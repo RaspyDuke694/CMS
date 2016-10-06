@@ -1,0 +1,3230 @@
+<apex:page sidebar="false" controller="VisualAntidote.SubmissionDetailController" >
+<meta http-equiv="X-UA-Compatible" content="IE=edge;" />     
+         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css"/>
+         <apex:includeScript value="//code.jquery.com/jquery-1.11.3.min.js" /> 
+       <link rel="stylesheet" href="{!URLFOR($Resource.jquery_dialog,'jquery_dialog/jquery-ui.css')}"/>
+
+         <script src="{!URLFOR($Resource.jquery_dialog,'jquery_dialog/jquery-ui.js')}"></script> 
+         <apex:includeScript value="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" />
+        
+       <link rel="stylesheet" href="{!URLFOR($Resource.select2,'select2.css')}" />
+        <script src="{!URLFOR($Resource.select2,'select2.js')}"></script>
+              <script src="{!URLFOR($Resource.commonJSHelper)}"></script>
+          <link rel="stylesheet" href="{!URLFOR($Resource.fscommon,'fscommon.css')}" /> 
+        <script src="{!URLFOR($Resource.FFCKEditor,'ckeditor.js')}"></script>
+
+  <!-- Begin Default Content   -->
+
+  <style>
+  
+  .fastformiframeWrapper{
+    max-width: 100%;
+  }
+  .tab-pane.fsd-view-content{
+    margin-bottom: 20px;
+  }
+  .inline-block{
+    display: inline-block;
+  }
+  .fsheader-wrapper-inner {
+   border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(8,52,80,.15);
+    border: 1px solid #E0E0E0;
+}
+span.status-msg, span.e-status-msg {
+    margin-right: 20px;
+    vertical-align: top;
+}
+
+.dv-header-row,.dv-content-row {
+    display: table-row;  
+     
+}
+@keyframes highlightWhiteToLightYellow {
+    0%  {background-color: #ffffff;}
+    20% {background-color: #fffcf3;}
+    80% {background-color: #fffcf3;}
+    100%  {background-color: #ffffff;}
+}
+
+.dv-content-row {
+        background-color: #ffffff;
+       
+    }
+    .dv-content-row.added-unmapped ,.dv-content-row.updated-mapped{
+    animation-name:highlightWhiteToLightYellow;   
+     animation-duration: 3s;  
+}
+.dv-header-row { 
+    background-color: #f1f6f8;   
+}
+.dv-th{
+    text-align: center;
+}
+.dv-th, .dv-td {
+    display: table-cell;
+
+}
+.dv-td {
+    border-top: 1px solid #c4d5e0 !important;
+    vertical-align: middle;
+}
+.f-status {
+    width: 150px;
+}
+.f-rec {
+     width: 400px;
+    padding-right:30px;
+}
+.f-obj {
+    padding-left: 30px;
+    padding-left:30px;
+}
+ 
+.dv-th span.dv-title {
+    color: #052942;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 20px 10px;
+    display: inline-block;
+}
+.dv-th{
+width:30%;
+}
+.dv-th.f-icons{
+width:10%;
+}
+.dv-td span.dv-text {
+    color: #616161;
+    font-size: 15px;
+    padding: 20px 10px;
+    display: inline-block;
+}
+.dv-td.f-fieldname {
+    padding-left: 20px;
+}
+.dv-td.f-icons .dv-text {
+    float: right;
+}
+.dv-td.f-values span.dv-text{
+width:100%;
+}
+.dv-td span.field-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+        color: #cbcbcb;
+}
+.dv-td span.field-icon.ic-picklist,.dv-td span.field-icon.ic-multipicklist,.dv-td span.field-icon.ic-date,
+.dv-td span.field-icon.ic-boolean,.dv-td span.field-icon.ic-lookup,.dv-td span.field-icon.ic-reference{
+    background-image:  url("{!URLFOR($Resource.fscommon,'addash/addash_sprites_v1.png')}"); 
+    background-position: -284px -240px;
+    background-repeat: no-repeat;
+    text-indent: -9999px;
+}
+.dv-td span.field-icon.ic-boolean{
+    width: 18px;
+    height: 18px;
+    background-position: -212px -165px;
+    border: 1px solid #cbcbcb;
+    background-repeat: no-repeat;
+    border-radius: 3px;
+}
+.dv-td span.field-icon.ic-reference {
+    background-position: -382px -204px ;
+}
+.dv-td span.field-icon.ic-date {
+    background-position:-347px -270px
+}
+
+ .dv-td input.ff-input-text ,
+.dv-td    .ff-input-textarea{
+  border-width: 1px;
+    border-color: rgb( 176, 184, 189 );
+    border-style: solid;
+    border-radius: 5px; 
+    max-width: 317px;
+    max-height: 34px;
+    padding: 8px;
+    width:80%;
+    font-size: 14px;
+    color: #616161; 
+}
+.dv-content-row.fs-failed {
+    background-color: #e59299;
+}
+.dv-content-row.fs-failed .dv-td span.dv-text{
+   color: #ffffff; 
+}
+.dv-content-row.fs-discarded , .dv-content-row.fs-discarded  .dv-td span.dv-text{
+     color: #bababa;
+    font-style: italic;
+}
+.dv-content-row.fs-discarded .dv-td.f-values input,.dv-content-row.fs-discarded .dv-td.f-values textarea {
+     background-color: #f7f8fa; color: #bababa;
+    font-style: italic;
+    pointer-events:none;
+}
+.dv-content-row.fs-failed .dv-td span.field-icon.ic-picklist,
+.dv-content-row.fs-failed .dv-td span.field-icon.ic-multipicklist {
+    background-position: -284px -267px;
+}
+
+ .dv-content-row.fs-failed .dv-td span.field-icon.ic-reference {
+    background-position: -438px -204px;
+}
+ .dv-content-row.fs-failed .dv-td span.field-icon.ic-boolean{
+     
+    background-position: -187px -165px;
+    border: 1px solid #ffffff; 
+    border-radius: 3px;
+}
+span.ff-invalid-msg {
+    color: red;clear: both;
+    display:block;
+}
+ span.ff-required {color:#33aefd;  margin-left:5px;  }
+.fs-failed span.ff-invalid-msg ,
+.fs-failed  span.ff-required,
+.fs-failed   .dv-td span.field-icon {
+    color: #ffffff; 
+}
+ .pointerevents input,.pointerevents textarea ,.pointerevents  .vabutton1,.pointerevents  .vabutton2{
+pointer-events:none !important;
+background-color: #f7f8fa ;
+color:#bababa;
+ }
+ .pointerevents  .vabutton1,.pointerevents  .vabutton2{
+    border-color:#bababa;
+ }
+.unmapped-placeholder {
+    margin-bottom: 28px;
+}
+.unmapped-table .vabutton2{
+width:58px;
+margin-right:10px;
+}
+.dvcontent-row span.ff-required {
+    color: #33AEFD;
+    margin-left: 5px;
+}
+.dv-action-wrapper{
+    padding:0px 0px 18px 0px;
+    overflow: hidden;    min-height: 40px;
+}
+.dv-action-buttons {
+    width:40%;display: inline-block;
+    vertical-align: top;
+}
+.dv-action-buttons .vabutton1 ,.dv-action-buttons .vabutton2{
+margin-right:10px;
+}
+.dv-h-title{
+    padding-bottom: 12px;    display: block;    color: #9ea6ad;
+}
+
+.btnSaveAndResubmit span.btnIcon {
+    background-position: -187px -165px;
+}
+.btnRevert span.btnIcon {
+    background-position: -392px -240px;
+
+}
+.btnRevert.va-disabled span.btnIcon {
+    background-position:-347px -240px;
+}
+.mapping-wrapper select.select-elem,
+.mapping-wrapper .select2-container.select-elem{
+width:300px;
+}
+/*select2 css starts*/
+.select2-container .select2-choice{
+border-color: #a3a3a3 ;
+    background-color: #fff ;
+    background-image: none ;
+    height: 34px ;
+}
+.select2-container.select2-dropdown-open .select2-choice{
+border-color: #33AEFD  ;
+}
+.select2-container .select2-choice > .select2-chosen{margin-top: 2px;
+    background-color: #fff !important;
+    color: #052942;
+    font-size: 14px;
+    font-family: 'Open Sans';
+    padding: 2px;}
+.select2-results li.FieldOption,
+.select2-results li.PageOption {
+background-color:#ffffff !important;
+border-top:1px solid #93d4fe;
+}
+ 
+.select2-results li.SectionOption
+{
+border-top:1px solid #93d4fe; ; 
+background-color:#f1f6f8 !important;
+}
+.select2-results li.SectionOption .select2-result-selectable{
+border-color:#f1f6f8 ;
+}
+.select2-results .select2-result-selectable{
+color:#616161;
+}
+
+.select2-results li.select2-result-with-children > .select2-result-label{
+color:#b2b5b6;
+font-size:18px;
+}
+ .select2-container .select2-choice .select2-arrow {
+        display: block;
+        width: 25px !important;
+        background-image: none !important;
+        border-left-width: 0px !important;
+        background-color: #ffffff !important;
+    }
+    .select2-container .select2-choice .select2-arrow b {
+        display: block;
+        width: 100%;
+        height: 100%;
+        margin-top: 10px;
+        background-image: url("{!URLFOR($Resource.fscommon,'addash/addash_sprites_v1.png')}");
+        background-repeat:no-repeat;
+        background-position: -67px -237px ;
+    }
+    .select2-container.select2-dropdown-open .select2-choice .select2-arrow b {
+        background-position:  -13px -237px ;
+    }
+ 
+
+ .select2-results li.select2-result-with-children.FieldOption 
+ {
+ border-left:0px !important; 
+ }
+
+ .select2-results li.select2-result-with-children.FieldOption.A .select2-highlighted{
+            border-left: 10px solid #d9217d !important;
+        }
+        .select2-results li.select2-result-with-children.FieldOption.B .select2-highlighted{
+            border-left: 10px solid #00cc00 !important;
+        }
+        .select2-results li.select2-result-with-children.FieldOption.C .select2-highlighted{
+            border-left: 10px solid #7d21d9 !important;
+        }
+        
+.select2-results li.select2-result-with-children.FieldOption.D .select2-highlighted{
+border-left: 10px solid #d39f02 !important;
+} 
+.select2-results li.select2-result-with-children.FieldOption.E .select2-highlighted{
+border-left: 10px solid #f54028 !important;
+} 
+.select2-results li.select2-result-with-children.FieldOption.F .select2-highlighted{
+border-left: 10px solid #2121d9 !important;
+} 
+.select2-results li.select2-result-with-children.FieldOption.G .select2-highlighted{
+border-left: 10px solid #d0601d !important;
+}
+.select2-results li.select2-result-with-children.FieldOption.H .select2-highlighted{
+ border-left: 10px solid #d921d9 !important;
+}
+.select2-results li.select2-result-with-children.FieldOption.I .select2-highlighted{
+border-left: 10px solid #159215 !important;
+}
+
+ .select2-results li span.is-r {
+    /*for required fileds*/
+   
+}
+
+/*select2 css ends*/
+.form-view-header {
+    width: 800px;
+    margin: 10px auto 6px auto;
+    
+    min-height:45px;
+}
+.form-view-nav-wrapper{
+    width:100%;
+    display: table;
+}
+.form-view-note {
+    display: table-cell;
+    vertical-align: middle;
+ font-size: 14px;
+}
+.nav-pills.form-view-nav {
+    display: table-cell;
+    text-align: right;
+}
+.fsd-view-tabs{
+    float:right;
+}
+ 
+#formViewLoadingDiv{ max-width: 100%;
+float:none;}
+/*Native changes to css*/
+#fsd-fcurrent input,#fsd-fcurrent select,#fsd-fcurrent textarea,#fsd-fcurrent button,
+#fsd-fsubmitted input,#fsd-fsubmitted select,#fsd-fsubmitted textarea,#fsd-fsubmitted button{
+pointer-events: none;
+} 
+
+/*Native changes to css ends*/
+</style>
+<!--  PAGE HTML STARTS-->
+ <div class="FastFormsWrapper">
+ <div class="mainHeader">
+                    <div class="mainHeaderInner">
+                <div style=" ">
+     
+                    <div style=" ">
+     
+                     <div class="bread-crumb">
+                         <div class="bread-crumb navbar">
+                                <div class="navbar-inner">
+                                        <div class="navcontainer">
+                                                <ul class="nav-wizard">
+                                                        <li>
+                                                                <a class="vfns-link" href="/apex/SubmissionDashboard" id="breadcrumb-dashboard">Form Submissions</a>
+                                                        </li>
+                                                     
+                                                                        <li class="li-arrow-seperator"></li>
+                                                         <li class="active">
+                                                                <span   style="padding: 0px 0px 0px 20px;"><span id="submissionName">
+                                                            </span></span>
+                                                        </li>
+                                                </ul>
+                                        </div>
+                                </div>
+                        </div>
+                         </div>
+                
+                </div> 
+                
+                </div>
+                       <div class="ff-logo-box">
+                        <div class="ff-logo"><img src="{!URLFOR($Resource.logos,'color_logo_only.png')}" /></div>
+                        <div class="ff-logo-title"> <h1 class="E-bold">FAST</h1><h1 class="sub-h1">FORMS</h1></div>     
+                        </div>        
+                        
+                        <div class="help-text-r"><a target="_blank" href="http://www.visualantidote.com/fastforms/help?utm_source=fastformsapp&utm_medium=FormEditorPage&utm_campaign=help" >
+                        <img src="{!URLFOR($Resource.helptext_image)}" /></a>
+                        </div>                        
+                </div>
+                                                                 
+                
+        </div>
+        <div class="header-messages">
+        <div style="width: 80%;float:left;" class="text-align-center">
+        <div  style="width: 80%;margin: 0px auto;">
+         <div class="vff-success " id="successActionBox" style="display: none;">
+                                
+                                <div class="vff-success-msg msg-text-div" onclick="closeNotification(this);" > </div>
+                                </div>
+          <div class="vff-alert" id="errorActionBox" style="display: none;">
+                                
+                                <div class="vff-alert-msg msg-text-div" onclick="closeNotification(this);" > </div>
+          </div>
+        </div>
+        </div>
+        <div class="delete-submission">
+            <div class="btnDelete vabutton4" onclick="deleteSubmission(this);return false;">
+                         <span class="btnText">Delete submission</span>
+                        </div>
+        </div>
+        </div>
+        <div class="fsheader-wrapper-detail-outer"  >
+            <div class="fsheader-wrapper ">
+            <div id="mainSubmissionDetailBox" class="fsheader-wrapper-inner">
+                <div class="fsd-detail-row">
+                    <div class="fsd-rcol-1 col-id">
+                        <div class="fsd-col-1"><span class="fsd-title">Id</span></div><div class="fsd-col-2"><span class="fsd-value"></span></div>
+                    </div>
+                    <div class="fsd-rcol-2 col-form">
+                        <div class="fsd-col-1"><span class="fsd-title">Form</span></div><div class="fsd-col-2"><span class="fsd-value"></span></div>
+                    </div>
+                </div>
+                <div class="fsd-detail-row ">
+                    <div class="fsd-rcol-1 col-submitted">
+                        <div class="fsd-col-1"><span class="fsd-title">Submitted</span></div><div class="fsd-col-2"><span class="fsd-value"></span></div>
+                    </div>
+                    <div class="fsd-rcol-2 col-ipaddress">
+                        <div class="fsd-col-1"><span class="fsd-title">IP Address</span></div><div class="fsd-col-2"><span class="fsd-value"></span></div>
+                    </div>
+                </div>
+                <div class="fsd-detail-row">
+                    <div class="fsd-rcol-1 col-objects">
+                        <div class="fsd-col-1"><span class="fsd-title">Objects</span></div><div class="fsd-col-2"><span class="fsd-value"></span></div>
+                    </div>
+                    <div class="fsd-rcol-2 col-record">
+                        <div class="fsd-col-1"><span class="fsd-title">Record</span></div><div class="fsd-col-2"><span class="fsd-value"></span></div>
+                    </div>
+                </div>
+                <div class="fsd-detail-row">
+                    <div class="fsd-rcol-1 col-esign">
+                        <div class="fsd-col-1"><span class="fsd-title">E-Signature</span></div><div class="fsd-col-2"><span class="fsd-value"></span></div>
+                    </div>
+                    <div class="fsd-rcol-2 col-status">
+                        <div class="fsd-col-1"><span class="fsd-title">Status</span></div><div class="fsd-col-2"><span class="fsd-value"></span>
+
+                        <div class="pt20">
+                            <div class="btnResubmit vabutton1 va-disabled" onclick="resubmitSubmission(this);return false;">
+                        <span class="btnIcon"></span><span class="btnText">Resubmit</span>
+                        </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fsheader-wrapper-inner-expanded">
+                 
+            </div>
+            </div>
+        </div>
+        <div class="fscontent-wrapper"  >
+              
+                <div class="nav-pills "><ul class="nav nav-tabs fsd-details-tabs">
+                <li class="fsd-details-tab fsd-form-view-li active"><a aria-controls="fsd-form-view" data-toggle="tab" href="#fsd-form-view" id="fsdformview"  onclick="toggleSubmissionTab(this,false)" role="tab"><span class="tab-icon"></span><span class="tab-title">Form Preview</span></a></li>
+                <li class="fsd-details-tab fsd-data-view-li"><a aria-controls="fsd-data-view" data-toggle="tab" href="#fsd-data-view" id="fsddataview"  onclick="toggleSubmissionTab(this,false)" role="tab"><span class="tab-icon"></span><span class="tab-title">Submitted Values <i class="submit-change" style="display:none">*</i></span></a></li>
+                <li class="fsd-details-tab  fsd-objects-records-li"><a aria-controls="fsd-objects-records" data-toggle="tab" href="#fsd-objects-records" id="fsdobjectsrecords"  onclick="toggleSubmissionTab(this,false)"  role="tab"><span class="tab-icon"></span><span class="tab-title">Objects and Records</span></a></li></ul>
+                </div>
+            
+            <div class="tab-pane fade in fsd-details-content  active" id="fsd-form-view">
+            <div class="fsd-main-content-holder display-table">
+            <div class="form-view-header"  >
+            <div class="form-view-nav-wrapper" style="display:none">
+              <div class="form-view-note">This form has been changed after this submission. Which form you would like to see.</div>
+            <div class="nav-pills form-view-nav"><ul class="nav nav-tabs fsd-view-tabs">
+            
+            <li class="fsd-view-tab fsd-fsubmitted-li "><a aria-controls="fsd-fsubmitted" data-toggle="tab" href="#fsd-fsubmitted"  id="fsdfsubmitted"   onclick="toggleFormViewTab(this)" role="tab"><span class="tab-title">Original</span></a></li><li class="fsd-view-tab  fsd-fcurrent-li active"><a aria-controls="fsd-fcurrent" data-toggle="tab" href="#fsd-fcurrent"  id="fsdfcurrent"  onclick="toggleFormViewTab(this)"  role="tab"><span class="tab-title">Current</span></a></li>
+            </ul>
+            </div>
+            </div>
+            <div id="formViewLoadingDiv" style="display:none">
+                <div class="load-status-small"> <div class="dialogSmall"></div><div class="primary">Loading, please wait...</div></div>
+            </div>
+            </div>
+            <div class="tab-pane fade in fsd-view-content active" id="fsd-fcurrent">
+               <div id="currentFormViewDiv">
+                    <div id="currentFormiframeWrapper" class="fastformiframeWrapper">
+                          
+                    </div>
+                </div>
+             
+             </div>
+            <div class="tab-pane fsd-view-content " id="fsd-fsubmitted">
+               <div id="submittedFormViewDiv">
+                    <div id="originalFormiframeWrapper" class="fastformiframeWrapper">
+                        
+                    </div>
+                </div>
+             
+             </div>
+             
+             </div>
+            </div>
+            <div class="tab-pane fsd-details-content" id="fsd-data-view">
+            <div class="fsd-main-content-holder display-table">
+                <div class="fscontent-wrapper-inner">
+                <div class="dv-action-wrapper">
+                <div class="dv-action-buttons">
+                    <div class="btnSaveAndResubmit vabutton1 va-disabled" onclick="saveAndResubmitSubmission(this);return false;"  >
+                        <span class="btnIcon"></span><span class="btnText">Save and Resubmit</span>
+                        </div>
+                        <div class="btnRevert vabutton2 va-disabled" onclick="revertChanges(this);return false;"  >
+                        <span class="btnIcon"></span><span class="btnText">Revert</span>
+                        </div>
+                </div>
+                <div id="dataViewLoadingDiv" class="inline-block" style="display: none;">
+                <div class="load-status-small"> <div class="dialogSmall"></div><div class="primary">Loading please wait... </div></div>
+            </div>
+            </div>
+                <div class="unmapped-placeholder" style="display:none">
+                <h3 class="dv-h-title">Unmapped fields</h3>
+                </div>
+                <h3 class="dv-h-title">Mapped fields</h3>
+                <div  id="dvContentTable" class="fscontent-table">
+                    <div class="dv-header-row">
+                         <div class="dv-th f-fieldname"><span class="dv-title">Field Name</span></div>
+                         <div class="dv-th f-apiname"><span class="dv-title">API Name</span></div>
+                         <div class="dv-th f-icons"><span class="dv-title">&nbsp;</span></div>
+                         <div class="dv-th f-values"><span class="dv-title">Values</span></div>
+                    </div>
+                     
+                    </div>
+                    <div style="clear:both">
+                    <div class="vff-alert vff-w-close" style="display:none" >
+                                <div class="vff-alert-msg msg-text-div"  ></div><span class="vff-close-icon" onclick="closeNotification(this)"></span>
+          </div></div>
+                </div>
+            </div>
+            </div>
+            <div class="tab-pane fsd-details-content" id="fsd-objects-records"><div class="fsd-main-content-holder display-table">
+                <div class="fscontent-wrapper-inner">
+                <div  id="oarContentTable" class="fscontent-table">
+                    <div class="oar-header-row">
+                         <div class="oar-th f-obj"><span class="oar-title">Object</span></div>
+                         <div class="oar-th f-status"><span class="oar-title">Status</span></div>
+                         <div class="oar-th f-msg"><span class="oar-title">Message</span></div>
+                         <div class="oar-th f-rec"><span class="oar-title">Record</span></div>
+                    </div>
+                     
+                    </div>
+                </div>
+            </div></div>
+        </div>
+
+        <div style="display:none">
+        <div id="UnmappedContentTableHTML">
+        <div class="fscontent-table unmapped-table" id="dvUnmappedContentTable"><div class="dv-header-row"><div class="dv-th f-fieldname"><span class="dv-title">Original Field Name</span></div><div class="dv-th f-apiname"><span class="dv-title">Mapping</span></div><div class="dv-th f-icons"><span class="dv-title">&nbsp;</span></div><div class="dv-th f-values"><span class="dv-title">Value</span></div></div></div></div>
+        
+        <div id="MappingBoxHTML">
+          <div class="mapBox" style="display:none">
+
+          <div class="vabutton2" onclick="showMappingOptions(this);"><span class="btnText">Map</span></div><div class="vabutton2" onclick="deletUnmappedField(this);"><span class="btnText">Delete</span></div></div>
+          <div class="addBox"  style="display:none">
+          <div class="clear-both" style="margin-bottom:10px;"><select  class="select-elem select-available-fields" onchange="onUnmappedFieldChange(this);"></select></div>
+          <div class="vabutton2" onclick="addUnmappedField(this);"><span class="btnText">Add</span></div><div class="vabutton2"  onclick="cancelUnmappedField(this);"><span class="btnText">Cancel</span></div></div>
+        </div>
+        <div id="VAButton2HTML">
+            <div class="vabutton2"  >
+                        <span class="btnText"></span><span class="btnIcon"></span>
+                        </div>
+        </div>
+        <div id="VAButton1HTML">
+            <div class="vabutton1"  >
+                        <span class="btnText"></span><span class="btnIcon"></span>
+                        </div>
+        </div>
+        <div id="EmailTemplate">
+        <div style="width:75%; font-family:'Open Sans','Sans Serif';">
+<div><img src="http://www.visualantidote.com/images/FFSF/ffsf_logo.aspx" alt="Fast Forms for Salesforce" width="40%" /></div>
+<br />
+<div>Hello,<br />
+ <br />
+<div>You recently filled out and submitted a form for which you provided a signature.</div>
+<div>Please click the link below to verify your email address and complete your submission:</div><br />
+
+[[verifyLink|Verify Email]]
+
+<div>If any of this information is incorrect, you may disregard this message or <a href="mailto:support@fastforms.io">contact support</a> for more information.</div>
+<br/>
+<br/>
+<div>Thank you,<br />
+<div>The Fast Forms team</div></div></div></div></div>
+        </div>
+
+        </div>
+        <!--  PAGE HTML ENDS-->
+    <script>
+    var isSubmittedDataChanged=false;
+    var isFormNative={!isNative};
+    var isCurrentFormFlagSet=false;
+    var currentFlagInterval=null;
+    window.setInterval(changeValueTriggered, 3000); 
+    var primaryObjectName='';
+    var submissionObjectXML='{!RelatedObjectsXML}';
+    var referenceFieldsArr=[];
+    var isSubmittedValuesTabPopulated=false;
+    var submittedFieldsArr=[];
+    var repeatedObjectsArr=[];
+    var formFieldsArr=[];
+    var availableFieldsArr=[];
+    var unmappedFieldsArr=[];
+    var organisationId='{!$Organization.Id}';
+    var fastFormBaseFormEngineURL=getQueryStringSafeURL("{!URLFOR(ffEngineLink)}")+"/"; 
+    var fastFormBaseURL=getQueryStringSafeURL("{!URLFOR(ffShortLink)}");
+    var FFCKEditorurlroot="{!URLFOR($Resource.FFCKEditor)}";
+    var submissionRecID = '{!JSENCODE($CurrentPage.parameters.id)}';
+    var isCallBackResourceReset=false;
+    var isCurrentRecIdValid=false;
+    var SFOrgPrefix='';
+    var salesforceurl='';
+    $(document).ready(function(){
+ salesforceurl=window.UserContext.salesforceURL;
+    
+    var ffcommonUrl="{!URLFOR($Resource.ffcommon)}";
+    if(ffcommonUrl.toLowerCase().indexOf('visualantidote__')>0){
+      SFOrgPrefix='VisualAntidote__';
+    }
+   setLookupAndChildRefFields(submissionObjectXML);
+   getSubmissionInfoJS(1,false);
+resetFastFormsHREFLinks('.bread-crumb',SFOrgPrefix);
+    });
+    
+    function getSubmissionInfoJS(tabOpen,triggerToggle)
+    {
+         
+         if(!isNullOrEmpty(submissionRecID)){
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteGetSubmissionInfo)}',submissionRecID,
+                function(result, event) { 
+                    
+                      if (event.status) {
+                         /*console.log(' Success-'+result);*/
+                        if(result!=null  && result.length>0)
+                        {
+                           populateSubmissionInfo(result[0]);
+                           if(tabOpen==2){
+                            toggleSubmissionTab($('#fsdobjectsrecords'),triggerToggle);
+                           
+                           }
+                           else{
+                            toggleSubmissionTab($('#fsdformview'),triggerToggle);
+                           }
+                           isCurrentRecIdValid=true;
+                       
+                        }
+                        else
+                        {
+                            console.log(' result is null'+result);
+                          showFFErrorMessage('Submission record doesn\'t exist');
+                            
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('Request took longer then expected. Please try again');
+                         
+                      }
+                   
+                },
+                { buffer: true, escape: true, timeout: 30000 }
+            );
+}
+}
+function remoteGetFormSubmissionInfoListJS(){
+     
+         if(!isNullOrEmpty(submissionRecID)){
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteGetFormSubmissionInfoList)}',submissionRecID,
+                function(result, event) { 
+                    
+                      if (event.status) {
+                       /*console.log(' Success-'+result);*/
+                        if(result!=null && result.length>0 )
+                        {
+                           populateFormSubmissionInfo(result);
+                           
+                        }
+                        else
+                        {
+                            console.log(' result is null'+result);
+                             
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('Request took longer then expected. Please try again');
+                         
+                      }
+                   
+                },
+                { buffer: true, escape: false, timeout: 30000 }
+            );
+    }
+}
+
+function remoteGetSubmissionInfoForFormViewJS(currentOrOriginal){
+
+     
+         if(!isNullOrEmpty(submissionRecID)){
+            toggleFormViewLoadingDiv(true);
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteGetSubmissionInfoForFormView)}',submissionRecID,
+                function(result, event) { 
+                    
+                      if (event.status) {
+                       /*console.log(' Success-'+result);*/
+                        if(result!=null   )
+                        {
+                         
+                           populateFormViewPage(result,currentOrOriginal);
+                           
+                        }
+                        else
+                        {
+                            console.log(' result is null'+result);
+                            toggleFormViewLoadingDiv(false);
+                             
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('Request took longer then expected. Please try again');
+                         toggleFormViewLoadingDiv(false);
+                         
+                      }
+                   
+                },
+                { buffer: true, escape: true, timeout: 30000 }
+            );
+    }
+}
+function resubmitNativeSubmission(elemSource){
+      var submissionID = '{!JSENCODE($CurrentPage.parameters.id)}';
+  if(!isNullOrEmpty(submissionID) && !$(elemSource).hasClass('va-disabled')){
+    $(elemSource).find('.btnText').html('Processing...');
+ $(elemSource).addClass('va-disabled');
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteNativeResubmit)}',submissionID,
+                function(result, event) { 
+                    
+                      if (event.status) { 
+                        if(result!=null )
+                        {
+                             if(result.IsValid){
+                                 showInlineInfoMSG($('.fsheader-wrapper'),null,result.ResultText,'msg-success','2');
+                             } 
+                           else{
+                            showInlineInfoMSG($('.fsheader-wrapper'),null,result.OtherText,'msg-error','2');
+                            }
+                           $(elemSource).find('.btnText').html('Resubmit');
+                        }
+                        else
+                        {
+                            console.log(' result is null');
+                            showInlineInfoMSG($('.fsheader-wrapper'),null,'Your resubmission attempt has failed. Please try again','msg-error','2');
+                            $(elemSource).find('.btnText').html('Resubmit');
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('An error occurred when attempting to resubmit this submission. <br />Please refresh your page and try again. If the issue persists, contact the Fast Forms Support Team at support@fastforms.io for assistance.');
+                         $(elemSource).find('.btnText').html('Resubmit');
+                      }
+                   
+                },
+                { buffer: true, escape: false, timeout: 30000 }
+            );
+}
+  
+}
+function resubmitSubmission(elemSource){
+    if(isFormNative){
+        resubmitNativeSubmission(elemSource);
+    }else{
+    var userContentId=$(elemSource).attr('data-ucid');
+
+   
+  var url=fastFormBaseFormEngineURL+'RetrySaveContent?ucIds='+userContentId+'&orgId='+organisationId;
+   
+  if(!isNullOrEmpty(userContentId) && !$(elemSource).hasClass('va-disabled')){
+    $(elemSource).find('.btnText').html('Processing...');
+ $(elemSource).addClass('va-disabled');
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteResubmitCallout)}',url,
+                function(result, event) { 
+                    
+                      if (event.status) {
+                        /*console.log(' Success-'+result);*/
+                        if(result!=null && result.length>0)
+                        {
+                            var responseArr= JSON.parse(result);  
+                            var errorMsgList=[]; 
+                            var isErrorSFType=false;    
+                            var isSuccessful=true;
+                                if(responseArr[0].errList!=null && responseArr[0].errList.length>0){
+                                isSuccessful=false;
+                                 
+                                $.each(responseArr[0].errList,function(idx,errObj){
+                                    if(errObj.type+''=='SF'){
+                                        isErrorSFType=true;
+                                    }
+                                 errorMsgList.push(errObj);
+ 
+                                });
+                                 
+                                }
+                             
+                            if(isSuccessful){
+                           showInlineInfoMSG($('.fsheader-wrapper'),null,'Form resubmitted successfully!','msg-success','2');
+                           }
+                           else{
+                                if(errorMsgList!=null && errorMsgList.length>0){
+                                    var errormessagetext='';
+                                    $.each(errorMsgList,function(idx,errObj){
+                                        errormessagetext+=''+errObj.errorMessage;
+                                        });
+                                if(isErrorSFType){
+                                    refreshSubmissionDetailInfo(2,true);
+                                       
+                                         showInlineInfoMSG($('.fsheader-wrapper'),null,'Your resubmission attempt has failed. Please see the Objects and Records tab for more details.','msg-error','2');
+                                    }else{
+                                      showFFErrorMessage(errormessagetext);  
+                                    }
+                                  }
+                                  else{
+                                    showFFErrorMessage('An error occurred when attempting to resubmit this submission. <br />Please refresh your page and try again. If the issue persists, contact the Fast Forms Support Team at support@fastforms.io for assistance.');
+                                  }
+                            //showInlineInfoMSG($('.fsheader-wrapper'),null,'Form is not submitted successfully. Please fix the issues mentioned in Objects and records tab.','msg-error','2');
+                           }
+                           $(elemSource).find('.btnText').html('Resubmit');
+                        }
+                        else
+                        {
+                            console.log(' result is null');
+                            showInlineInfoMSG($('.fsheader-wrapper'),null,'Your resubmission attempt has failed. Please try again','msg-error','2');
+                            $(elemSource).find('.btnText').html('Resubmit');
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('An error occurred when attempting to resubmit this submission. <br />Please refresh your page and try again. If the issue persists, contact the Fast Forms Support Team at support@fastforms.io for assistance.');
+                         $(elemSource).find('.btnText').html('Resubmit');
+                      }
+                   
+                },
+                { buffer: true, escape: false, timeout: 30000 }
+            );
+}
+}
+  
+}
+function refreshSubmissionDetailInfo(tabOpen,triggerToggle){
+    getSubmissionInfoJS(tabOpen,triggerToggle);
+}
+ 
+function deleteSubmission(elemSource){
+
+    var submissionID = '{!JSENCODE($CurrentPage.parameters.id)}';
+    if(!isNullOrEmpty(submissionID)  && !$(elemSource).hasClass('va-disabled') && isCurrentRecIdValid){
+  $(elemSource).find('.btnText').html('Processing...');
+  $(elemSource).addClass('va-disabled');
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteDeleteSubmission)}',submissionID,
+                function(result, event) { 
+                    
+                      if (event.status) {
+                         /*console.log(' Success-'+result);*/
+                        if(result!=null && result.length>0)
+                        {
+                          hideFFNotification('errorActionBox'); 
+                           $('.btnDelete .btnText').html('Delete Submission');
+                          var isError=false;
+                           var responseMessage='';
+                          $.each(result,function(gindx,resultHelper){
+                            if(!resultHelper.IsValid){
+                              isError=true;
+                            }
+                            responseMessage+=resultHelper.ResultText+'<br/>';
+                          });
+                          if(isError){
+                            showFFErrorMessage(responseMessage);
+                          }
+                          else{
+                          //window.location.href="/apex/submissiondashboard";
+                          ffNavigateToUrl( "/apex/submissiondashboard",SFOrgPrefix);
+                          }
+                           
+                        }
+                        else
+                        {
+                            console.log(' result is null'+result);
+                            showFFErrorMessage('Something went wrong. Please try again. Please contact Fast Forms Support team if this message keeps coming back.');
+                            $(elemSource).find('.btnText').html('Delete submission');
+                            $(elemSource).removeClass('va-disabled');
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('Request took longer then expected. Please try again');
+                         $(elemSource).find('.btnText').html('Delete submission');
+                         $(elemSource).removeClass('va-disabled');
+                      }
+                   
+                },
+                { buffer: true, escape: true, timeout: 30000 }
+            );
+}
+  
+}
+
+function populateEventLogAndSetupEmailTemplate( elemSource,elemParent){
+
+    var submissionID = '{!JSENCODE($CurrentPage.parameters.id)}';
+    var ucId=$('#mainSubmissionDetailBox .fsd-detail-row .fsd-rcol-1.col-id').attr('data-ucid');
+   
+   var url= fastFormBaseFormEngineURL+'GetSignatureLog?ucId='+ucId+'&orgId='+organisationId;
+    if(!isNullOrEmpty(submissionID) ){
+   
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteGetSignatureLog)}',url,
+                function(result, event) { 
+                    
+                      if (event.status) {
+                         /*console.log(' Success-'+result);*/
+                        if(result!=null && result.length>0)
+                        {
+                          hideFFNotification('errorActionBox'); var numberPattern = /\d+/g;
+                          // $('.btnDelete .btnText').html('Send Now');
+                          var responseArr= JSON.parse(result);  
+                            var activityLogList=[];
+                                $.each(responseArr,function(idx,responseObj){
+                                    var dated=responseObj.CreatedDate;
+                                    if(dated!=null && dated!=undefined){
+                                     var  numArr= dated.match( numberPattern );
+                                     if(numArr!=null && numArr.length>0){
+                                    activityLogList.push(createActivityLogItem(numArr[0],responseObj.EventDescription));
+                                    }
+                                   }
+                                });
+                           populateEmailLogPanel(elemSource,elemParent,activityLogList)
+                        }
+                        else
+                        {
+                            console.log(' result is null'+result);
+                            showFFErrorMessage('Something went wrong. Please try again. Please contact Fast Forms Support team if this message keeps coming back.');
+                            
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('Request took longer then expected. Please try again');
+                          
+                      }
+                   
+                },
+                { buffer: true, escape: false, timeout: 30000 }
+            );
+}
+  
+}
+function remoteResendEmailVerificationJS( elemSource){
+    
+    var submissionID = '{!JSENCODE($CurrentPage.parameters.id)}';
+    var ucId=$('#mainSubmissionDetailBox .fsd-detail-row .fsd-rcol-1.col-id').attr('data-ucid');
+    var emailsCSV=safeStringValue($('.fsheader-wrapper-inner .fsd-detail-row .fsd-rcol-1.col-id').attr('data-emails'),"");
+    var body='';
+    
+    if(CKEDITOR.instances['send-verification-email-editor']!==undefined){
+        body=CKEDITOR.instances['send-verification-email-editor'].getData();
+        body=encodeURIComponent(body);
+    }
+    emailsCSV=encodeURIComponent(emailsCSV);
+    $(elemSource).addClass('va-disabled'); 
+    $(elemSource).find('.btnText').html('Sending email..');
+   var url= fastFormBaseFormEngineURL+'ResendVerificationEmail?ucId='+ucId+'&orgId='+organisationId+'&body='+body+'&emailsTo='+emailsCSV;
+    if(!isNullOrEmpty(submissionID) && !isNullOrEmpty(body)){
+   
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteResendEmailVerification)}',url,
+                function(result, event) { 
+                $(elemSource).removeClass('va-disabled');
+                    $(elemSource).find('.btnText').html('Send Now');
+                      if (event.status) {
+                        console.log(' Result -'+result);
+                        if(result!=null)
+                        {
+                          hideFFNotification('errorActionBox');  
+                          hideFFNotification('successActionBox');  
+                          // $('.btnDelete .btnText').html('Send Now');
+                          var isSuccess= getSafeBoolean(result,false);  
+                          if(isSuccess){
+                             showFFSuccessMessage('A verification email is sent successfully');
+                          }
+                          else{
+                            showFFErrorMessage('Email is not sent. Please try again.');
+                          }
+                           
+                        }
+                        else
+                        {
+                            console.log(' result is null'+result);
+                            showFFErrorMessage('Something went wrong. Please try again. Please contact Fast Forms Support team if this message keeps coming back.');
+                            
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('Request took longer then expected. Please try again');
+                          
+                      }
+                   
+                },
+                { buffer: true, escape: false, timeout: 30000 }
+            );
+}
+  
+}
+function createFieldModelObj(apiname,label,isreq,fieldtype,isrepeat){
+var data={'name':apiname,'label':label,'req':isreq,'type':fieldtype,'repeat':isrepeat};
+return data;
+}
+function getZeroBasedFieldID(fieldObj,repeatIndex){
+    var fieldIdasArr=fieldObj['id'].split('.');
+                            var fieldRelId=fieldObj['id'];
+                             
+                            if(fieldIdasArr.length===4 && getSafeBoolean(fieldObj['repeat'],false) && fieldIdasArr[2].length<=2){
+                            fieldRelId=fieldIdasArr[0]+'.'+fieldIdasArr[1]+'.'+fieldIdasArr[2]+'_'+repeatIndex+'_.'+fieldIdasArr[3];  
+                          }
+                          return fieldRelId;
+}
+function remoteGetAllObjectsAndFieldsJS( revertCall,formFieldsJSONArr){
+
+    var submissionID = '{!JSENCODE($CurrentPage.parameters.id)}';
+     if(!isNullOrEmpty(submissionID)  ){
+   if(revertCall){ 
+    populateDataFormView();
+   }else{
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteGetAllObjectsAndFields)}',submissionID,
+                function(result, event) { 
+                    
+                      if (event.status) {
+                        console.log(' Result -'+result);
+                        var fieldIdArr=[];
+                         $.each(formFieldsJSONArr, function(index, fieldObj) {                            
+                            fieldIdArr.push(getZeroBasedFieldID(fieldObj,1));
+                         });
+                          $.each(repeatedObjectsArr, function(indx, childObject) {
+                         if(childObject['rindex']>1){   
+                         var repeatIndex=childObject['rindex'];
+                         var childLetter=childObject['child'];                       
+                            $.each(formFieldsJSONArr, function(index, fieldObj) { 
+                            var fieldIdasArr=fieldObj['id'].split('.');
+                            if(childLetter==fieldIdasArr[2] && fieldIdasArr.length===4 && getSafeBoolean(fieldObj['repeat'],false) && fieldIdasArr[2].length<=2){                           
+                             fieldIdArr.push(fieldIdasArr[0]+'.'+fieldIdasArr[1]+'.'+fieldIdasArr[2]+'_'+repeatIndex+'_.'+fieldIdasArr[3]);
+                            }
+                         });
+                           }
+                         });
+
+                        if(result!=null && result.length>0)
+                        {
+                          hideFFNotification('errorActionBox');  
+                          hideFFNotification('successActionBox');  
+                          availableFieldsArr=[];
+                         var primaryObjName='';
+                         var isRepeat=false;
+                         var repeatedObjectInfo=[];
+                         //repeatedObjectsArr
+                         $.each(result, function(index, objectItem) {
+                         if(objectItem["oType"]=='primary'){
+                          primaryObjName=objectItem["oName"]+'';
+                         }
+                         if(getSafeBoolean(objectItem["oIsRepeat"],false)){
+                            isRepeat=true;
+                         }else{isRepeat=false;}
+                         var fieldList=[];
+                         var fieldListFiltered=[];
+                         fieldList=objectItem["fieldModelList"];
+                         if(fieldList!=null && fieldList.length>0){
+                         $.each(fieldList, function(fieldIndex, fieldItem) {
+                          var fieldItemClone= JSON.parse(JSON.stringify(fieldItem)) ;
+                          var fieldRelId=safeStringValue(fieldItem["fAPIName"],"");//fieldRelIdTemp;
+                          var fieldIdasArr= fieldRelId.split('.');
+                          if(fieldIdasArr.length===3 && isRepeat){
+                            fieldRelId=fieldIdasArr[0]+'.'+fieldIdasArr[1]+'_1_.'+fieldIdasArr[2];  
+                           
+                          }
+                          var label=safeStringValue(fieldItem["fLabel"],"") ;
+                          var isreq= fieldItem["fIsRequired"] ;
+                          var type=safeStringValue(fieldItem["fType"],"");
+                          if($.inArray(primaryObjName+'.'+fieldRelId,fieldIdArr)>=0){
+                            fieldItem["fAPIName"]=fieldRelId;
+                            fieldListFiltered.push(fieldItem);
+                          }
+                          else if(isreq){
+                            // fieldListFiltered.push(fieldItem);
+                          }
+                          availableFieldsArr.push(createFieldModelObj(primaryObjName+'.'+fieldRelId,label,isreq,type,isRepeat));
+                          if(fieldIdasArr.length===3 && isRepeat){
+                          $.each(repeatedObjectsArr, function(indx, childObject) {
+                             fieldItemClone= JSON.parse(JSON.stringify(fieldItemClone)) ;
+                         if(childObject['rindex']>1){ 
+                            var newFieldRelId='';
+                          var repeatIndex=childObject['rindex'];
+                         var childLetter=childObject['child'];  
+                          var fieldIdasArr=safeStringValue(fieldItemClone["fAPIName"],"").split('.');
+                            if(fieldIdasArr.length===3 && childLetter==fieldIdasArr[1]  && isRepeat){                           
+                            newFieldRelId=fieldIdasArr[0]+'.'+fieldIdasArr[1]+'_'+repeatIndex+'_.'+fieldIdasArr[2];
+                            if($.inArray(primaryObjName+'.'+newFieldRelId,fieldIdArr)>=0){
+                            var newFieltItem= JSON.parse(JSON.stringify(fieldItemClone));
+                               newFieltItem["fAPIName"]=newFieldRelId;
+                            fieldListFiltered.push(newFieltItem);
+                          }
+                          else if(isreq){
+                            // fieldListFiltered.push(fieldItem);
+                          }
+                          availableFieldsArr.push(createFieldModelObj(primaryObjName+'.'+newFieldRelId,label,isreq,type,isRepeat));
+                            }  
+                           }
+                         });
+                         }
+                         });
+                       }
+                        fieldListFiltered.sort(sortRepeatedFieldItems);
+                        objectItem["fieldModelList"]=fieldListFiltered;
+                    });
+
+                         populateSelectElementForAvailableFields(result);
+                      populateDataFormView();
+                     
+                        }
+                        else
+                        {
+                            console.log(' result is null'+result);
+                            showFFErrorMessage('Something went wrong. Please try again. Please contact Fast Forms Support team if this message keeps coming back.');
+                            
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('Request took longer then expected. Please try again');
+                          
+                      }
+                   
+                },
+                { buffer: true, escape: false, timeout: 30000 }
+            );
+}
+}
+  
+}
+function sortRepeatedFieldItems(a,b){
+   
+  var aName = a.fAPIName.toLowerCase();
+  var bName = b.fAPIName.toLowerCase(); 
+  return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+ 
+}
+function sortRepeatedFieldItemsById(a,b){
+   
+  var aName = a.id.toLowerCase();
+  var bName = b.id.toLowerCase(); 
+  return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+ 
+}
+function remoteGetFormPagesObjectXMLListJS(revertCall){
+
+    var submissionID = '{!JSENCODE($CurrentPage.parameters.id)}';
+     if(!isNullOrEmpty(submissionID)  ){
+   toggleDataViewLoadingDiv(true,'');
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteGetFormPagesObjectXMLList)}',submissionID,
+                function(result, event) { 
+                    
+                      if (event.status) {
+                        console.log(' Result -'+result);
+                        if(result!=null && result.length>0)
+                        {
+                          formFieldsArr=[];
+                          hideFFNotification('errorActionBox');  
+                          hideFFNotification('successActionBox'); 
+                           console.log(' FIELDS count--'+result.length);
+                          $.each(result, function(index, fieldId) {
+                           
+                            /*ID Check added APril 29 2016 to ensure uninque field ids*/
+                            if(!isNullOrEmpty(fieldId) && fieldId.split('||').length==2){
+                                
+                          var fIdArr=fieldId.split('||');
+                            if(checkIfFieldIDExists(fIdArr[0],formFieldsArr)<0){
+                             formFieldsArr.push({'id':fIdArr[0],'repeat':fIdArr[1]});
+                            }
+                           }
+                          });
+                           //if(!revertCall){
+                            remoteGetAllObjectsAndFieldsJS(revertCall,formFieldsArr);
+                         //}
+                            
+                         
+                        }
+                        else
+                        {
+                            toggleDataViewLoadingDiv(false,'');
+                            console.log(' result is null'+result);
+                            showFFErrorMessage('Something went wrong. Please try again. Please contact Fast Forms Support team if this message keeps coming back.');
+                            
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                        toggleDataViewLoadingDiv(false,'');
+                         showFFErrorMessage('Request took longer then expected. Please try again');
+                          
+                      }
+                   
+                },
+                { buffer: true, escape: false, timeout: 30000 }
+            );
+}
+  
+}
+function checkIfFieldIDExists(fieldId, fieldIdArr) {
+    for (var i = 0; i < fieldIdArr.length; i++) {
+        if (fieldIdArr[i].id == fieldId) {
+            return(i);
+        }
+    }
+    return(-1);
+}
+function remoteGetFSInfoForErrorListingJS(){
+     
+         if(!isNullOrEmpty(submissionRecID)){
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteGetFSInfoForErrorListing)}',submissionRecID,
+                function(result, event) { 
+                    
+                      if (event.status) {
+                       /*console.log(' Success-'+result);*/
+                        if(result!=null && result.length>0 )
+                        {
+                           populateErrorDetailInfo(result);
+                           
+                        }
+                        else
+                        {
+                            console.log(' result is null'+result);
+                             
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('Request took longer then expected. Please try again');
+                         
+                      }
+                   
+                },
+                { buffer: true, escape: false, timeout: 30000 }
+            );
+    }
+}
+function sendEmailVerification(elemSource){
+if(!$(elemSource).hasClass('va-disabled')){
+remoteResendEmailVerificationJS(elemSource);
+}
+}
+/*Populate submitted values tab*/
+function populateDataFormView(){
+
+  var formFieldsArrImproved = [];
+  var formFArrTemp=[];
+  for (var i = 0; i < formFieldsArr.length; i++) {
+   // getZeroBasedFieldID(formFieldsArr[i],1);
+    formFArrTemp.push({'id':getZeroBasedFieldID(formFieldsArr[i],1),'repeat':formFieldsArr[i]['repeat']});
+    if(formFieldsArr[i]["id"].split('.').length==4){
+     $.each(repeatedObjectsArr, function(indx, childObject) {
+                         if(childObject['rindex']>1){   
+                         var repeatIndex=childObject['rindex'];
+                         var childLetter=childObject['child'];                 
+                            
+                            var fieldIdasArr=formFieldsArr[i]["id"].split('.');
+                            if(childLetter==fieldIdasArr[2] && getSafeBoolean(formFieldsArr[i]['repeat'],false) && fieldIdasArr[2].length<=2){                           
+                             formFArrTemp.push({'id':fieldIdasArr[0]+'.'+fieldIdasArr[1]+'.'+fieldIdasArr[2]+'_'+repeatIndex+'_.'+fieldIdasArr[3],'repeat':getSafeBoolean(formFieldsArr[i]['repeat'],false)});
+                            }
+                        
+                           }
+                         });
+    }
+  }
+  formFieldsArr=formFArrTemp;
+   formFieldsArr.sort(sortRepeatedFieldItemsById);
+for (var i = 0; i < formFieldsArr.length; i++) {
+    var obj =  formFieldsArr[i]["id"];
+     
+        for (var j = 0; j < availableFieldsArr.length; j++ ) {
+            if(obj ==availableFieldsArr[j]['name'])
+            {
+              formFieldsArrImproved.push(availableFieldsArr[j]);
+            }
+        }
+        
+     
+};
+  if(formFieldsArrImproved!=null && formFieldsArrImproved.length>0){
+
+
+ var mainTableElem=$('#dvContentTable');
+        $(mainTableElem).find('.dv-content-row').remove();
+        var relatedObjectMaxIndex=formFieldsArr.length-1;
+        $.each(formFieldsArrImproved,function(indx,fieldElem){
+var fieldlabel=fieldElem["label"];
+var fieldId=fieldElem["name"];
+var fieldType=fieldElem["type"];
+var isRequired=getSafeBoolean(fieldElem["req"],false);
+       
+         var oarTextSpan= $('<span/>',{'class':'dv-text'});
+      var contentRow=$('<div/>',{'class':'dv-content-row','data-fieldid':fieldId});
+      oarTextSpan.html($('<label/>',{'class':'ff-label',html:fieldlabel}));
+      if(isRequired){
+        oarTextSpan.append($('<span/>',{'class':'ff-required','html':'*'}));
+      }
+      var tdObjecName=$('<div/>',{'class':'dv-td f-fieldname' });
+       
+      tdObjecName.html(oarTextSpan);
+      contentRow.html(tdObjecName.clone().wrap('<p>').parent().html());
+       
+      var tdapiname=$('<div/>',{'class':'dv-td f-apiname'});
+      oarTextSpan.html(fieldId);
+      tdapiname.html(oarTextSpan);
+      contentRow.append(tdapiname.clone().wrap('<p>').parent().html());
+       
+      var tdIcon=$('<div/>',{'class':'dv-td f-icons'});
+      oarTextSpan.html($('<span/>',{'class':'field-icon ic-'+fieldType.toLowerCase(),html:'txt'}));
+      tdIcon.html(oarTextSpan);
+      contentRow.append(tdIcon.clone().wrap('<p>').parent().html());
+       
+      var tdInputElement=$('<div/>',{'class':'dv-td f-values'});
+      if(fieldType.toLowerCase()=='textarea'){
+        oarTextSpan.html($('<textarea/>',{'class':'ff-input-textarea','data-isrequired':isRequired,'id':fieldId,'onblur':'submittedValueChange(this);'}));
+      }else{
+      oarTextSpan.html($('<input/>',{'class':'ff-input-text','data-isrequired':isRequired,'id':fieldId,'onblur':'submittedValueChange(this);'}));
+      }
+      tdInputElement.html(oarTextSpan);
+      contentRow.append(tdInputElement.clone().wrap('<p>').parent().html());
+        
+       contentRow.addClass(indx);
+      mainTableElem.append(contentRow);
+     });
+     populateDataFormViewInputValues(); 
+}
+toggleDataViewLoadingDiv(false,'');
+  }
+  function populateDataFormViewInputValues(){
+    unmappedFieldsArr=[];
+    if(submittedFieldsArr!=null && submittedFieldsArr.length>0){
+       var mainTableElem= $('#dvContentTable');
+       $.each(submittedFieldsArr,function(indx,fieldElem){
+        
+      var fieldId=fieldElem["id"];
+       if(!isNullOrEmpty(fieldId)){
+       var  safefieldId=fieldId.replace(/\./g,'\\.');
+        
+        
+        if($(mainTableElem).find('#'+safefieldId).length>0){
+          $(mainTableElem).find('#'+safefieldId).val(unescapeHTMLString(fieldElem["val"]));
+          
+        }
+        else{
+            var addToUnmap=true;
+         /*var fieldIdasArr= fieldElem["id"].split('.');
+         if(fieldIdasArr.length===4){
+
+            console.log('fieldId---'+fieldElem["id"]);
+          if(fieldIdasArr[2].length>=4 && fieldIdasArr[2].split('_').length>=2){
+                     //create new repeat section
+              var prevRepeatIndex=safeInt(fieldIdasArr[2].split('_')[1],-1);
+                if(prevRepeatIndex>1   ){
+                  var prevfieldIdWithDot=fieldIdasArr[0]+'.'+fieldIdasArr[1]+'.'+fieldIdasArr[2].split('_')[0]+'_'+(prevRepeatIndex-1)+'_.'+fieldIdasArr[3];
+                var prevfieldId=prevfieldIdWithDot.replace(/\./g,'\\.');
+                if($('#dvContentTable').find('#'+prevfieldId).length>0){
+                var newRow=$('<div/>');
+                $(newRow).html($('#dvContentTable').find('#'+prevfieldId).parents('.dv-content-row').clone().wrap('<p>').parent().html());
+                $(newRow).find('#'+prevfieldId).attr('id','NEWFFID');
+                $('#dvContentTable').append($(newRow).html());
+                var  newRepeatIndex=prevRepeatIndex;
+                var repeatfieldIdWithDot=fieldIdasArr[0]+'.'+fieldIdasArr[1]+'.'+fieldIdasArr[2].split('_')[0]+'_'+newRepeatIndex+'_.'+fieldIdasArr[3];
+                var repeatfieldId=repeatfieldIdWithDot.replace(/\./g,'\\.');
+                  if($('#dvContentTable').find('#NEWFFID').length>0){
+                      $('#dvContentTable').find('#NEWFFID').attr('id',repeatfieldIdWithDot);
+                      var newContentRow=$('#dvContentTable').find('#'+repeatfieldId).parents('.dv-content-row');
+                      $(newContentRow).attr('data-fieldid',repeatfieldIdWithDot);
+                      $(newContentRow).find('.f-apiname .dv-text').html(repeatfieldIdWithDot);
+                       addToUnmap=false;
+                  //setFFFieldValue(repeatfieldId,submittedJSON[property]);
+                 } 
+                }
+               }
+           }
+         }*/ 
+         if(addToUnmap && !isNullOrEmpty(fieldElem["val"]))
+          {
+            unmappedFieldsArr.push({'id':fieldId,'val':fieldElem["val"]});
+          }
+        
+       }
+     }
+     });
+       populateUnMappedFieldTable();
+    callToRemoteErrorDetail();   
+    }
+    else{
+    callToRemoteErrorDetail();
+   }
+  }
+  function callToRemoteErrorDetail(){
+    remoteGetFSInfoForErrorListingJS();
+  }
+  function populateErrorDetailInfo(FSInfoList){
+    var generalError='';
+    var errorlist=[];
+    if(FSInfoList!=null && FSInfoList.length>0){
+        
+       $.each(FSInfoList,function(indx,fsobject){
+        if(isSubmissionFailed(fsobject[SFOrgPrefix+"Status__c"])){
+            var errorObj={};
+            var fieldidprefix='';
+           var childColor= safeStringValue(fsobject[SFOrgPrefix+"Child_Object_Letter__c"],"");
+           var objectOrder= safeStringValue(fsobject[SFOrgPrefix+"Object_Order__c"],"");
+           var objname=safeStringValue(fsobject[SFOrgPrefix+"Object__c"],"");
+           var relname=safeStringValue(fsobject[SFOrgPrefix+"Related_Field_Name__c"],"");
+           var repindex=safeInt(fsobject[SFOrgPrefix+"Repeat_Index__c"],-1);
+            var errorDetail=safeStringValue(fsobject[SFOrgPrefix+"Details__c"],"");
+            if(errorDetail.indexOf('[')>0){
+                errorDetail=errorDetail.substring(errorDetail.indexOf('['));
+                 var errObj;
+                        try{
+                            var errdt=[];
+                       errObj= JSON.parse(errorDetail);
+                        $.each(errObj,function(i,errItem){
+                       if(errItem['message']!=null){
+                        errdt.push(errItem['message']);
+                       }});
+                        if(errdt!=''){
+                            errorDetail=JSON.stringify(errdt);
+                        }
+                   }catch(err){
+                   
+                   }
+            }
+            if(  childColor!=''){
+               fieldidprefix= primaryObjectName+'.'+objname+'.'+childColor+'.';
+               if(repindex>0){
+                fieldidprefix= primaryObjectName+'.'+objname+'.'+childColor+'_'+repindex+'_.';
+               }
+                errorObj={'idp':fieldidprefix,'error':errorDetail};
+                 
+            }
+            else if(!isNullOrEmpty(relname) && objectOrder!='1' ){
+                   fieldidprefix= primaryObjectName+'.'+relname+'.';
+                errorObj={'idp':fieldidprefix,'error':errorDetail};
+            }
+            else if(objname==primaryObjectName){
+                fieldidprefix= primaryObjectName+'.';
+                errorObj={'idp':fieldidprefix,'error':errorDetail};
+            }
+            else{
+                errorObj={'idp':'NOID_','error':objname+'- '+errorDetail};
+            }
+            errorDetail=errorDetail.replace(/\'/g,'\'');
+            var errorFieldArr=   errorDetail.match(/\[.*?\]/g);
+                if(errorFieldArr!=null && errorFieldArr.length>0){
+                    $.each(errorFieldArr,function(i,errField){
+                        errField=errField.replace('[','').replace(']','');
+                if(errorObj!=null && !isNullOrEmpty(errField)){
+                    if(errField.split(',').length>0)
+                          {  
+                            var errObjArr=errField.split(',');
+                            $.each(errObjArr,function(i,errFieldItem){
+                                var prefixId=safeStringValue(errorObj['idp'],'');
+                            var errord=safeStringValue(errorObj['error'],'');
+                             if(!isNullOrEmpty(errord)){
+                                errord=errord.replace(/\[.*?\]/g,'');
+                             }
+                              errorlist.push({'id':fieldidprefix+errFieldItem.trim(),'error':errord+errFieldItem});
+                            });
+                            
+                          }
+                          else{
+                            var prefixId=safeStringValue(errorObj['idp'],'');
+                            var errord=safeStringValue(errorObj['error'],'');
+                             if(!isNullOrEmpty(errord)){
+                                errord=errord.replace(/\[.*?\]/g,'');
+                             }
+                              errorlist.push({'id':fieldidprefix+errField.trim(),'error':errord+errField});
+                          }
+                   }
+                 });
+             }
+             else{
+                 if(!isNullOrEmpty(errorDetail)  ){
+                generalError+=objname+': '+errorDetail;}
+              }
+            
+             
+            
+        }
+       });
+ var mainTableElem=$('#dvContentTable');
+ $(mainTableElem).find('.dv-content-row').find('.ff-invalid-msg').remove();
+ $(mainTableElem).find('.dv-content-row').removeClass('fs-failed');
+        if(errorlist!=null && errorlist.length>0){
+            var generalMessage='';
+           
+        $.each(errorlist,function(indx,errorElem){
+              var fieldId=errorElem["id"];
+              if(isNullOrEmpty(fieldId) || fieldId.indexOf('{')>=0 || fieldId.indexOf('}')>=0 || fieldId.indexOf("'")>=0){
+              fieldId='';
+               } 
+
+               if(!isNullOrEmpty(fieldId)){
+            var  safefieldId=fieldId.replace(/\./g,'\\.').replace(/\'/g,'\\\'');
+                console.log('safefieldId---'+safefieldId);
+                
+                if($(mainTableElem).find('#'+safefieldId).length>0){
+                    var span=$('<span/>',{'class':'ff-invalid-msg'});//Required fields are missing: [Client_Name__c]</div>';
+                    span.html(errorElem["error"]+'');
+                    $(mainTableElem).find('#'+safefieldId).parents('.dv-content-row').addClass('fs-failed');
+                 $(span).insertAfter($(mainTableElem).find('#'+safefieldId));//.after(unescapeHTMLString(errorElem["val"]));
+                }
+                else{
+                   generalMessage+=errorElem["error"]+'<br/>';
+               }
+             }else{
+                generalMessage+=errorElem["error"]+'<br/>';
+             }
+             });
+        if(!isNullOrEmpty(generalMessage)  && !isCallBackResourceReset ){
+
+            showErrorDetailMessage($(mainTableElem).parents('.fscontent-wrapper-inner').find('.vff-alert'),generalMessage);
+           }
+
+        }
+        else{
+            if(!isNullOrEmpty(generalError) && !isCallBackResourceReset){
+            showErrorDetailMessage($(mainTableElem).parents('.fscontent-wrapper-inner').find('.vff-alert'),generalError);
+          
+           }
+        }
+    }
+  }
+  function isSubmissionFailed(submissionStatus){
+    var submissionFailed=true;
+    if(!isNullOrEmpty(submissionStatus) && (submissionStatus.toUpperCase()=='CREATED' || submissionStatus.toUpperCase()=='UPDATED' || submissionStatus.toUpperCase()=='VERIFIED' || submissionStatus.toUpperCase()=='AWAITING_EMAIL_VERIFICATION' || submissionStatus.toUpperCase()=='NO_DATA')){
+        submissionFailed=false;
+    }
+    return submissionFailed;
+  }
+  function populateUnMappedFieldTable(){
+     if(unmappedFieldsArr!=null && unmappedFieldsArr.length>0){
+       var tempUnmappedTable=$('<div/>').html($('#UnmappedContentTableHTML').html());
+       var unmappedPlaceHolder=$('.unmapped-placeholder');
+       $(unmappedPlaceHolder).find('.fscontent-table').remove();
+         $.each(unmappedFieldsArr,function(indx,fieldElem){
+var fieldlabel=fieldElem["id"];
+var fieldId=fieldElem["id"];
+var fieldValue=fieldElem["val"];
+var fieldType='string';
+var isRequired= false;
+       
+         var oarTextSpan= $('<span/>',{'class':'dv-text'});
+      var contentRow=$('<div/>',{'class':'dv-content-row','data-fieldid':fieldId});
+      oarTextSpan.html($('<label/>',{'class':'ff-label',html:fieldlabel}));
+       
+      var tdObjecName=$('<div/>',{'class':'dv-td f-fieldname' });
+       
+      tdObjecName.html(oarTextSpan);
+      contentRow.html(tdObjecName.clone().wrap('<p>').parent().html());
+       
+      var tdapiname=$('<div/>',{'class':'dv-td f-apiname'}); 
+      
+      oarTextSpan.html($('#MappingBoxHTML').html());
+      tdapiname.html(oarTextSpan);
+      tdapiname.find('.dv-text').addClass('mapping-wrapper');
+      contentRow.append(tdapiname.clone().wrap('<p>').parent().html());
+       
+      var tdIcon=$('<div/>',{'class':'dv-td f-icons'});
+      oarTextSpan.html($('<span/>',{'class':'field-icon ic-'+fieldType.toLowerCase(),html:'txt'}));
+      tdIcon.html(oarTextSpan);
+      contentRow.append(tdIcon.clone().wrap('<p>').parent().html());
+       
+      var tdInputElement=$('<div/>',{'class':'dv-td f-values'});
+      if(fieldType.toLowerCase()=='textarea'){
+        oarTextSpan.html($('<textarea/>',{'class':'ff-input-textarea','id':fieldId}));
+      }else{
+      oarTextSpan.html($('<input/>',{'class':'ff-input-text','id':fieldId}));
+      }
+      tdInputElement.html(oarTextSpan);
+      tdInputElement.find('input,textarea').attr('value',fieldValue);
+      contentRow.append(tdInputElement.clone().wrap('<p>').parent().html());
+        
+       contentRow.addClass(indx);
+      tempUnmappedTable.find('.fscontent-table').append(contentRow);
+     });
+unmappedPlaceHolder.append(tempUnmappedTable.html());
+unmappedPlaceHolder.slideDown();
+ unmappedPlaceHolder.find('.mapBox').slideDown();
+ ///unmappedFieldsArr=[];
+  /*var mainTableElem=$('#dvUnmappedContentTable');
+      $.each(unmappedFieldsArr,function(indx,fieldElem){
+      var fieldId=fieldElem["id"];
+       if(!isNullOrEmpty(fieldId)){
+       var  safefieldId=fieldId.replace(/\./g,'\\.');
+        console.log('fieldId---'+fieldId);
+        
+        if($(mainTableElem).find('#'+safefieldId).length>0){
+          $(mainTableElem).find('#'+safefieldId).val(fieldElem["val"]);
+        }
+        else{
+          if(!isNullOrEmpty(fieldElem["val"]))
+          {
+            unmappedFieldsArr.push({'id':fieldId,'val':fieldElem["val"]});
+          }
+        
+       }
+     }
+     });*/
+     }
+  }
+//populateEventLogAndSetupEmailTemplate
+function getTestActivityData(){
+    var activityLogList=[];
+    activityLogList.push(createActivityLogItem(1449684601000,'form submitted 1'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 2  long description  long description'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 3'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 4'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 5 long description  long description'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 6'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 7'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 8'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 9'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 10'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 11'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 12  long description  long description'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 13'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 14'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 15 long description  long description'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 16'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 17'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 18'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 19'));
+        activityLogList.push(createActivityLogItem(1449684601000,'form submitted 20'));
+        return activityLogList;
+}
+function expandEmailLogPanel(elemSource){
+
+    var expandedWrapper=$('.fsheader-wrapper-inner-expanded');
+    expandedWrapper.removeClass('fsa-expanded');
+    if($(elemSource).hasClass('fs-expand')){
+        $(elemSource).removeClass( "fs-expand");
+         expandedWrapper.find('.fs-expanded-wrapper-inner').slideUp('300', function() {
+                                       expandedWrapper.find('.fs-expanded-wrapper-inner').remove();
+                                       expandedWrapper.find('.fs-verification-wrapper').remove();
+                                });
+    }
+    else{
+           populateEventLogAndSetupEmailTemplate(elemSource,expandedWrapper);
+        }
+}
+function populateEmailLogPanel(elemSource,expandedWrapper,activityLogList){
+
+    
+        var isResendReq=false;
+        var pageSize=10;
+        var elemenBtnParent=$(elemSource).parent();
+        if(elemenBtnParent.hasClass('b-resend'))
+        {
+            isResendReq=true;
+        }
+         if(isResendReq){
+            pageSize=5;
+         }
+       
+        $('.btns-wrapper .btn-div>div').removeClass("fs-expand");
+        expandedWrapper.find('.fs-expanded-wrapper-inner>div').remove();
+        expandedWrapper.addClass('fsa-expanded');
+        $(elemSource).addClass( "fs-expand");
+        var expandedInner=$('<div/>',{'class':'fs-expanded-wrapper-inner'});
+
+        var expandedVerWrapper=$('<div/>',{'class':'fs-verification-wrapper'});
+        var expandedLogDiv=$('<div/>',{'class':'fs-expanded-activity-box'});
+        var expandedResenDiv=$('<div/>',{'class':'fs-expanded-resend-box'});
+        var activityLogWrapper=$('<div/>',{'class':'fs-activity-wrapper'});
+        var actFooter=$('<div/>',{'class':'fs-activity-footer'});
+        var actFooterText=$('<div/>',{'class':'fs-act-footer-txt'});
+        var actFooterPrev=$('<span/>',{'class':'fs-act-prev' ,'onclick':'prevActivityPage(this)'});
+        var actFooterNext=$('<span/>',{'class':'fs-act-next','onclick':'nextActivityPage(this)'});
+        var activityLogTable=$('<div/>',{'class':'fs-activity-table'});
+        var activityLogTitle=$('<h2/>',{'class':'log-title','html':'E-Signature Activity Log'});
+        
+
+        
+        
+       activityLogWrapper.html(activityLogTitle);
+       var itemPageWrapper=$('<div/>',{'class':'fs-activity-page page-indx-1'});
+       var page=1;
+       var pageCount=1;
+       if(activityLogList.length>0){
+        pageCount=Math.ceil(parseFloat(activityLogList.length/pageSize));
+        }
+       actFooterText.html('Page 1 of '+pageCount);
+       actFooterText.attr('data-pagecount',pageCount);
+       actFooterText.attr('data-currentpage',1);
+        $.each(activityLogList,function(indx,aItem){
+            var pageNumber=1;
+            var currentNonZeroIndex=indx;
+            currentNonZeroIndex++;
+            pageNumber= Math.ceil(parseFloat(currentNonZeroIndex/pageSize));
+            
+            if(pageNumber>page){
+                page=pageNumber;
+                itemPageWrapper=$('<div/>',{'class':'fs-activity-page page-indx-'+pageNumber});
+            }
+             var spanHtmlTemp=$('<span/>',{'class':'act-msg'});
+           var spanDateHtmlTemp=$('<span/>',{'class':'act-dt'});
+           spanHtmlTemp.html(aItem.msg);
+
+           spanDateHtmlTemp.html(getFormattedDateTime(parseInt(aItem.date)));
+           var activityRow=$('<div/>',{'class':'act-row'});
+           activityRow.html(spanDateHtmlTemp);
+           activityRow.append(spanHtmlTemp);
+           itemPageWrapper.append(activityRow);
+           if((currentNonZeroIndex % pageSize)==0 || currentNonZeroIndex==activityLogList.length){
+           activityLogTable.append(itemPageWrapper);
+           }
+        });
+        actFooter.html(actFooterPrev);
+        actFooter.append(actFooterText);
+        
+        actFooter.append(actFooterNext);
+        activityLogWrapper.append(activityLogTable);
+        activityLogWrapper.append(actFooter);
+        if(activityLogList!=undefined && activityLogList.length>0){
+        expandedLogDiv.html(activityLogWrapper);
+        expandedInner.hide();
+        if(isResendReq){
+            expandedResenDiv.html(getEmailBlockHTML());
+            expandedInner.html(expandedResenDiv);
+            
+        }
+        expandedInner.append(expandedLogDiv);
+        expandedVerWrapper.html(expandedInner);
+        expandedWrapper.html(expandedVerWrapper);
+        if(isResendReq){
+            resetVerificationEmailEditor(expandedWrapper.find('.fs-expanded-resend-box'),true);
+            expandedInner.addClass('both-views');
+        }
+        expandedWrapper.append($('<div/>',{'class':'fs-expanded-bottom'}));
+        expandedWrapper.find('.fs-expanded-wrapper-inner').slideDown();
+        }
+        resetActivityPageCounter(1);
+    
+}
+function resetVerificationEmailEditor(elemParent,setup){
+ if(setup){
+    var editElem=elemParent.find('textarea');
+     
+            CKEDITOR.plugins.addExternal( 'fftoken', FFCKEditorurlroot+'/plugins/fftoken/', 'plugin.js' );
+        CKEDITOR.replace( $(editElem).attr('id'), {
+        extraPlugins: 'fftoken', 
+            customConfig: FFCKEditorurlroot+'/config.js'
+             
+        } );
+        var defaultHtml=$('#EmailTemplate').html();
+        setContentInEditor($(editElem).attr('id'),defaultHtml);
+ }
+ else{
+
+ }
+}
+function setContentInEditor(elemSourceId,html,overwrite)
+    {
+     var editor = CKEDITOR.instances[elemSourceId];
+     if(overwrite){
+          editor.setData( html );
+     }
+     else{
+        if(editor!==undefined && editor.getData()==''){
+            editor.setData( html );
+        }
+     }
+    }
+    function insertContentInEditor(elemSourceId,html)
+    {
+
+        var editor = CKEDITOR.instances[elemSourceId];
+          editor.insertHtml( html );
+
+    }
+    function insertVerificationLink(elemSource){
+        insertContentInEditor('send-verification-email-editor','[[verifyLink|Verify Email]]')
+    }
+function getEmailBlockHTML(){
+    var title=$('<h2/>',{'html':'Customize message'});
+     var aLink=$('<a/>',{'class':'verification-link','onclick':'insertVerificationLink(this);return false;'});
+     aLink.html('<span class="btnIcon">&nbsp;</span>Insert Verification link');
+    var editorTextarea=$('<textarea/>',{ 'id':'send-verification-email-editor'});
+    var editorArea=$('<div/>',{'class':'editor-area'});
+    editorArea.html(aLink);
+     editorArea.append(editorTextarea);
+
+   // var sendBtn=$('#VAButton1HTML').html();
+      var htmlTemp=$('<div/>',{'class':'temp'}); 
+    
+     htmlTemp.html(title);
+     htmlTemp.append(editorArea);
+     htmlTemp.append($('#VAButton1HTML').html());
+     htmlTemp.find('.vabutton1 .btnIcon').remove();
+     htmlTemp.find('.vabutton1 .btnText').html('Send Now');
+     htmlTemp.find('.vabutton1').attr('onclick','sendEmailVerification(this);');
+     return htmlTemp.html();
+    }
+function createActivityLogItem(dateString,message){
+var data={'date':dateString,'msg':message};
+return data;
+}
+function resetActivityPageCounter(currentPage){
+$('.fs-act-footer-txt').attr('data-currentpage',currentPage);
+$('.fs-activity-page').removeClass('act-active');
+$('.fs-activity-page.page-indx-'+currentPage).addClass('act-active');
+var totalPages=1;
+    try{
+    totalPages=parseInt($('.fs-act-footer-txt').attr('data-pagecount'));
+}
+catch(err){}
+$('.fs-act-footer-txt').html('Page '+currentPage+' of '+totalPages);
+}
+function nextActivityPage(elemSource){
+    var currentPage=1;
+    var totalPages=1;
+    try{
+    totalPages=parseInt($('.fs-act-footer-txt').attr('data-pagecount'));
+    currentPage=parseInt($('.fs-act-footer-txt').attr('data-currentpage'));
+    }
+    catch(err){}
+    if(totalPages>currentPage){
+        currentPage++;
+        $('.fs-act-footer-txt').attr('data-currentpage',currentPage);
+    }
+    resetActivityPageCounter(currentPage);
+}
+function prevActivityPage(elemSource){
+var currentPage=1;
+    var totalPages=1;
+    try{
+    totalPages=parseInt($('.fs-act-footer-txt').attr('data-pagecount'));
+    currentPage=parseInt($('.fs-act-footer-txt').attr('data-currentpage'));
+    }catch(err){}
+    if(currentPage>1){
+        currentPage--;
+        $('.fs-act-footer-txt').attr('data-currentpage',currentPage);
+    }
+    resetActivityPageCounter(currentPage);
+}
+function toggleFormViewLoadingDiv(show){
+    if(show){
+        $('#formViewLoadingDiv').fadeIn();
+    }
+    else{
+        $('#formViewLoadingDiv').fadeOut();
+    }
+}
+function toggleDataViewLoadingDiv(show,optinalLoadingMessage){
+    if(show){
+        var loadingmessage='Loading... please wait';
+        if(!isNullOrEmpty(optinalLoadingMessage)){
+            loadingmessage=optinalLoadingMessage;
+        }
+        $('#dataViewLoadingDiv').find('.primary').html(loadingmessage);
+        $('#dataViewLoadingDiv').fadeIn();
+    }
+    else{
+        $('#dataViewLoadingDiv').fadeOut();
+    }
+}
+function populateSubmissionInfo(SubmissionObj){
+    if(SubmissionObj!=null){
+isCurrentRecIdValid=true;
+        var primaryObjectLabel=getObjectNameFromXML(SubmissionObj[SFOrgPrefix+"Objects_XML__c"]);
+        var subname=SubmissionObj["Name"];
+     
+     $('.fsheader-wrapper-inner .fsd-detail-row .col-id .fsd-value').html(subname); 
+     var formname='';
+     var formid='';
+     if(SubmissionObj[SFOrgPrefix+"Form__r"]!==undefined){
+       formname= safeStringValue(SubmissionObj[SFOrgPrefix+"Form__r"]["Name"],"");
+       formid=safeStringValue(SubmissionObj[SFOrgPrefix+"Form__r"]["Id"],"");
+       formid= 'apex/'+SFOrgPrefix+'FormEditor?id='+formid;
+     $('#submissionName').text(getTrimmedSTR(formname,25,'...'));
+     var aTag=$('<a/>',{'class':'ffblue-link','target':'_blank','href':'/'+formid,'html':formname,'title':formname});
+     $('.fsheader-wrapper-inner .fsd-detail-row .col-form .fsd-value').html(aTag);
+     }
+     
+     
+     $('.fsheader-wrapper-inner .fsd-detail-row .col-submitted .fsd-value').html(getFormattedDateTime(safeStringValue(SubmissionObj[SFOrgPrefix+"Submission_Date__c"],"")));
+     $('.fsheader-wrapper-inner .fsd-detail-row .col-ipaddress .fsd-value').html(safeStringValue(SubmissionObj[SFOrgPrefix+"IP_Address__c"],""));
+     $('.fsheader-wrapper-inner .fsd-detail-row .col-objects .fsd-value').html(safeStringValue(primaryObjectLabel,""));
+     
+     var recordUrlSpan=$('<span/>');
+     var recordUrl=safeStringValue(SubmissionObj[SFOrgPrefix+"Record_Created_Updated__c"],"");
+     if(!isNullOrEmpty(recordUrl)){
+        //var sfHosturl=window.UserContext.salesforceURL;
+     recordUrlSpan.html($('<a/>',{ 'html':getTrimmedSTR(recordUrl,38,'...'),'target':'_blank','href':recordUrl}));
+     }
+     $('.fsheader-wrapper-inner .fsd-detail-row .col-record .fsd-value').html(recordUrlSpan.html());
+     $('.fsheader-wrapper-inner .fsd-detail-row .col-esign .fsd-value').html(getESignColHTML(SubmissionObj[SFOrgPrefix+"E_Sign__c"]));
+     if(!isNullOrEmpty(SubmissionObj[SFOrgPrefix+"E_Sign__c"])){
+        /*enable Email verification buttons*/
+       $('.fsheader-wrapper-inner .fsd-detail-row .col-esign .fsd-col-2').append(getESignButtonsHtml(SubmissionObj[SFOrgPrefix+"E_Sign__c"]));
+     }
+     var statusMsg=safeStringValue(SubmissionObj[SFOrgPrefix+"Status__c"],"");
+     $('.fsheader-wrapper-inner .fsd-detail-row .col-status .fsd-value').html(getStatusColHTML(statusMsg));
+     
+     var userContentId=-1;
+     userContentId=safeStringValue(SubmissionObj[SFOrgPrefix+"User_Content_ID__c"],-1);
+     if(userContentId>=0){
+        $('.fsheader-wrapper-inner .fsd-detail-row .col-status .btnResubmit').attr('data-ucid',userContentId);
+        $('.fsheader-wrapper-inner .fsd-detail-row .fsd-rcol-1.col-id').attr('data-ucid',userContentId);
+        if(statusMsg=='Failed'){
+            $('.fsheader-wrapper-inner .fsd-detail-row .col-status .btnResubmit').removeClass('va-disabled');
+        }
+     }
+      var verificationEmails= safeStringValue(SubmissionObj[SFOrgPrefix+"Verification_Emails__c"],"");
+     if(!isNullOrEmpty(verificationEmails)){
+        $('.fsheader-wrapper-inner .fsd-detail-row .fsd-rcol-1.col-id').attr('data-emails',verificationEmails);
+     }
+     
+    }
+
+}
+function getESignButtonsHtml(eSignStatus){
+   /*VAButton2HTML*/
+   var buttonWrapper=$('<div/>',{'class':'btns-wrapper'});
+   var btnHtml=$('#VAButton2HTML').html();
+    var buttonResendLog=$('<div/>',{'class':'btn-div b-resend','html':btnHtml});
+    buttonResendLog.find('.btnText').html('Re-send');
+    buttonResendLog.find('.vabutton2').attr('onclick','expandEmailLogPanel(this);');
+     var buttonViewLog=$('<div/>',{'class':'btn-div b-viewlog','html':btnHtml});
+     buttonViewLog.find('.btnText').html('View log');
+     buttonViewLog.find('.vabutton2').attr('onclick','expandEmailLogPanel(this);');
+     if(!isNullOrEmpty(eSignStatus) && eSignStatus.toLowerCase()!=='verified'){
+     buttonWrapper.html(buttonResendLog);
+   }
+   else{
+    buttonWrapper.html('');
+   }
+     buttonWrapper.append(buttonViewLog);
+     var tempDiv=$('<div/>').html(buttonWrapper);
+     return tempDiv;
+}
+ function closeMessageDivRow(elemSource){
+if($(elemSource).parents('.fsd-detail-row').length>0){
+  $(elemSource).parents('.fsd-detail-row').fadeOut();
+  $(elemSource).parents('.fsd-detail-row').remove();
+}
+}
+function showInlineInfoMSG(elementMainToAppend,rowExtraClasses,messageText,tdClass,col_1_2_spanned){
+    var mainTableElem=$('<div/>',{'class':'fsheader-wrapper-inner-noborder'});
+    var trRow=$('<div/>',{'class':'fsd-detail-row','style':'display:none'});
+     var spanCloseElem=$('<span/>',{'class':'fsclose-icon','onclick':'closeMessageDivRow(this)'});
+    if(rowExtraClasses!=undefined && rowExtraClasses instanceof Array && rowExtraClasses.length>0)
+            {
+                 $.each(rowExtraClasses,function(indx,classname){
+                    tdRow.addClass(classname);
+                });
+            }
+    if(col_1_2_spanned=='spanned'){
+        trRow.addClass('full-span');
+        var tdRow1=$('<div/>',{'class':'fsd-col-span'});
+        trRow.html(tdRow1);
+    }
+    else if(col_1_2_spanned=='1'){
+        var tdRow1=$('<div/>',{'class':'fsd-ncol-1'});
+        var tdRow2=$('<div/>',{'class':'fsd-ncol-2'});
+        tdRow1.html($('<span/>',{'class':'imsg-text'}).html(messageText));
+        tdRow1.append(spanCloseElem);
+        if(!isNullOrEmpty(tdClass)){
+            tdRow1.addClass(tdClass);
+        }
+        trRow.html(tdRow1);
+        trRow.append(tdRow2);
+    }
+    else if(col_1_2_spanned=='2'){
+        var tdRow1=$('<div/>',{'class':'fsd-ncol-1'});
+        
+        var tdRow2=$('<div/>',{'class':'fsd-ncol-2'});
+        tdRow2.html($('<span/>',{'class':'imsg-text'}).html(messageText));
+        tdRow2.append(spanCloseElem);
+        if(!isNullOrEmpty(tdClass)){
+            tdRow2.addClass(tdClass);
+        }
+        trRow.html(tdRow1);
+        trRow.append(tdRow2);
+    }
+    mainTableElem.html(trRow);
+    
+    elementMainToAppend.find('.fsheader-wrapper-inner-noborder').remove();
+    elementMainToAppend.append(mainTableElem.clone().wrap('<p>').parent().html());
+    elementMainToAppend.find('.fsheader-wrapper-inner-noborder .fsd-detail-row').fadeIn();
+}
+function getObjectNameFromXML(objectXMl){
+    var objectName='';
+    var xmlstr=$('<div/>').html(objectXMl).text();
+    xmlstr='<root>'+xmlstr+'</root>';
+    var xmlDocElement=getXmlElementFromStr(xmlstr);
+     var objElements=xmlDocElement.getElementsByTagName("object");
+    $.each(objElements, function (index, objElement) {
+        var objecttype=objElement.getAttribute('type');
+        if(!isNullOrEmpty(objecttype) && objecttype=='primary'){
+            var labels=objElement.getElementsByTagName("label");
+            if(labels!=null && labels.length>0){
+            objectName= labels[0];
+             return false;
+            }
+        }
+    });
+    return objectName;
+}
+function setLookupAndChildRefFields(objectXML)
+    {
+        referenceFieldsArr=[];
+      var  xmlstr='<root>'+objectXML+'</root>';
+    var xmlDocElement=getXmlElementFromStr(xmlstr);
+    var pname='';
+    var objElements=xmlDocElement.getElementsByTagName("object");
+    $.each(objElements, function (index, objElement) {
+        var objecttype=objElement.getAttribute('type');
+        if(!isNullOrEmpty(objecttype) && objecttype=='primary'){
+            var name=firstElementByTagName(objElement,"name",true);
+            if(name!=null  ){
+            pname= name;
+            primaryObjectName=pname;
+             return false;
+            }
+        }
+    });
+    $.each(objElements, function (index, objElement) {
+        var objecttype=objElement.getAttribute('type');
+        if(!isNullOrEmpty(objecttype)){
+            var fieldid='';
+            if(  objecttype=='detail'){
+                var objname=firstElementByTagName(objElement,"name",true);
+                var relname=firstElementByTagName(objElement,"relName",true);
+                var childcolor=objElement.getAttribute('child');
+                  fieldid=pname+'.'+objname+'.'+childcolor+'.'+relname;
+            }
+            else if( objecttype=='lookup'){
+                   var relname=firstElementByTagName(objElement,"relName",true); 
+                   fieldid=pname+'.'+relname;
+            }
+            if(!isNullOrEmpty(fieldid)){
+              //  referenceFieldsArr.push(fieldid);
+            }
+        }
+    });
+ 
+    }
+function getESignColHTML(esignStatus){
+    //<span class="e-status-msg est-verified"></span><span class="e-status-text">Verified</span>
+    var returnHtml=$('<span/>');
+    if(!isNullOrEmpty(esignStatus)){
+        esignStatus=esignStatus.toUpperCase();
+        var spanTagIcon=$('<span/>',{'class':'e-status-msg'});
+        var spanTagText=$('<span/>',{'class':'e-status-text'});
+     if(esignStatus=='VERIFIED'){
+            spanTagIcon.addClass('est-verified');
+            spanTagText.html('Verified'); 
+            returnHtml.html(spanTagIcon);
+            returnHtml.append(spanTagText);
+        }
+        else if(esignStatus=='AWAITING_EMAIL_VERIFICATION')
+        {
+            spanTagIcon.addClass('est-awaiting');
+            spanTagText.html('Waiting for email verification'); 
+            returnHtml.html(spanTagIcon);
+            returnHtml.append(spanTagText);
+        }
+        else{
+             
+        }
+    }
+  return  returnHtml;
+}
+
+function getStatusColHTML(submissionStatus){
+    //<span class="e-status-msg est-verified"></span><span class="e-status-text">Verified</span>
+    var returnHtml=$('<span/>');
+    if(!isNullOrEmpty(submissionStatus)){
+        submissionStatus=submissionStatus.toUpperCase();
+        var spanTagIcon=$('<span/>',{'class':'status-msg'});
+        spanTagIcon.addClass('st-'+submissionStatus.toLowerCase().replace(" ","-"));
+        var spanTagText=$('<span/>',{'class':'status-msg-text','html':firstCharCapitalCase(submissionStatus)});
+        returnHtml.html(spanTagIcon);
+            returnHtml.append(spanTagText);
+      
+    }
+  return  returnHtml.html();
+}
+function populateFormSubmissionInfo(formSubmissionArr){
+    if(formSubmissionArr!=null && formSubmissionArr.length>0){
+        var mainTableElem=$('#oarContentTable');
+        $(mainTableElem).find('.oar-content-row').remove();
+        var relatedObjectMaxIndex=formSubmissionArr.length-1;
+        $.each(formSubmissionArr,function(indx,formSubmissionObj){
+
+        var recordUrlSpan=$('<span/>');
+     var recordUrl=safeStringValue(formSubmissionObj[SFOrgPrefix+"Record_Created_Updated__c"],"");
+     if(!isNullOrEmpty(recordUrl)){
+        //var sfHosturl=window.UserContext.salesforceURL;
+     recordUrlSpan.html($('<a/>',{ 'html':getTrimmedSTR(recordUrl,45,'...'),'target':'_blank','href':recordUrl}));
+     }
+         var oarTextSpan= $('<span/>',{'class':'oar-text'});
+      var contentRow=$('<div/>',{'class':'oar-content-row'});
+      var relatedObjectCountSuffix='tag';
+      if(indx==0 && relatedObjectMaxIndex>0){
+        relatedObjectCountSuffix='first';
+      }
+      else if(indx==relatedObjectMaxIndex && relatedObjectMaxIndex>0){
+        relatedObjectCountSuffix='last';
+      }
+      else if(indx==0 && relatedObjectMaxIndex==0){
+        relatedObjectCountSuffix='key';
+      }
+
+      var tdObjecName=$('<div/>',{'class':'oar-td f-obj obj-indx-'+relatedObjectCountSuffix});
+      oarTextSpan.html(safeStringValue(formSubmissionObj[SFOrgPrefix+"Object__c"],""));
+      tdObjecName.html(oarTextSpan);
+      contentRow.html(tdObjecName.clone().wrap('<p>').parent().html());
+      oarTextSpan.html('');
+      var tdStatus=$('<div/>',{'class':'oar-td f-status'});
+      var subStatusStr=formSubmissionObj[SFOrgPrefix+"Status__c"];
+      var submissionStatus=evaluateSubmissionStatusText(subStatusStr);
+      oarTextSpan.html(getStatusColHTML(submissionStatus));
+      tdStatus.html(oarTextSpan);
+      contentRow.append(tdStatus.clone().wrap('<p>').parent().html());
+       oarTextSpan.html('');
+      var tdMessage=$('<div/>',{'class':'oar-td f-msg'});
+      oarTextSpan.html(revaluateSubmissionMessage(subStatusStr,formSubmissionObj[SFOrgPrefix+"Details__c"],""));
+      tdMessage.html(oarTextSpan);
+      contentRow.append(tdMessage.clone().wrap('<p>').parent().html());
+       oarTextSpan.html('');
+      var tdRecord=$('<div/>',{'class':'oar-td f-rec'});
+      oarTextSpan.html(recordUrlSpan);
+      tdRecord.html(oarTextSpan);
+      contentRow.append(tdRecord.clone().wrap('<p>').parent().html());
+       oarTextSpan.html('');
+       contentRow.addClass(indx);
+      mainTableElem.append(contentRow);
+     });
+   if(formSubmissionArr[0][SFOrgPrefix+"Submission__r"]!==undefined){
+    var objectxml=safeStringValue(formSubmissionArr[0][SFOrgPrefix+"Submission__r"][SFOrgPrefix+"Objects_XML__c"],"");
+    if(!isNullOrEmpty(objectxml)){
+        resetObjectsDisplayname(mainTableElem,objectxml);
+    }
+   }
+
+    }
+}
+function resetObjectsDisplayname(elemTableParent,objectXml){
+    objectXml='<root>'+objectXml+'</root>';
+   var xmlDoc=   getXmlElementFromStr(objectXml);
+   var objectArr=[];
+   var objectElemList=  xmlDoc.getElementsByTagName('object');
+    $.each(objectElemList,function(indx,objectItem){
+   var objecttype=objectItem.getAttribute('type');
+   var childtext=objectItem.getAttribute('child');
+   if(isNullOrEmpty(childtext)){
+    childtext='';
+   }
+     var label=  firstElementByTagName(objectItem, "label", true);
+     if(!isNullOrEmpty(objecttype) && objecttype.toLowerCase()!='primary' ){
+            var relbl=  firstElementByTagName(objectItem, "relLabel", true);
+             if(!isNullOrEmpty(relbl)){
+                relbl=relbl.replace(" ID","");
+            if(childtext!=''){
+            label=label+' ('+relbl+')';    
+            }
+            else{
+                label=relbl+' ('+label+')';    
+            }
+          }
+            
+        }
+     var objorder=  firstElementByTagName(objectItem, "order", true);
+     objectArr.push({'label':label,'o':objorder,'c':childtext})
+     
+    });
+    if(objectArr!=null && objectArr.length>0){
+            objectArr.sort(function(a, b) {
+            return parseFloat(a.o) - parseFloat(b.o);
+             });
+    }
+    if(objectArr.length>0)
+    {
+        $(elemTableParent).find('.oar-content-row').each(function(indx,rowElem){
+            if(objectArr[indx]!==undefined){
+               $(rowElem).find('.f-obj .oar-text').html(getDisplayNameItem(objectArr[indx]));
+            }
+                   
+        });
+          
+    }
+}
+function getDisplayNameItem(objectItem){
+    var spanElem ;
+    if(objectItem!=null){
+ var childtext=objectItem["c"];
+        var objname=objectItem["label"];
+        var  liElemSpan = $('<span/>',{'class':'li-sitem','html':objname});
+       spanElem = $('<span/>',{'class':'d-item' });
+       spanElem.html(objname);
+     if(!isNullOrEmpty(childtext)){
+        spanElem.addClass(childtext);
+     }
+      
+ }
+ return spanElem;
+}
+ function evaluateSubmissionStatusText(status){
+    var statusText=status;
+     
+    if(!isNullOrEmpty(status)) {
+    switch (status.toUpperCase()) {
+                    
+                      case "NO_DATA":
+                    statusText='no data';
+                      break;
+                      case "VERIFIED":
+                      case "UPDATED":
+                      case "CREATED":
+                    statusText='successful';
+                      break;
+                      case "AWAITING_EMAIL_VERIFICATION":
+                    statusText='pending';
+                      break;
+                       case "DECLINED":
+                    statusText='declined';
+                      break; 
+                      break;
+                      default:
+                      statusText='failed';
+                      break;
+                  }
+}
+    return statusText;
+ }
+ function revaluateSubmissionMessage(status,message){
+var messageText=message;
+if(!isNullOrEmpty(status)) {
+    switch (status.toUpperCase()) {
+                    case "VERIFIED":
+                    messageText='Your email is verified successfully';
+                      break;
+                      case "NO_DATA":
+                    messageText='No data was submitted for this object';
+                      break;
+                      case "UPDATED":
+                    messageText='Record is updated successfully';
+                      break;
+                      case "CREATED":
+                    messageText='Record is created successfully';
+                      break;
+                       case "DECLINED":
+                    messageText='Submission is declined';
+                      break;
+                       case "AWAITING_EMAIL_VERIFICATION":
+                    messageText='Awaiting approval';
+                      break;
+                      default:
+                      break;
+                  }
+}
+return messageText;
+ }
+function toggleSubmissionTab(elemSource,triggerToggle){
+if($(elemSource).attr('id')=='fsdobjectsrecords'){
+    remoteGetFormSubmissionInfoListJS();
+}
+else if($(elemSource).attr('id')=='fsdformview'){
+    //
+    if($('.fsd-view-tabs li.active').hasClass('fsd-fcurrent-li')){
+        populateFormView('current');
+    }
+    else{
+        populateFormView('original');
+    }
+}
+else{
+    if(!isSubmittedValuesTabPopulated){
+        isSubmittedValuesTabPopulated=true;
+        disableResubmission();
+        //remoteGetAllObjectsAndFieldsJS();
+        remoteGetFormPagesObjectXMLListJS(false);
+    }
+//remoteGetFormPagesObjectXMLListJS();
+
+}
+if(triggerToggle){
+    $('.fsd-details-tabs li.fsd-details-tab').removeClass('active');
+    $('.fscontent-wrapper .fsd-details-content').removeClass('active');
+    
+    $(elemSource).parent().addClass('active');
+    var contentId=$(elemSource).attr('href');
+    $('.fscontent-wrapper').find(contentId+'').addClass('active');
+}
+}
+function disableResubmission(){
+    var msgstatus=$('#mainSubmissionDetailBox .fsd-rcol-2.col-status .fsd-value .status-msg-text').text();
+    if(!isNullOrEmpty(msgstatus)){
+        msgstatus=msgstatus.trim().toLowerCase();
+        if(msgstatus=='successful'){
+            $('#dvContentTable').addClass('pointerevents');
+            $('#dvUnmappedContentTable').addClass('pointerevents');
+            //$('#dvUnmappedContentTable .vabutton2').addClass('pointerevents'); 
+        }
+    }
+}
+function toggleFormViewTab(elemSource){
+   if($(elemSource).attr('id')=='fsdfcurrent'){
+     populateFormView('current');
+}
+else{
+    populateFormView('original');
+} 
+}
+function populateFormView(currentOrOriginal){
+    if(!isNullOrEmpty(currentOrOriginal))
+    {
+        remoteGetSubmissionInfoForFormViewJS(currentOrOriginal);
+    }
+}
+function populateFormViewPage(formSubmissionObjArr,currentOrOriginal){
+    if($('#'+currentOrOriginal+'FormiframeWrapper').find('iframe').length>0){
+        $('#'+currentOrOriginal+'FormiframeWrapper').find('iframe').fadeOut('fast',function(){
+                                    $(this).remove();
+                                });
+    }
+     submittedFieldsArr=[];
+    
+    var hostedFormId='';
+    var userContentId='';
+    var formPayload='';
+    var formpayloaddata=new FormData;
+    var documentIdsData='';
+    var generalFieldSubmittedData='';
+    if(formSubmissionObjArr!=null && formSubmissionObjArr.length>0){
+        if(formSubmissionObjArr[0][SFOrgPrefix+"Form__r"]!==undefined){
+          hostedFormId= formSubmissionObjArr[0][SFOrgPrefix+"Form__r"][SFOrgPrefix+"Hosted_Form_ID__c"]+'';
+          
+      }
+      if(formSubmissionObjArr[0][SFOrgPrefix+"Submission__r"]!==undefined){
+        generalFieldSubmittedData=safeStringValue(formSubmissionObjArr[0][SFOrgPrefix+"Submission__r"][SFOrgPrefix+"Submitted_Data_XML__c"],'');
+          generalFieldSubmittedData+=safeStringValue(formSubmissionObjArr[0][SFOrgPrefix+"Submission__r"][SFOrgPrefix+"Submitted_Data_XML2__c"],'');
+          generalFieldSubmittedData+=safeStringValue(formSubmissionObjArr[0][SFOrgPrefix+"Submission__r"][SFOrgPrefix+"Submitted_Data_XML3__c"],'');
+          documentIdsData=safeStringValue(formSubmissionObjArr[0][SFOrgPrefix+"Submission__r"][SFOrgPrefix+"Document_Ids__c"],'');
+      }
+      var xmlDocGeneral=   getXmlElementFromStr($('<div/>').html(generalFieldSubmittedData).text());
+      var documentIdsXML=   getXmlElementFromStr('<root>'+$('<div/>').html(documentIdsData).text()+'</root>');
+      
+           userContentId=       formSubmissionObjArr[0][SFOrgPrefix+"User_Content_ID__c"]+'';
+            $.each(formSubmissionObjArr,function(indx,formSubmissionObj){
+                var primaryObject= safeStringValue(formSubmissionObj[SFOrgPrefix+"Submission__r"][SFOrgPrefix+"Primary_Object__c"],"");
+   var childObjectLetter= safeStringValue(formSubmissionObj[SFOrgPrefix+"Child_Object_Letter__c"],"");
+   var repeatIndex= safeInt(formSubmissionObj[SFOrgPrefix+"Repeat_Index__c"],0);
+   var objectName= safeStringValue(formSubmissionObj[SFOrgPrefix+"Object__c"],"");
+   var relatedFieldname=safeStringValue(formSubmissionObj[SFOrgPrefix+"Related_Field_Name__c"],"");
+                if(!isNullOrEmpty(relatedFieldname)){
+    var reffieldid=primaryObject+'.'+relatedFieldname;
+    if(!isNullOrEmpty(childObjectLetter)){
+        reffieldid=primaryObject+'.'+objectName+'.'+childObjectLetter+'.'+relatedFieldname;
+        if(repeatIndex>=1){
+            reffieldid=primaryObject+'.'+objectName+'.'+childObjectLetter+'_'+repeatIndex+'_.'+relatedFieldname;
+        } 
+    }
+    if(!isNullOrEmpty(reffieldid)){
+                referenceFieldsArr.push(reffieldid);
+            }
+   }
+            });
+    $.each(formSubmissionObjArr,function(indx,formSubmissionObj){
+var submittedData=formSubmissionObj[SFOrgPrefix+'Submitted_Data_XML__c'];
+//var submittedData=formSubmissionObj[SFOrgPrefix+'Submitted_Data_XML__c'];
+     if(!isNullOrEmpty(submittedData)){
+  var  xmlstr= $('<div/>').html(submittedData).text();
+    //xmlstr='<ffroot>'+xmlstr+'</ffroot>';
+   var xmlDoc=   getXmlElementFromStr(xmlstr);
+   var primaryObject= safeStringValue(formSubmissionObj[SFOrgPrefix+"Submission__r"][SFOrgPrefix+"Primary_Object__c"],"");
+   var childObjectLetter= safeStringValue(formSubmissionObj[SFOrgPrefix+"Child_Object_Letter__c"],"");
+   var repeatIndex= safeInt(formSubmissionObj[SFOrgPrefix+"Repeat_Index__c"],0);
+   var relatedObjectType= safeStringValue(formSubmissionObj[SFOrgPrefix+"Object__c"],"");
+   if(isNullOrEmpty(primaryObject)){
+    primaryObject=safeStringValue(formSubmissionObj[SFOrgPrefix+"Object__c"],"");
+   }
+   var relName='';
+   if(!isNullOrEmpty(childObjectLetter)){
+     if(repeatIndex>0){
+        repeatedObjectsArr.push({'child':childObjectLetter,'rindex':repeatIndex});
+    childObjectLetter=childObjectLetter+'_'+repeatIndex+'_.';
+    
+    }else{
+        childObjectLetter=childObjectLetter+'.';
+    }
+   }
+   else if(indx>0){
+    relatedObjectType=safeStringValue(formSubmissionObj[SFOrgPrefix+"Related_Field_Name__c"],"");
+    relName=relatedObjectType;
+   }
+   
+   
+   if(!isNullOrEmpty(relatedObjectType)){
+    relatedObjectType=relatedObjectType+'.';
+   }
+   var objectArr=[];
+   
+   if(xmlDoc.hasChildNodes()){ 
+     var objPrefix='';
+    objectArr= getNameValuePairList(xmlDoc.childNodes[0]);
+    $.each(objectArr,function(childindx,childnode){
+           if(childnode.name!=='fieldsToNull'){
+            var fieldId=primaryObject+'.'+childnode.name;
+            if(indx>0){                
+                fieldId=primaryObject+'.'+relatedObjectType+childObjectLetter+childnode.name;                
+            }
+            var fieldValue=childnode.val;
+            if($.inArray( fieldId, referenceFieldsArr )<0){
+            submittedFieldsArr.push({'id':fieldId,'val':fieldValue});
+            }
+            fieldValue=encodeURIComponent(fieldValue);
+            console.log('FieldId-- '+fieldId+' FiledValue--'+fieldValue);
+            formpayloaddata.append(fieldId,encodeURIComponent(fieldValue));
+            if(!isNullOrEmpty(formPayload)){
+
+                formPayload+='&'+fieldId+'='+fieldValue;
+            }
+            else{
+                formPayload=fieldId+'='+fieldValue;
+            }
+          }
+             
+        });
+   }
+     
+    }
+    });
+    /*E-Sign*/
+    var objectGeneralArr=[];
+      if(xmlDocGeneral.hasChildNodes()){ 
+     var objPrefix='';
+    objectGeneralArr= getNameValuePairList(xmlDocGeneral.childNodes[0]);
+    $.each(objectGeneralArr,function(childindx,childnode){
+           if(childnode.name.indexOf('sign')==0){ 
+            console.log('FieldId-- '+childnode.name+' FiledValue--'+childnode.val);
+            formpayloaddata.append(childnode.name,encodeURIComponent(childnode.val));
+           }
+       });
+     }
+     if(documentIdsXML.hasChildNodes()){
+      var fileArr=  documentIdsXML.getElementsByTagName('file');
+      if(fileArr!==undefined && fileArr!=null && fileArr.length>0){
+        $.each(fileArr,function(indx,fileItem){
+            var filetype=getInnerHTML(fileItem.getElementsByTagName('type')[0]);
+           if(!isNullOrEmpty(filetype) && filetype=='ESIGNATURE'){
+            var fileid=getInnerHTML(fileItem.getElementsByTagName('id')[0]);
+            var filefieldid=getInnerHTML(fileItem.getElementsByTagName('refId')[0]);
+            if(!isNullOrEmpty(filefieldid) && !isNullOrEmpty(fileid)){
+            formpayloaddata.append(filefieldid,fileid);
+             }
+           }
+        });
+      }
+     }
+    /*E-Sign*/
+    }
+    var isPostDataValid=false;
+   try{
+    for (var value of formpayloaddata.values()) {
+   isPostDataValid=true;break ;
+}}catch(err){}
+    if(!isNullOrEmpty(hostedFormId)){
+        if(isFormNative){
+            var url='https://'+window.location.hostname+'/apex/'+SFOrgPrefix+'SubmissionPreview?h='+hostedFormId+'&ucId='+userContentId+'&ft='+currentOrOriginal;
+            
+            $.ajax({
+                global: false,
+                type: "POST",
+                crossDomain: true,
+                url: url,
+                data: isPostDataValid?formpayloaddata:'',
+                contentType:false,
+                mimeType: "multipart/form-data", 
+                
+                processData: false,
+                success: function (data) {
+                  //  console.log(' data-posted: '+data);
+                     if(data!=null   )
+                        {
+                            hideFFNotification('errorActionBox'); 
+                        var responseBody=data;
+                        var responseHTML=$('<div/>');
+                    if(!isNullOrEmpty(responseBody) && responseBody.indexOf('VA error--')!=0){
+                        var iframeid=currentOrOriginal+'FormiframeWrapper';
+                      iframeid=iframeid.replace('Wrapper','');
+                      var targetElem=$("#"+currentOrOriginal+'FormiframeWrapper');
+                        
+                      targetElem.find('iframe').remove();
+                     var iframe =  $('<iframe />', { id:   iframeid }).appendTo(targetElem);
+                    iframe=$(iframe)[0] ;
+                    iframe = (iframe.contentWindow) ? iframe.contentWindow : (iframe.contentDocument.document) ? iframe.contentDocument.document : iframe.contentDocument;
+                   iframe.src  = "about:blank";
+                   iframe.document.open();
+
+                    iframe.document.close();
+                    iframe.document.open();
+                    iframe.document.write(responseBody);
+                    iframe.document.close(); 
+                    callToResetFormViewInnerTabs();
+               
+                     }
+                     else if(!isNullOrEmpty(responseBody)){
+                        var errorMessage=responseBody.replace('VA error--','');
+                        showFFErrorMessage(errorMessage);
+                     }
+                     else{
+                        showFFErrorMessage('Something went wrong. Please try again.');
+                     }
+
+                        }
+                        else
+                        {
+                            console.log(' result is null'+result);
+                             
+                        }
+                        toggleFormViewLoadingDiv(false);
+
+                },
+                error: function (request, status, error) {
+                    console.log(' data-posted error: '+error);
+                    toggleFormViewLoadingDiv(false);
+
+                }
+            });
+        }else{
+            var formurl = fastFormBaseURL+''+hostedFormId+'?ucId='+userContentId+'&ft='+currentOrOriginal;
+            remoteFastFormsPostJS(formPayload,formurl,currentOrOriginal+'FormiframeWrapper');
+        }
+    }
+    else{
+        toggleFormViewLoadingDiv(false);
+        showFFErrorMessage('Related Form is not found');
+    }
+}
+function getNameValuePairList(elementNode){
+    var data=[];
+ if(elementNode.nodeType===1){
+    if(elementNode.hasChildNodes()){
+        $.each(elementNode.childNodes,function(indx,childnode){
+            $.merge(data,getNameValuePairList(childnode));
+        });
+    }
+ }
+ else if(elementNode.nodeType===3){
+     var textvalue=elementNode.nodeValue;
+    var fieldName=elementNode.parentNode.nodeName;
+    data.push(createNameValuePairObj(fieldName,textvalue));
+     
+ }
+ return data;
+}
+ 
+function createNameValuePairObj(name,val){
+var dataObj={'name':name,'val':val};
+return dataObj;
+}
+ 
+ 
+function remoteFastFormsPostJS(dataPayLoad,url,target){
+     
+         if(!isNullOrEmpty(url)){
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteFastFormsPost)}',url,dataPayLoad,
+                function(result, event) { 
+                    
+                      if (event.status) {
+                        toggleFormViewLoadingDiv(false);
+                        /*console.log(' Success-'+result);*/
+                        if(result!=null   )
+                        {
+                            hideFFNotification('errorActionBox'); 
+                        var responseBody=result;
+                        var responseHTML=$('<div/>');
+                    if(!isNullOrEmpty(responseBody) && responseBody.indexOf('VA error--')!=0){
+                        var iframeid=target;
+                      iframeid=iframeid.replace('Wrapper','');
+                      var targetElem=$("#"+target);
+                       /* if(isFormNative){
+                           // responseBody
+                           targetElem.html(responseBody);
+                           //responseHTML.html(responseBody);
+                           $.each(dataPayLoad,function(indx,dataItem){
+                            var fieldId=dataItem.id.replace(/\./g,'\\.');
+                            console.log('Native fieldId:'+fieldId+' value-'+dataItem.val);
+                            //responseHTML.find('#'+fieldId).val(dataItem.val);
+                            $(targetElem).find('#dvBannerHTML').find('#'+fieldId).val(dataItem.val);
+                            console.log('Native Vsl:'+$(targetElem).find('#dvBannerHTML').find('#'+fieldId).val());
+                            });
+                        //  responseBody= responseHTML.html();
+                        }else{
+                      */
+                      targetElem.find('iframe').remove();
+                     var iframe =  $('<iframe />', { id:   iframeid }).appendTo(targetElem);//document.getElementById(target);
+                    iframe=$(iframe)[0] ;
+                    iframe = (iframe.contentWindow) ? iframe.contentWindow : (iframe.contentDocument.document) ? iframe.contentDocument.document : iframe.contentDocument;
+                   iframe.src  = "about:blank";
+                   iframe.document.open();
+
+                    iframe.document.close();
+                    iframe.document.open();
+                    iframe.document.write(responseBody);
+                    iframe.document.close(); 
+                    callToResetFormViewInnerTabs();
+                 // }
+                     }
+                     else if(!isNullOrEmpty(responseBody)){
+                        var errorMessage=responseBody.replace('VA error--','');
+                        showFFErrorMessage(errorMessage);
+                     }
+                     else{
+                        showFFErrorMessage('Something went wrong. Please try again.');
+                     }
+
+                        }
+                        else
+                        {
+                            console.log(' result is null'+result);
+                             
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('Request took longer then expected. Please try again.');
+                         toggleFormViewLoadingDiv(false);
+                      }
+                   
+                },
+                { buffer: false, escape: false, timeout: 60000 }
+            );
+    }
+}
+function callToResetFormViewInnerTabs(){
+
+    if(!isCurrentFormFlagSet){
+   currentFlagInterval=  setInterval(resetFormViewInnerTabs, 3000);
+    }
+    else{
+       console.log(' CurrentForm flag is set to true');   
+    }
+}
+function resetFormViewInnerTabs(){
+    if(isCurrentFormFlagSet){
+        
+         clearInterval(currentFlagInterval);
+       }
+       else{
+    try{
+var currentFormIdElem=$("#currentFormiframe").contents().find("#isCurrentForm");
+if($(currentFormIdElem)!==undefined && $(currentFormIdElem).length>0){
+    //$('.fastformiframeWrapper').jScrollPane({mouseWheelSpeed: 100 });
+   var isCurrent=getSafeBoolean($(currentFormIdElem).val(),false);
+   isCurrentFormFlagSet=true;
+   if(isCurrent){
+      console.log(' isCurrent---'+isCurrent);
+   }else{
+    $('.form-view-nav-wrapper').slideDown();
+    console.log('Not isCurrent---'+isCurrent);
+   }
+}
+}
+catch(err){
+console.log(' Error---'+err.message);
+}
+}
+}
+function remoteResubmitNativeModifiedFormJS(dataPayLoad){
+     
+         if(dataPayLoad!==undefined && dataPayLoad!=null){
+            toggleDataViewLoadingDiv(true,'Resubmitting...');
+
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteResubmitNativeModifiedForm)}',submissionRecID,dataPayLoad,
+                function(result, event) { 
+                    toggleDVActionButtons(false);
+                      if (event.status) {
+                        toggleDataViewLoadingDiv(false,'');
+                        //if(!isNullOrEmpty(result) && result.indexOf('VA error--')!=0){
+                        if(result!=null && result.IsValid )
+                        {
+                             window.location.reload();      
+                        }
+                        else
+                        {
+                           showFFErrorMessage('Sorry couldn\'t update the record. Please try again.');
+                           revertConfirmedCallback(false);
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('Request took longer then expected. Please try again.');
+                         toggleDataViewLoadingDiv(false,'');
+                      }
+                   
+                },
+                { buffer: false, escape: false, timeout: 60000 }
+            );
+    }
+}
+function remotePostToResubmitModifiedFormJS(dataPayLoad,url){
+     
+         if(!isNullOrEmpty(url)){
+            toggleDataViewLoadingDiv(true,'Resubmitting...');
+
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.SubmissionDetailController.remoteFastFormsPost)}',url,dataPayLoad,
+                function(result, event) { 
+                    toggleDVActionButtons(false);
+                      if (event.status) {
+                        toggleDataViewLoadingDiv(false,'');
+                        //if(!isNullOrEmpty(result) && result.indexOf('VA error--')!=0){
+                        if(!isNullOrEmpty(result) && result.indexOf('VA error--')!=0 )
+                        {
+                            hideFFNotification('errorActionBox'); 
+                      try{
+                     var responseArr= JSON.parse(result);
+                     var isErrorSFType=false;    
+                     var errormessagetext='';
+                            var isSuccessful=true;
+                            if(responseArr!=null && responseArr.length>0){
+                     if(responseArr[0].errList!=null && responseArr[0].errList.length>0){
+                                isSuccessful=false;
+                                 
+                                $.each(responseArr[0].errList,function(idx,errObj){
+                                    if(errObj.type+''=='SF'){
+                                        isErrorSFType=true;
+                                    }
+                                     errormessagetext+=''+errObj.errorMessage;
+                                  
+                               });
+                                 }
+                                }
+                                if(isSuccessful){
+
+                                    //showFFSuccessMessage('Record is resubmitted successfully in Salesforce.');
+                                     window.location.reload();
+                                }
+                                else{
+                                    showFFErrorMessage('Sorry couldn\'t update the record. Please try again.');
+                                if(isErrorSFType){
+                                    console.log('SF type error:'+errormessagetext);
+                                } 
+                                else{
+                                    console.log('General Error: '+errormessagetext);
+                                }
+                                revertConfirmedCallback(false);                                   
+                                }
+                            }
+                            catch(err){
+                                console.log('Response Error: '+err.message);
+                             //   showFFErrorMessage('Something went wrong. Please try again or contact Fast Forms Support team.');
+                                revertConfirmedCallback(false);
+                            }
+      
+                        }
+                        else
+                        {
+                            console.log(' result is null'+result); 
+                              //showFFErrorMessage('Something went wrong. Please try again.');
+                              revertConfirmedCallback(false);
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                         showFFErrorMessage('Request took longer then expected. Please try again.');
+                         toggleDataViewLoadingDiv(false,'');
+                      }
+                   
+                },
+                { buffer: false, escape: false, timeout: 60000 }
+            );
+    }
+}
+function populateSelectElementForAvailableFields(dvModelList){
+    //availableFieldsArr
+    var selectHTML='';
+    var pname='';
+    var selectElem=$('<select/>');
+    selectElem.html($('<option/>',{'value':''}).html('--select an item--'));
+    $.each(dvModelList, function(index, objectItem) {
+                         var optgrptitle='';
+                         var childColor='';
+                          
+                         if(objectItem["oType"]=='primary'){
+                          pname=objectItem["oName"]+'.';
+                          optgrptitle=safeStringValue(objectItem["oLabel"],"");
+                         }
+                         else{
+                            if(objectItem["oType"]=='lookup'){
+                                optgrptitle=safeStringValue(objectItem["oRelLabel"],"")+' ('+safeStringValue(objectItem["oLabel"],"")+')';
+                            }else{
+                                childColor=safeStringValue(objectItem["oChildColor"],"");
+                                 optgrptitle=safeStringValue(objectItem["oLabel"],"")+' ('+safeStringValue(objectItem["oRelLabel"],"")+')';
+                            }
+                            
+                         }
+                         
+                         optgrptitle='Fields for '+optgrptitle;
+                         var optgroupElem=$('<optgroup/>',{'class':'FieldOption','label':optgrptitle});
+                         var isRepeat=false;
+                         if(!isNullOrEmpty(childColor)){
+                         optgroupElem.addClass(childColor);
+                          }
+                         if(getSafeBoolean(objectItem["oIsRepeat"],false)){
+                            isRepeat=true;
+                         }
+                         var fieldList=[];
+                         fieldList=objectItem["fieldModelList"];
+                         if(fieldList!=null && fieldList.length>0){
+                            console.log('FIELDLIST - '+objectItem["oName"]+': '+fieldList.length);
+                         $.each(fieldList, function(fieldIndex, fieldItem) {
+                            var fieldRelId=pname+safeStringValue(fieldItem["fAPIName"],"");
+                           var fieldId=fieldRelId;
+                            var type=safeStringValue(fieldItem["fType"],"");
+                            var isReq=getSafeBoolean(fieldItem["fIsRequired"],false);
+
+                             var optionElem=$('<option/>',{'class':'fielditem','name':'field-item','data-type':type,'data-isreq':isReq});
+                             if(isReq){
+                                $(optionElem).addClass('is-req');
+                             }
+                             var label=safeStringValue(fieldItem["fLabel"],"") ; 
+                             if(!isNullOrEmpty(label)){
+                                label=label.replace(' ID','');
+                             }
+                              var fieldIdasArr=fieldId.split('.');
+                             if(fieldIdasArr.length===4 && isRepeat){
+
+                           // fieldId=fieldIdasArr[0]+'.'+fieldIdasArr[1]+'.'+fieldIdasArr[2]+'_1_.'+fieldIdasArr[3];
+                            $(optionElem).text(label+' ('+fieldIdasArr[2].split('_')[1]+')');
+                            }else{
+                              $(optionElem).text(label);  
+                            }
+                             $(optionElem).val(fieldId);                             
+                                                       
+                           optgroupElem.append(optionElem);
+                         /*  if(fieldRelId.split('.').length==4){
+                             $.each(repeatedObjectsArr, function(indx, childObject) {
+                             if(childObject['rindex']>1){   
+                             var repeatIndex=childObject['rindex'];
+                             var childLetter=childObject['child'];                 
+                                
+                                var fieldIdasArr=fieldRelId.split('.');
+                                if(childLetter==fieldIdasArr[2] && isRepeat && fieldIdasArr[2].length<=2){                           
+                                 fieldRelId=fieldIdasArr[0]+'.'+fieldIdasArr[1]+'.'+fieldIdasArr[2]+'_'+repeatIndex+'_.'+fieldIdasArr[3];
+                                 var optionElemTemp=$('<option/>',{'class':'fielditem','name':'field-item','data-type':type,'data-isreq':isReq});
+                             if(isReq){
+                                $(optionElemTemp).addClass('is-req');
+                             }
+                                 $(optionElemTemp).val(fieldRelId);                      
+                             $(optionElemTemp).text(label+' ('+repeatIndex+')');   
+                             console.log('fieldRelId::'+fieldRelId);                       
+                           optgroupElem.append(optionElemTemp);
+                                }
+                            
+                               }
+                             });
+                            }*/
+                         });
+                       }
+                       selectElem.append(optgroupElem);
+                    });
+ 
+  $('.select-available-fields').empty();
+  $('.select-available-fields').append(selectElem.html());
+  
+}
+function updateFieldItemRow(elemSource,fieldId,fieldValue,isFieldRequired,resetUnmappedPlaceHolder){
+    var currentContentRow=$('#dvContentTable').find('.dv-content-row[data-fieldid="'+fieldId+'"]');
+    if($(currentContentRow)!=null && $(currentContentRow).length>0){
+         $(currentContentRow).addClass('updated-mapped');
+         $(currentContentRow).find('.f-fieldname .ff-required').remove();
+         if(isFieldRequired){
+        $(currentContentRow).find('.f-fieldname .dv-text').append($('<span/>',{'class':'ff-required','html':'*'}));
+      }
+         $(currentContentRow).find('.f-values input,.f-values textarea').val(fieldValue);
+        }
+        isSubmittedDataChanged = true; 
+      if(resetUnmappedPlaceHolder){
+        $('.unmapped-placeholder').slideUp(200,'linear',function(){
+            $(this).find('.fscontent-table').remove();
+        });
+      }
+    }
+function appendFieldItemRow(elemSource,fieldId,fieldText,fieldValue,fieldDataType,isFieldRequired,resetUnmappedPlaceHolder){
+    var mainTableElem=$('#dvContentTable');
+ var fieldType=safeStringValue(fieldDataType,"") ; 
+ var fieldlabel=safeStringValue(fieldText,"") ; 
+var isRequired= isFieldRequired;
+       
+         var oarTextSpan= $('<span/>',{'class':'dv-text'});
+      var contentRow=$('<div/>',{'class':'dv-content-row','data-fieldid':fieldId});
+      oarTextSpan.html($('<label/>',{'class':'ff-label',html:fieldlabel}));
+      if(isRequired){
+        oarTextSpan.append($('<span/>',{'class':'ff-required','html':'*'}));
+      }
+      var tdObjecName=$('<div/>',{'class':'dv-td f-fieldname' });
+       
+      tdObjecName.html(oarTextSpan);
+      contentRow.html(tdObjecName.clone().wrap('<p>').parent().html());
+       
+      var tdapiname=$('<div/>',{'class':'dv-td f-apiname'});
+      oarTextSpan.html(fieldId);
+      tdapiname.html(oarTextSpan);
+      contentRow.append(tdapiname.clone().wrap('<p>').parent().html());
+       
+      var tdIcon=$('<div/>',{'class':'dv-td f-icons'});
+      oarTextSpan.html($('<span/>',{'class':'field-icon ic-'+fieldType.toLowerCase(),html:'txt'}));
+      tdIcon.html(oarTextSpan);
+      contentRow.append(tdIcon.clone().wrap('<p>').parent().html());
+       
+      var tdInputElement=$('<div/>',{'class':'dv-td f-values'});
+      if(fieldType.toLowerCase()=='textarea'){
+        oarTextSpan.html($('<textarea/>',{'class':'ff-input-textarea','data-isrequired':isRequired,'id':fieldId,'onblur':'submittedValueChange(this);'}));
+      }else{
+      oarTextSpan.html($('<input/>',{'class':'ff-input-text','data-isrequired':isRequired,'id':fieldId,'onblur':'submittedValueChange(this);'}));
+      }
+      tdInputElement.html(oarTextSpan);
+      tdInputElement.find('input,textarea').attr('value',fieldValue);
+      contentRow.append(tdInputElement.clone().wrap('<p>').parent().html());
+        
+     
+      //mainTableElem.append(contentRow);
+      $(contentRow).appendTo(mainTableElem);
+      //$(contentRow).addClass('highlighted').stop().delay(2000).queue(function(){$(this).removeClass('highlighted');});
+      $(contentRow).addClass('added-unmapped');
+     // $(contentRow).removeClass('highlighted');
+       isSubmittedDataChanged = true; 
+      if(resetUnmappedPlaceHolder){
+        $('.unmapped-placeholder').slideUp(200,'linear',function(){
+            $(this).find('.fscontent-table').remove();
+        });
+      }
+}
+ function showMappingOptions(elemSource){
+    var parentElem=$(elemSource).parents('.mapping-wrapper');
+   $(parentElem).find('.mapBox').slideUp(200,'linear',function(){
+    $(parentElem).find('.addBox').slideDown();
+   $(parentElem).find('.addBox select').select2({  formatResult: function(item) { 
+   var classname=safeStringValue(item.css ,'');
+        if(classname.indexOf('is-req')>=0){
+             return item.text+'<span class="is-3r">*</span>';
+        }
+        return item.text ;
+    }
+   });
+   });
+ }
+function deletUnmappedField(elemSource){
+    var parentElem=$(elemSource).parents('.mapping-wrapper');
+$(parentElem).find('.mapBox').hide("drop", { direction: "left" }, 200,function(){
+    $(parentElem).html('<i>discarded</i>');
+    $(parentElem).parents('.dv-content-row').addClass('fs-discarded');
+    isSubmittedDataChanged = true; 
+});
+
+}
+function onUnmappedFieldChange(elemSource){
+    var datatype=safeStringValue($(elemSource).find('option:selected').attr('data-type'),'string');
+    var iconElem=$(elemSource).parents('.dv-content-row').find('.f-icons .field-icon');
+    $(iconElem).removeAttr('class');
+    $(iconElem).addClass('field-icon');
+    $(iconElem).addClass('ic-'+datatype.toLowerCase());
+}
+    function addUnmappedField(elemSource){
+ var parentElem=$(elemSource).parents('.mapping-wrapper');
+ var existAlready=false;
+      var selectedFieldId=  $(parentElem).find('.addBox select.select-available-fields').select2('val');
+      var selectFieldText=$(parentElem).find('.addBox select.select-available-fields').select2('data').text;
+      var selectedFieldType=$(parentElem).find('.addBox select.select-available-fields option:selected').attr('data-type');
+      var existingFieldsArr=[];
+      var valueForField=$(parentElem).parents('.dv-content-row').find('.f-values input,.f-values textarea').val();
+      var isFieldRequired=getSafeBoolean($(parentElem).find('.addBox select.select-available-fields option:selected').attr('data-isreq'),false);
+      var existingFieldsElemArr=$('#dvContentTable').find('.f-apiname .dv-text');
+      $.each(existingFieldsElemArr,function(indx,elem){
+        existingFieldsArr.push($(elem).text());
+      });
+      if($.inArray( selectedFieldId, existingFieldsArr )>=0){
+        existAlready=true;
+      }
+      if(existAlready){
+        var divDialogMain=getAlertDialogBodyElem('Selected API Name field already have a value in it. Proceeding will overwrite existing value with value from unmapped field. Would you like to continue?','');  
+                // Define the Dialog and its properties.
+                divDialogMain.dialog({
+                    resizable: false,
+                    modal: true,
+                    title: "Save",
+                    height: "auto",
+                    width: 413,
+                    buttons:  {                        
+                        "Yes":{
+                            click: function () {
+                                $(this).dialog('close'); 
+                                if(!isNullOrEmpty(selectedFieldId)){
+                                    var resetUnmappedTable=false;
+                if($('.unmapped-placeholder').find('.dv-content-row').length<=1){
+                    resetUnmappedTable=true;
+                }
+                                $(elemSource).parents('.dv-content-row').fadeOut('fast',function(){
+                                    $(this).remove();
+                                });
+                                updateFieldItemRow(elemSource,selectedFieldId,valueForField,isFieldRequired,resetUnmappedTable);
+                                }
+                            },
+                            text: 'Map anyway',
+                            'class': 'vabutton1'
+                        },
+                        "No":{
+                            click: function () {
+                                $(this).dialog('close'); 
+                            },
+                            text: 'Cancel',
+                            'class': 'vabutton2'
+                        }                         
+                    },
+                                                                                    
+                    open: function( event, ui ) {
+                        $('.ui-dialog :button').blur();
+                    }
+                });
+        }
+        else
+        {
+            if(!isNullOrEmpty(selectedFieldId)){
+                $(elemSource).parents('.dv-content-row').fadeOut('fast',function(){
+                    $(this).remove();
+                });
+                var resetUnmappedTable=false;
+                if($('.unmapped-placeholder').find('.dv-content-row').length<=1){
+                    resetUnmappedTable=true;
+                }
+            appendFieldItemRow(elemSource,selectedFieldId,selectFieldText,valueForField,selectedFieldType,isFieldRequired,resetUnmappedTable);
+            }
+        }
+}
+function cancelUnmappedField(elemSource){
+var parentElem=$(elemSource).parents('.mapping-wrapper');
+   $(parentElem).find('.addBox').slideUp(200,'linear',function(){
+    $(parentElem).find('.mapBox').slideDown();
+   $(parentElem).find('.addBox div.select-elem').remove();
+   $(parentElem).find('.addBox select.select-elem').val('');
+   });
+}
+
+function saveAndResubmitSubmission(elemSource){
+     if(!$(elemSource).hasClass('va-disabled')){
+        if(isFormNative){
+          var formPayload=  getCurrentDataViewPayloadObjectMap();
+           toggleDVActionButtons(false);
+          remoteResubmitNativeModifiedFormJS(formPayload);
+        }else{
+        var userContentId=$('#mainSubmissionDetailBox .fsd-detail-row .fsd-rcol-1.col-id').attr('data-ucid');
+        var url=fastFormBaseFormEngineURL+'RetrySaveContent?ucIds='+userContentId+'&orgId='+organisationId+'&isModified=true';
+        var formPayload=getCurrentDataViewPayload();
+        toggleDVActionButtons(false);
+        remotePostToResubmitModifiedFormJS(formPayload,url);
+       }
+      }
+}
+
+ function revertChanges(elemSource){
+    if(!$(elemSource).hasClass('va-disabled')){
+        var divDialogMain=getAlertDialogBodyElem('Are you sure you want to discard all of your changes and revert to original values','');  
+                // Define the Dialog and its properties.
+                divDialogMain.dialog({
+                    resizable: false,
+                    modal: true,
+                    title: "Save",
+                    height: "auto",
+                    width: 413,
+                    buttons:  {                        
+                        "Yes":{
+                            click: function () {
+                                $(this).dialog('close'); 
+                              revertConfirmedCallback(true);
+                            },
+                            text: 'Proceed',
+                            'class': 'vabutton1'
+                        },
+                        "No":{
+                            click: function () {
+                                $(this).dialog('close'); 
+                            },
+                            text: 'Cancel',
+                            'class': 'vabutton2'
+                        }                         
+                    },
+                                                                                    
+                    open: function( event, ui ) {
+                        $('.ui-dialog :button').blur();
+                    }
+                });
+    
+   }
+ }
+
+function showErrorDetailMessage(elem,message){
+                   
+                  if(isNullOrEmpty(message))
+                  {
+                    message='Something went wrong please contact Fast Forms support team';
+                  }
+                  showFFNotificationElem(elem, message);
+       }
+       function submittedValueChange(elemSource)
+       {
+         isSubmittedDataChanged=true;
+       }
+       function changeValueTriggered(){
+            if (isSubmittedDataChanged) { 
+                isSubmittedDataChanged = false;    
+                toggleChangeNotification(true); 
+                toggleDVActionButtons(true);
+              }   
+        }
+        function toggleChangeNotification(show){
+            var submitChangeElem=$('#fsddataview .submit-change');
+            if(show){
+                $(submitChangeElem).fadeIn();
+            }
+            else{
+                $(submitChangeElem).fadeOut();
+            }
+        }
+        function toggleDVActionButtons(enable){
+             if(enable){
+            $('.dv-action-buttons').find('.vabutton1,.vabutton2').removeClass('va-disabled');
+        }else{
+            $('.dv-action-buttons').find('.vabutton1,.vabutton2').addClass('va-disabled');
+        }
+        }
+
+        function revertConfirmedCallback(resourceIsReset){
+            isCallBackResourceReset=resourceIsReset;
+            isSubmittedDataChanged = false; 
+    toggleChangeNotification(false);  
+    toggleDVActionButtons(false); 
+    // remoteGetAllObjectsAndFieldsJS();
+    remoteGetFormPagesObjectXMLListJS(true);
+        }
+        function getAlertDialogBodyElem(primaryMessage,secondaryMessage){
+             var divDialogMain=$('<div />'); 
+//var primaryMessage='Are you sure you want to discard all of your changes and revert to original values';
+  var dialogBody="<div class='dialogHeader'></div><div class='dialogHeaderInner'><div class='dialogIcon dialogIconAlert'>&nbsp;</div></div><div class='dialogFont'><div class='primary'>"+primaryMessage+"</div><div class='secondary'>"+secondaryMessage+"</div></div>";
+  divDialogMain.html(dialogBody);
+  return divDialogMain;
+        }
+        function getCurrentDataViewPayload(){
+    var   formPayload='';
+     
+    var counter=0;
+ $('#dvContentTable .dv-content-row').each(function(indx,contentRow){
+ var fieldId=$(contentRow).find('.f-apiname .dv-text').text();
+ 
+           if(!isNullOrEmpty(fieldId)){
+
+            var fieldValue=safeStringValue($(contentRow).find('.f-values input,.f-values textarea').val(),'');
+            fieldValue=encodeURIComponent(fieldValue);
+            if(counter>0){
+
+                formPayload+='&'+fieldId+'='+fieldValue;
+            }
+            else{
+                formPayload=fieldId+'='+fieldValue;
+            }
+            counter++;
+          }
+             
+        });
+ return formPayload;
+}
+function getCurrentDataViewPayloadObjectMap(){
+    var formPayload={};
+   
+ $('#dvContentTable .dv-content-row').each(function(indx,contentRow){
+ var fieldId=$(contentRow).find('.f-apiname .dv-text').text();
+ 
+           if(!isNullOrEmpty(fieldId)){
+
+            var fieldValue=safeStringValue($(contentRow).find('.f-values input,.f-values textarea').val(),'');
+            fieldValue=encodeURIComponent(fieldValue);
+           // var data={};
+            formPayload[fieldId]=fieldValue;
+            //formPayload.push(data);
+            
+          }
+             
+        });
+ return formPayload;
+}
+    </script>
+  <!-- End Default Content  -->
+<script type="text/javascript">
+  var _mfq = _mfq || [];
+  (function() {
+    var mf = document.createElement("script");
+    mf.type = "text/javascript"; mf.async = true;
+    mf.src = "//cdn.mouseflow.com/projects/59c9bd1d-b0c1-42f4-98eb-590c0642300b.js";
+    document.getElementsByTagName("head")[0].appendChild(mf);
+  })();
+  _mfq.push(["setVariable", "Org ID", "{!$Organization.Id}"]);
+</script>
+  
+</apex:page>
