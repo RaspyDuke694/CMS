@@ -1,0 +1,2276 @@
+<apex:page standardController="VisualAntidote__Previous_Form__c" extensions="VisualAntidote.CKEditorMenuController" id="pg" sidebar="false" docType="html-5.0" title="Fast Forms" tabStyle="FastForms__tab">
+<apex:remoteObjects jsNamespace="ffAlertTemplateEmailNS2">
+ <apex:remoteObjectModel name="VisualAntidote__Alert_Template__c" jsShorthand="ffAlertTemplateEmailObject" fields="Id,VisualAntidote__Category__c,VisualAntidote__Subject__c,VisualAntidote__Body__c,VisualAntidote__Name__c">  
+    </apex:remoteObjectModel> 
+</apex:remoteObjects>
+
+<head>
+<apex:includeScript value="//code.jquery.com/jquery-1.10.1.min.js" />
+<script>
+
+(function(f,b){if(!b.__SV){var a,e,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=f.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=f.getElementsByTagName("script")[0];e.parentNode.insertBefore(a,e)}})(document,window.mixpanel||[]);
+mixpanel.init("39b7e8be28cfa1b59fdd342bad0004e0");
+mixpanel.identify();
+mixpanel.people.set({
+    "$email": "{!$User.Email}",
+    "$first_name": "{!$User.FirstName}",
+    "$last_name": "{!$User.LastName}",
+    "User ID":"{!$User.Id}",
+    "Organization ID":"{!$Organization.Id}"
+});
+
+
+
+/*FullStory Snippet*/
+window['_fs_debug'] = false;
+window['_fs_host'] = 'www.fullstory.com';
+window['_fs_org'] = '1ZpR';
+(function(m,n,e,t,l,o,g,y){
+  g=m[e]=function(a,b){g.q?g.q.push([a,b]):g._api(a,b);};g.q=[];
+  o=n.createElement(t);o.async=1;o.src='https://'+_fs_host+'/s/fs.js';
+  y=n.getElementsByTagName(t)[0];y.parentNode.insertBefore(o,y);
+  g.identify=function(i,v){g(l,{uid:i});if(v)g(l,v)};g.setUserVars=function(v){FS(l,v)};
+  g.clearUserCookie=function(d,i){d=n.domain;while(1){n.cookie='fs_uid=;domain='+d+
+  ';path=/;expires='+new Date(0);i=d.indexOf('.');if(i<0)break;d=d.slice(i+1)}}
+})(window,document,'FS','script','user');
+
+FS.identify('{!$Organization.Id}', {
+  displayName: '{!$User.FirstName} {!$User.LastName}',
+  email: '{!$User.Email}'
+});
+
+/*End FullStory Snippet*/
+
+</script>
+
+<script>
+/*Intercom Snippet*/
+  window.intercomSettings = {
+    app_id: "uh2s363g",
+    user_id: "{!$Organization.Id}",
+    name: "{!$User.FirstName} {!$User.LastName}", // Full name
+    email: "{!$User.Email}", // Email address   
+    custom_launcher_selector: "#Intercom"
+  };  
+
+</script>
+<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/uh2s363g';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
+/*End Intercom Snippet*/
+</script>
+<script>
+
+console.log("Has user accepted EULA? {!hasAcceptedEula}");
+</script>
+    </head>
+
+
+
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <meta content="utf-8" http-equiv="encoding" />
+    
+    
+       <link rel="stylesheet" href="{!URLFOR($Resource.jquery_dialog,'jquery_dialog/jquery-ui.css')}"/>
+    <script src="{!URLFOR($Resource.jquery_dialog,'jquery_dialog/jquery-ui.js')}"></script>
+    
+    <script src="{!URLFOR($Resource.Clipboard,'ZeroClipboard.js')}"></script>
+     
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans" />
+
+    <script src="{!URLFOR($Resource.downloadifyjs)}"></script>
+    <script src="{!URLFOR($Resource.swfobjectjs)}"></script>
+
+      <link rel="stylesheet" href="{!URLFOR($Resource.ffcommon,'ffcommon.css')}" /> 
+         <script src="{!URLFOR($Resource.commonJSHelper)}"></script>
+         <script src="{!URLFOR($Resource.alertHelperJS)}"></script>
+    <link rel="stylesheet" href="{!URLFOR($Resource.foundation,'css/foundation.css')}" />     
+    <script src="{!URLFOR($Resource.foundation,'js/foundation.min.js')}"></script>
+    <script src="{!URLFOR($Resource.foundation,'js/foundation/foundation.joyride.js')}"></script>
+
+     <script src="{!URLFOR($Resource.FFCKEditor,'ckeditor.js')}"></script>
+          <apex:includeScript value="{!URLFOR($Resource.VisualAntidote__jszip, '/jszip.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.VisualAntidote__jszip, '/jszip-load.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.VisualAntidote__jszip, '/jszip-deflate.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.VisualAntidote__jszip, '/jszip-inflate.js')}"/>
+        <script src="{!URLFOR($Resource.FastPrefillHelperJS)}"></script>
+    <style>
+        [title~="REFERENCE"] {
+        display: none !important;
+    }
+    div.form-trial-popup {
+    max-width: 600px;
+}
+   .form-trial-popup .popup-row {
+    width: 100%;
+    float: left;
+    text-align: center;    padding: 5px 0px;
+}
+.form-trial-popup input.form-textbox {
+    width: 90%;
+        color: rgb(97, 97, 97);
+    margin-top: 5px;
+    padding: 3px;
+}
+.form-trial-popup textarea.form-textarea {
+width: 100%;
+    height: 200px;
+    font-size: 9pt;
+    padding: 10px;
+    line-height: 14pt;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+
+.form-trial-popup .popup-validation {
+    color: red;
+    padding-top: 10px;
+    display: block;
+    text-align: left; 
+    clear: left;
+}
+    div.form-intro-popup {
+    max-width: 600px;
+}
+   .form-intro-popup .popup-row {
+    width: 100%;
+    float: left;
+    text-align: center;
+    padding: 10px 0px;
+    font-size: 15px;
+    font-family: Open Sans, sans-serif;
+}
+.form-intro-popup input.form-textbox {
+    width: 90%;
+        color: rgb(97, 97, 97);
+    margin-top: 5px;
+    padding: 3px;
+}
+.form-intro-popup textarea.form-textarea {
+width: 100%;
+    height: 75px;
+    font-size: 11pt;
+    padding: 10px;
+    line-height: 14pt;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: 'Open Sans';
+}
+.form-intro-popup textarea.form-textarea.placeholder {
+color:#cecece;
+}
+
+
+.form-intro-popup .popup-validation {
+        color: red;
+    padding: 0px 0px 10px 0px;
+    display: block;
+    text-align: left;
+    clear: left;
+    font-size: 13px;
+    font-family: Open Sans, sans-serif;
+    text-align: center;
+}
+
+.form-intro-popup-buttonpane {
+    background-color: #FAFAFA;
+    height: 100px;
+    padding: 20px;    
+    border-radius: 0px 0px 10px 10px;
+    background-image: url(http://fastforms.visualantidote.com/images/survey_element_2.png) !important;
+    background-repeat: no-repeat;
+    background-position: 560px 50px;    
+}
+
+
+span.ff-warning {
+    background-color: #F78585;
+    border-radius: 4px;
+    padding: 0px 3px;
+}
+/*Submissions css starts*/
+.form-submission-wrapper {
+    float: left;
+    margin-right: 20px;
+}
+.form-settings-wrapper-inner {
+    float: left;
+}
+.form-submission-wrapper span.notifications-tag {
+    display: inline-block;
+    opacity:0; 
+    min-width: 25px;
+    background-color: #d55555;
+    border-radius: 50%;
+    min-height: 25px;
+    padding: 4px 2px;
+    text-align: center;
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 11px;
+    margin-top: -40px;
+    vertical-align: middle; 
+    margin-left: -15px;
+    font-family: 'Open Sans';    box-shadow: 0 3px 4px rgba(8,52,80,.5);
+}
+
+.form-submission-wrapper span.notifications-tag {
+   
+    -webkit-animation-fill-mode:both;
+    -moz-animation-fill-mode:both;
+    -ms-animation-fill-mode:both;
+    -o-animation-fill-mode:both;
+    animation-fill-mode:both;
+    -webkit-animation-duration:500ms;
+    -moz-animation-duration:500ms;
+    -ms-animation-duration:500ms;
+    -o-animation-duration:500ms;
+    animation-duration:500ms;
+        -webkit-transition-duration: 500ms;
+    transition-duration: 500ms; 
+}
+
+@-webkit-keyframes ffscale {
+    0% { -webkit-transform: scale(.7);  }
+  70% { -webkit-transform: scale(1.2); }
+  100% { -webkit-transform: scale(1); } 
+}
+@-moz-keyframes ffscale {
+    0% { -moz-transform: scale(.7);  }
+  70% { -moz-transform: scale(1.2);   }
+  100% { -moz-transform: scale(1); }
+}
+@-o-keyframes ffscale {
+  0% { -o-transform: scale(.7);  }
+  70% { -o-transform: scale(1.2);   }
+  100% { -o-transform: scale(1) }
+}
+@keyframes ffscale {
+  0% { transform: scale(.7);  }
+  70% { transform: scale(1.2);  }
+  100% { transform: scale(1); }      
+}
+.form-submission-wrapper span.notifications-tag.ffscale-css {
+  opacity:1;
+     
+    -webkit-animation-name: ffscale;
+    -moz-animation-name: ffscale;
+    -o-animation-name: ffscale;
+    animation-name: ffscale;
+}
+.form-submission-wrapper-inner {
+  padding: 30px;
+    background-color:#BED4DF;
+}
+.fs-statuses-box ul{
+margin: 0px;
+    padding: 10px;
+    list-style: none;
+    background-color: #E6ECEF;
+    /* font-weight: 600; */
+    overflow: hidden;
+    border-radius: 5px;
+    font-family: 'Open Sans';
+    font-size: 16px;
+}
+.fs-statuses-box ul li{
+  float:left;
+  width:25%;
+  margin-left: 0px;    padding: 8px 0px 10px;
+  }
+  li.st-successful .status-msg{
+    background-color: #a0d468;
+    background-position: -9px 0px;
+ }
+ li.st-pending .status-msg{
+    background-color: #ffce54;
+    background-position: -35px 3px;
+ }
+ li.st-failed .status-msg{
+    background-color: #d55555;
+    background-position: -56px -2px;
+ }
+ li.st-declined .status-msg{
+    background-color: #b7b7b7;
+    background-position: -74px 0px;
+ }
+ li.status-msg-li span.status-msg {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    font-family: 'Open Sans', 'sans-serif';
+    border-radius: 11px;
+    background-image: url("{!URLFOR($Resource.fscommon,'addash/addash_sprites_v1.png')}");
+    background-repeat: no-repeat;
+}
+li.st-all span.status-msg {
+    background-image: none !important;
+    background-color: #ffffff;
+}
+li.status-msg-li span.status-text {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 15px;
+}
+.submission-link-box {
+    text-align: right;
+    margin-top: 20px;
+}
+.vabutton2-noactive.active  span.btn-icon {
+    background-position: -373px -1px !important;
+}
+li.st-failed .status-text {
+    color: #d55555;
+    }
+/*Submissions css ends*/
+/*ff-pagination css*/
+.ff-pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+.ff-pagination>li{
+   display: inline-block;
+      float: left;
+      list-style-type: none;
+      margin-left: 0px;
+
+}
+.ff-pagination>li>a, .ff-pagination>li>span {
+    position: relative;
+ 
+    padding: 6px 8px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #33aefd;
+    font-weight: 600;
+     font-size: 14px;
+     display: inline-block;
+    vertical-align: top;
+   font-family: 'Open Sans', 'sans-serif';
+   
+    text-decoration: none !important; 
+}
+.ff-pagination>li>a.ls2{
+  letter-spacing: 2px;
+}
+.ff-pagination>li>a.active, .ff-pagination>li>span.active ,
+.ff-pagination>li>a.disabled, .ff-pagination>li>span.disabled {
+color: #8294A0;
+}
+.ff-pagination>li>a:not(.active):not(.disabled){
+     cursor: pointer;
+}
+.ff-pagination-box{
+display: block;
+    width: 600px;
+    margin: 20px auto;
+    text-align: center;
+  }
+.ff-pagination-box  .ff-page-info {
+    color: #b7b7b7;
+    font-size: 12px;
+    font-weight: 600;
+     font-family: 'Open Sans', 'sans-serif'; 
+    font-style: italic;
+}
+.ff-pagination>li a.nav-link.first-link,.ff-pagination>li a.nav-link.last-link {
+  background-image:   url("{!URLFOR($Resource.fscommon,'addash/addash_sprites_v1.png')}")  !important;
+   background-repeat: no-repeat !important;
+    padding: 6px 8px;
+    text-indent: -9999px;
+    background-color: rgba(255,255,255,0) !Important;
+    margin: 0px 8px;
+  }
+.ff-pagination>li a.nav-link.first-link {    
+    background-position: -46px -116px;  
+}
+.ff-pagination>li a.nav-link.first-link.disabled {
+background-position: -27px -116px  !important;
+  }
+  .ff-pagination>li a.nav-link.last-link {    
+    background-position: -118px -116px;  
+}
+.ff-pagination>li a.nav-link.last-link.disabled {
+background-position: -94px -116px;
+  }
+/*ff-pagination css ends*/
+/*new css*/
+.ffheader-wrapper-outer {
+    margin: 50px auto 20px auto;
+    width: 940px;
+    overflow: hidden;
+    display: block;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(8,52,80,.15);
+    border: 1px solid #E0E0E0;
+}
+.ffheader-wrapper.p12_0 {
+    padding: 12px 0px;
+}
+.ffheader-wrapper {
+    overflow: visible;
+}
+.ff-form-filter,.ff-sort-box  {
+  width: 49%;
+    float: left;    
+    padding: 13px 25px;
+    display: block;
+}
+.ff-sort-box{
+  float:right;
+}
+.ff-sort-box >span.sort-title{
+  vertical-align: middle;
+  margin-right: 12px;
+}
+.txt-form-name{
+      border-style: solid;
+    border-color: #BBBBBB;
+    padding: 5px;
+    font-size: 14px;
+    padding-left: 15px;
+    width: 201px;
+    margin-left: -4px;
+    line-height: 19px;
+    font-weight: 600;
+    width: 330px;
+    font-family: 'Open Sans', 'sans-serif';
+    border-width: 1px;
+    border-radius: 4px;
+    outline:none;    background: #fff url("{!URLFOR($Resource.ffcommon,'iconimages/LookUp.png')}") no-repeat 300px center;
+}
+.txt-form-name:focus,.txt-form-name:active{
+outline:none;border: solid 1px #33aefd;
+}
+.form-outer-container{
+    overflow: hidden;
+    display: block;
+    padding: 0px 0px 30px 0px;
+}
+.form-information-wrapper-outer{
+  margin:auto;
+}
+.ffactions-wrapper-outer {
+    margin: 30px auto 20px auto;
+    width: 940px;
+    overflow: hidden;
+    display: block;
+}
+.action-btn-container {
+    float: left;
+    margin-left: 25px;
+}
+.action-btn-container .vabutton4.va-disabled {
+        color: #cecece;
+    cursor: default;background-color:rgba(255,255,255,0) !important;
+    text-decoration: underline;
+}
+.ffheader-wrapper-outer  .vabutton3 {
+    padding: 5px 6px;
+    border-radius: 6px;
+    min-width: 40px;
+    text-align: center;
+    border: solid 1px #33aefd;
+    color: #33aefd;
+    background-color: #ffffff;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.vabutton3, .vabutton4 {
+    font-family: 'Open Sans';
+    font-weight: 600;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+}
+.vabutton4 {
+    padding: 4px 10px;
+    color: #33aefd;
+    background-color:rgba(255,255,255,0) !important;
+    min-width: 100px;
+    text-decoration: underline; 
+}
+.form-item-row{
+  display: table-row;
+  width:100%;
+}
+.form-item-row .tb-cell{
+  display: table-cell;
+}
+.form-selection.tb-cell {
+    width: 16px;
+    cursor: pointer;
+}
+.other-information{
+  display: inline-block;
+  width:100%;
+  clear: both;
+}
+.other-information .formActiveDiv{
+  display: inline-block;
+}
+.other-information .modified-date{
+      font-size: 12px;
+    font-weight: 400 !important;
+    color: #616161;display: inline-block;
+    font-style: italic;    font-family: 'Open Sans', 'sans-serif';vertical-align: top;
+    margin-left: 20px;
+    margin-top: 5px;
+}
+.form-information-wrapper-outer:hover{
+  border: 1px solid #e6ecef;
+}
+.form-information-wrapper-outer:hover .form-selection{
+  background-color: #e6ecef;
+  background-image:  url("{!URLFOR($Resource.ffcommon,'iconimages/ticks.png')}");
+    background-repeat: no-repeat;
+    background-position: -2px center;
+}
+.form-information-wrapper-outer.f-selected{
+  border: 1px solid #33aefd;
+}
+.form-information-wrapper-outer.disable-selection:hover .form-selection{
+  background: none !important;
+}
+
+.form-information-wrapper-outer.f-selected .form-selection{
+  background-color: #33aefd;
+  background-image:  url("{!URLFOR($Resource.ffcommon,'iconimages/ticks.png')}");
+    background-repeat: no-repeat;
+  background-position: -41px center !important;
+}
+.form-information-wrapper-outer.f-selected .grey-left-border10 {
+    border-color: #33aefd;
+}
+.publishComponentCSS .grey-left-border10{
+  background-color: #ffffff;
+}
+.form-information-wrapper-outer.f-selected .publishComponentCSS .grey-left-border10,.form-information-wrapper-outer.f-selected .form-submission-wrapper-expanded .grey-left-border10,.form-information-wrapper-outer:hover .publishComponentCSS .grey-left-border10,.form-information-wrapper-outer:hover .form-submission-wrapper-expanded .grey-left-border10{
+    border-left-width:21px;
+}
+.ui-menu .ui-menu-item a {
+    padding: 7px 8px;    
+    border-width:0px;
+    border-left: 5px solid #ffffff;
+    
+}
+.ui-autocomplete.ui-menu .ui-menu-item a.ui-state-focus, 
+.ui-autocomplete.ui-menu .ui-menu-item a.ui-state-active
+{
+background: #e6ecef;
+border-left-color: #33aefd;    border-radius: 0px;
+    margin: 0px;
+}
+.ui-autocomplete{
+margin-top: -5px;
+    border-radius: 0px 0px 4px 4px;
+   text-align: left;
+   padding:0px;
+  }
+  .no-record-found{
+  font-family: 'Open Sans';
+    font-size: 14px;
+    font-weight: 600;
+     color: #052942;   
+  }
+/*new css ends*/
+    </style>
+    <apex:outputPanel id="trialExpiryCompPanel">
+    <c:TrialExpiryComponent id="trialExpCp"  ffFreemium="{!isFreemium}" />
+    </apex:outputPanel>
+    
+
+   
+       
+        <script>
+        
+var SFPrefixForLinks='';
+    var ffcommonUrl="{!URLFOR($Resource.VisualAntidote__ffcommon)}";
+    if(ffcommonUrl.toLowerCase().indexOf('visualantidote__')>0){
+      SFPrefixForLinks='VisualAntidote__';
+    }
+     <apex:outputText rendered="{!IF(packageTier == 'NativeCloud',true,false)}">
+    var isForceComSiteSetup={!$Setup.VisualAntidote__FastFormsTokenInfo__c.VisualAntidote__Is_Native_Setup_Done__c};
+    if(!isForceComSiteSetup){
+      ffNavigateToUrl( '/apex/NativeCloudWizard',SFPrefixForLinks);
+    }
+</apex:outputText>
+        var formSearchText='';
+        var formRecIDs=[];
+        var orderByField='LastModifiedDate';
+var orderByDirection='DESC';
+var pageSize=10;
+
+var currentPage = 1;
+        var FFCKEditorurlroot="{!URLFOR($Resource.VisualAntidote__FFCKEditor)}";
+       var clip;
+       $( document ).ready(function() {
+       $('.form-sort-filter').select2();
+
+       /*autocomplete for search box*/
+       
+       
+    $("#inputTxtFormNames").autocomplete({   
+      minLength: 3, 
+      appendTo:'#suggestionList',
+      source: function(request, response){   
+       
+       getFormNameListJS(response ,request.term);   
+      },focus: function( event, ui ) {
+                $('#inputTxtFormNames').val( ui.item.value);
+                return false;
+                },
+        select: function( event, ui ) {
+                    $('#inputTxtFormNames').val( ui.item.value); 
+                    return false;
+                },
+     }); 
+       /*autocomplete initialization ends */
+       $(document).foundation();
+
+       $( document ).foundation({ joyride : {         
+              tip_location : 'top',
+              tip_animation : 'fade',
+              tip_animation_fade_speed: 500,          
+              modal:false,
+              expose: false,
+              next_button: true,
+              prev_button: false,
+              cookie_monster: true,
+              cookie_name: 'fastforms-joyride',
+              cookie_domain: false,
+              cookie_expires: 365,
+              post_ride_callback: function() {
+                $(document).foundation('joyride', 'destroy');
+              }     
+          }
+       });
+
+
+
+       
+
+       <apex:outputText rendered="{!IF(showPopup,true, false)}">
+      var popupHTML=$('<div/>');
+      var validationDiv=$('<div/>').addClass('popup-validation').hide();
+      var dialogBody =$('<div/>');
+      var dialogMainWrapper = $('<center/>').addClass('dialog-center');
+      var dialogFont = $('<div/>').addClass('introDialogFont');
+      var dialogTitle = $('<div/>').addClass('primary');      
+      var dialogDescription = $('<div/>').addClass('secondary');
+      var dialogFormControls = $('<div />',{'class':'form-intro-popup', id:'introFormPopup'} );
+      $inputDescription1=$('<textarea />',{'class':'form-textarea popup-req placeholder', id:'txtbxOnboardingHowDidYouHear', maxlength: '255', onclick:"if (this.value.indexOf('For example') == 0) {this.value = '';$(this).removeClass('placeholder');}"} );
+      $inputDescription1.html('For example: Google search for \'form builders\', AppExchange search for \'surveys\', etc.');
+
+      $inputDescription2=$('<textarea />',{'class':'form-textarea popup-req', id:'txtbxOnboardingWhyFastForms', maxlength: '255'} );
+
+      $(validationDiv).html('We would really appreciate your insight! Please fill out the questions above before proceeding.');
+      $(popupHTML).append($('<div/>').addClass('popup-row').append("<div style='height:10px'>&nbsp;</div><b>Just a couple of quick questions for you before you get started. <br />1) How did you hear about Fast Forms?<br/><br/></b><div style='height:10px'>&nbsp;</div>").append($inputDescription1));
+      $(popupHTML).append($('<div/>').addClass('popup-row').append("<b>2) What compelled you to install Fast Forms?<br/><br/></b><div style='height:10px'>&nbsp;</div>").append($inputDescription2));
+
+      $(popupHTML).append($(validationDiv));
+
+      $(dialogTitle).html('<b>Hello {!$User.FirstName}!</b>');
+      $(dialogDescription).html('<p>Thank you for installing Fast Forms.<br />We hope you have an awesome experience building forms and surveys :)</p>');
+      $(dialogFormControls).append($(popupHTML));
+      //$(dialogDescription).append($(dialogFormControls));
+      $(dialogFont).append($(dialogTitle));
+      $(dialogFont).append($(dialogDescription));
+       
+      $(dialogMainWrapper).append($(dialogFont));
+      $(dialogMainWrapper).append($(dialogFormControls));
+      $(dialogBody).html($(dialogMainWrapper));
+
+       $("#dialog-confirm").html($(dialogBody));
+        $.ui.dialog.prototype._focusTabbable = function(){};        
+        $("#dialog-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "Welcome to Fast Forms",
+            height: "auto",
+            width: 650,            
+            buttons: {
+              "Get Started":{
+                click: function () {
+                  if(IntroFormValid($('#introFormPopup')))
+                  {
+                    $('#introFormPopup').find('.popup-validation').hide();   
+                    sendInfoToIntercom('update', {"lead_source": $('#txtbxOnboardingHowDidYouHear').val()});
+                    sendInfoToIntercom('update', {"why_fast_forms": $('#txtbxOnboardingWhyFastForms').val()});
+                    $(this).dialog('close');
+                    $(document).foundation('joyride', 'start');
+                    doSetPopupDismissed();
+                  }
+                  else
+                  {
+                    $('#introFormPopup').find('.popup-validation').show();
+                  }
+                },
+                text: 'Get Started',
+                'class': 'vabuttonLarge'
+              }
+            }
+        });
+        var buttonPane = $("#dialog-confirm").parent().find('.ui-dialog-buttonpane');
+        $(buttonPane).attr('style', 'margin: 0px !important; padding-top:20px;').addClass('form-intro-popup-buttonpane');
+        ;
+      </apex:outputText>
+
+      <apex:outputText rendered="{!IF(hasAcceptedEula && !isEULASet,true, false)}">
+      console.log(' Update EULA');
+      updateAcceptEula();
+</apex:outputText>
+      <apex:outputText rendered="{!hasAcceptedEula == false}">
+       var dialogBody =$('<div/>');
+       var dialogMainWrapper = $('<center/>').addClass('dialog-center');
+       var dialogFont = $('<div/>').addClass('dialogFont');
+       var dialogTitle = $('<div/>').addClass('primary');
+     var dialogDescription = $('<div/>').addClass('secondary');
+     var dialogFormControls = $('<div />',{'class':'form-trial-popup', id:'trialFormPopup'} );
+     $inputEULA=$('<textarea />',{'class':'form-textarea popup-req', id:'txtbxEULA'} );
+     $inputEULA.val("This agreement (the “Agreement”) is by and between Visual Antidote Incorporated (“Visual Antidote” or “we”) and you (the “Subscriber” or “you” or “your”) relating to the on-line services known as Fast Forms provided by Visual Antidote.  This Agreement shall be effective as of the date of your acceptance of its terms as indicated by your electronic execution of this Agreement (“Effective Date”) by checking the “I have read and agree to the terms and conditions” checkbox upon install of the application. This Agreement may be amended at any time from time to time by Visual Antidote without specific notice to you. The first time you enter Fast Forms following a change to the Agreement, you will receive a notification that an amended version of this Agreement is available. The amended version of this Agreement will also be posted on the Fast Forms web site. If you continue using the Service or any Form following posting of the amended version of this Agreement, you shall be deemed to have accepted the amended version of this Agreement. It is your responsibility to review the amended version of this Agreement prior to using the Services.\n\nFast Forms is a form creation service for use by Salesforce.com Inc. (“Salesforce”) customers available through the Salesforce AppExchange that allows you to create forms, collect and save data to your Salesforce account, and to display the data within your forms for use by you and other Salesforce users, subject to the terms and restrictions contained within this Agreement, as amended from time to time. In this Agreement references to Fast Forms includes all versions of Fast Forms, and references to NativeCloud means the version of Fast Forms known as NativeCloud as defined in 1(d) below. \n1. Definitions:\na. “Documentation” means the documents made available to you by Visual Antidote online or via other means, which set out together a description of the Services, help, how-to and explanatory materials, and the user instructions for the Services as such materials may be updated from time to time.\nb. “Form” means a form created by you using the Services and “Forms” means all such Forms.  \nc.  “NativeCloud” means a version of Fast Forms that enables your Forms to transmit data exclusively and directly to and from your Salesforce account for the purpose of enabling you to comply with Privacy Laws. \nd. “Party” means each of you or Visual Antidote and “Parties” means both you and Visual Antidote.  \ne. “Privacy Laws” means any laws that regulate the collection, use or disclosure of personal and customer information, such as The Health Insurance Portability and Accountability Act of 1996 (United States) and the Personal Information Protection and Electronic Documents Act (Canada).\nf. “Site” means the Fast Forms web site: www.fastforms.io\ng. “Software” means the online form creation and data collection software known as Fast Forms and provided by Visual Antidote as part of the Services.\nh. “Services” means access to and use of the Software via password-protected client login, as described in the Documentation to create Forms for use by you and third parties authorized by you to access your Forms, and the transmission of data collected using Forms to and from your Salesforce account. \ni. “Subscription” means your purchase of an account with Visual Antidote to use the Services.\nj. “Subscription Fees” means monthly or annual recurring fees paid in exchange for access to the Fast Forms application in your Salesforce instance.\nk. “Subscription Term” means the period commencing on the Effective Date and continuing thereafter on a month to month or annual basis until expiring on the date this Agreement is terminated in accordance with Section 14. \nl. “Your Data” means all electronic data, content and information that is present in your Salesforce account. \n2. Subscription:  Visual Antidote hereby grants you, on a subject to the terms and conditions of this Agreement and during the Subscription Term, a non-exclusive, non-transferable, right and license to (a) use the Site, the Services, the Forms and the Documentation solely for your business operations, and (b) for all versions of Fast Forms other than NativeCloud, embed HTML code on your web site referencing Visual Antidote’s web site for the purpose of enabling you and third parties authorized by you to access your Forms.  You agree that your purchases hereunder are neither contingent on the delivery of any future functionality or features nor dependent on any oral or written public comments made by Visual Antidote regarding future functionality or features.\n3. Registration: The registration information you have provided to Salesforce for your Salesforce account is also used by Visual Antidote for the creation of your Fast Forms account and must be accurate, complete, and current at all times. Failure to do so constitutes a breach of this Agreement which may result in immediate termination of your account. You are responsible for maintaining the confidentiality of your password and are solely responsible for all activities resulting from the use of your password and conducted through your account and all acts or omissions that occur with respect to your Forms. \n4. Conduct: You shall use all reasonable efforts to prevent any unauthorized access to, or use of, the Services and/or the Documentation and shall notify Visual Antidote promptly of any such unauthorized access or use. You agree to comply with all applicable governmental laws and regulations and all rules, procedures and policies of Visual Antidote relating to the Site and the Services. Without limiting the generality of the foregoing you shall not and you agree to use reasonable protective measures to ensure your customers shall not:\na. copy, modify, duplicate, create derivative works from, frame, mirror, republish, download, display, transmit, or distribute all or any portion of the Software and/or Documentation (as applicable) in any form or media or by any means except as permitted for the creation and use of Forms; or\nb. reverse compile, disassemble, reverse engineer or otherwise reduce to human-perceivable form all or any part of the Software; or\nc. access all or any part of the Services and/or Documentation in order to build a product or service which competes with the Services and/or the Documentation or to copy any features, functions or graphics of the Services; or\nd. license, sell, resell, rent, lease, transfer, assign, distribute, display, disclose, or otherwise commercially exploit, or otherwise make the Services and/or Documentation available to any third party except as expressly permitted by this Agreement, or\ne. attempt to obtain, or assist third parties in obtaining, unauthorized access to the Services and/or Documentation; or\nf. use the Services to store or transmit infringing, libelous, or otherwise unlawful or tortious material, or to store or transmit material in violation of third-party rights or for any activity that may be considered unethical, immoral, or illegal; or\ng. use the Services to send unsolicited email, unsolicited bulk email, spam or use unethical means to directly or indirectly solicit persons to input data into a Form; or\nh. use the Services to store or transmit material containing software viruses, worms, trojan horses or other harmful computer code, files, scripts, agents or programs; or\ni. interfere with or disrupt the integrity or performance of the Services or third-party data contained therein.\nVisual Antidote may audit your use of the Services for compliance with these terms at any time upon 48 hours prior notice. In the event that such audit reveals any use of the Services by you other than in full compliance with the terms of this Agreement, you shall reimburse Visual Antidote for all reasonable expenses related to such audit in addition to any other liabilities you may incur as a result of such non-compliance.\n5. Service Details: The Services allow you to create Forms to collect and save data to your Salesforce account, and to display data uploaded from your Salesforce account within Forms for use by you and third parties authorized by you to access your Forms in accordance with the Fast Forms plan to which you have subscribed. Information may be inputted into a Form by you and by third parties to whom you make a Form available for your business purpose.   Visual Antidote is a third-party service provider and makes no promises, representations, or warranties about the functionality, operability, or access to the Salesforce service. Visual Antidote will use good faith efforts to notify you, at the earliest possible opportunity, of any material changes implemented by Salesforce that materially impacts your access to and use of the Service. The Services may be limited by any third-party usage limits, API request limits, factors that limit data availability and access, and other limits and rules relating to your account with Salesforce. \n\nNativeCloud enables you to create Forms that collect and save data exclusively and directly to your Salesforce account for the purpose of enabling you to establish processes and procedures that comply with Privacy Laws. If you are using NativeCloud for this purpose it is your responsibility to ensure your Salesforce account and the systems and processes you use to transmit, manage, store, use and back-up Your Data otherwise comply with applicable Privacy Laws.\n6. Changes to Services: Visual Antidote reserves the right in its sole discretion to amend, edit, delete or remove any Form, document, information, or content appearing on the Site, or created through the Services.\n7. Support Services. \nDuring the Term Visual Antidote will provide support for the Services on the following terms. \nA support request containing a reasonable description of the nature of the problem must be submitted to our support desk via email at support@fastforms.io. All support requests will be acknowledged by return email or telephone contact within 4 Business Hours following receipt. Resolution times will vary depending upon your cooperation and the complexity of the problem. In most instances we will work with you to provide a solution or work around within 1 Business Day of our receipt of your support request. However, situations involving more complex problems, requiring our access to your server, force.com site or Salesforce account, or where your availability causes delays, a solution or work around may take 7 or more Business Days. \nIn the event we determine that a solution or work around cannot be reasonably provided for any reason we reserve the right to terminate this Agreement and refund any pre-paid Subscription Fees for the period from the date you submitted the support request to the end of the subscription period. \nIf (a) you are using a free version of Fast Forms, (b) you are a NativeCloud user and used a third-party service provider to set up your force.com site, or (c) refuse to provide our support team with access to your server, force.com site, or Salesforce Account, we may decline to provide support services to you, at our discretion. \nBusiness Hours means 8 am to 6 pm EST on a Business Day. Business Day means Monday to Friday, excluding statutory holidays, in the Province of Ontario. \n8. Payment of Subscription Fees: \na. Unless you are using a trial version of Fast Forms you shall pay all Subscription Fees payable in respect of your Subscription. Subscription Fees are based on monthly, annual or multi-year subscription periods that begin on the Effective Date and each monthly/yearly anniversary thereof. In the event this Agreement is terminated during a subscription period, Subscription Fees will be payable to the end of the subscription period.\nb. Unless otherwise agreed to by Visual Antidote Subscription Fees shall be paid by credit card or PayPal. Subscription Fees will be paid in advance, either monthly or annually as specified in your Subscription order form. If you pay by credit card you are authorizing Visual Antidote to charge such credit card for all Services provided to your account. Invoiced charges are due net 30 days from the invoice date. You are responsible for providing complete and accurate billing and contact information and notifying Visual Antidote of any changes to such information. \nc. If any Subscription Fees are not paid by the due date, then such fees may, at Visual Antidote’s discretion, accrue late interest at the rate of 1.5% of the outstanding balance per month, or the maximum rate permitted by law, whichever is lower, from the date such payment was due until the charge is paid in full. If Subscription Fees are 15 or more days overdue Visual Antidote may, in addition to its other rights and remedies, suspend your account and discontinue the Services until such amounts are paid in full.\nd. In the event you dispute an invoice or Subscription Fee reasonably and in good faith and are cooperating diligently to resolve the dispute, subsection 8(c) will not apply to the disputed amount.  \ne. Subscription Fees do not include any taxes, levies, duties or similar governmental assessments such as value-added, sales, use or withholding taxes (collectively “Taxes”). You are responsible for paying Taxes associated with your Subscription. If Visual Antidote has the legal obligation to pay or collect Taxes the appropriate amount shall be invoiced to and paid by you.\n9. Intellectual Property:  \na. The Site, the Software, the Documentation and the Services are owned or licensed by Visual Antidote and protected by copyright, trademark, and/or other proprietary rights and laws. Except as expressly provided in this Agreement, Visual Antidote and its licensors retain all right, title and interest, including all copyright and other intellectual property rights, in and to, the Site, the Software the Documentation and the Services and all copies thereof. \nb. Visual Antidote, Fast Forms, NativeCloud and other trademarks contained in the Site, the Software, the Documentation and the Services are trademarks or registered trademarks of Visual Antidote or its licensors. Third party trademarks, trade names, product names and logos may be the trademarks or registered trademarks of their respective owners. You may not remove or alter any trademark, trade names, product names, logo, copyright or other proprietary notices, legends, symbols or labels in the Site, the Software, the Documentation and the Services. This Agreement does not authorize you to use Visual Antidote's or its licensors' names or any of their respective trademarks.\n10. Subscriber’s Data and Forms: \na. As between you and Visual Antidote, you shall own all Your Data, including all reports, statistics and other data to the extent that it is generated from Your Data, and all intellectual property rights therein. You, and not Visual Antidote, shall have sole responsibility for the accuracy, quality, integrity, legality, reliability, appropriateness, intellectual property ownership of and use of Your Data.\nb. If you are a NativeCloud user, all data collected through your Forms is transmitted directly to your Salesforce account and is stored at and accessed by the Services from your Salesforce account. Visual Antidote does not process, store or back up transmitted data. Visual Antidote shall not be responsible or liable for the deletion, correction, destruction, damage, or loss of any of Your Data\nc. The following provisions apply to all versions of Fast Forms, other than NativeCloud: \ni. Your Data shall be stored at and accessed by the Services from your Salesforce account. Visual Antidote will not store Your Data except as part of periodic system back-ups completed in the ordinary course, and to the extent described at the following link: https://visualantidote.com/fastforms/help#Data-Security-and-Privacy.\nii. Visual Antidote shall not use or disclose Your Data except solely in connection with processing such data in the normal course of your use of the Services and as otherwise provided for in this Agreement. \niii. Visual Antidote shall not be responsible or liable for the failure to store, or the deletion, correction, destruction, damage, or loss of any of Your Data. \niv. If you use a Form to collect credit card, PayPal or other payment processor information from Form users, you are solely responsible for any and all liability resulting from the collection and use of this information. Visual Antidote does not independently store or process credit card or PayPal information and shall not be responsible in any way for the collection, use, storage or loss of such information.\nd. Depending upon the Fast Forms plan you purchase the Services may allow you to use Javascript API to extend the functionality of your Forms (“Extended Functionality”). The Support Services provided for by section 7 of this Agreement and the Limited Warranty provided by section 12 of this Agreement do not apply to Extended Functionality, or any problems caused directly or indirectly by Extended Functionality.\ne. Depending upon the Fast Forms plan you purchase the Services may allow you to electronically collect signatures or initials from Form users for the purpose of obtaining the Form user’s consent, agreement or acknowledgement of or to any matter addressed within the Form. Visual Antidote does not warrant that use of the Services to electronically collect a signature or initials from a Form user will be sufficient to create an enforceable electronic signature or agreement with or obligation of the Form user, or that the process for electronically collecting signatures within the Services complies with the provisions of the United States Electronic Signatures in Global and National Commerce Act, Canada’s Personal Information Protection and Electronic Documents Act, or other applicable laws of any jurisdiction.  You, and not Visual Antidote, are responsible for ensuring your electronic collection of a signature or initials from a Form user is satisfactory for your purposes and complies with applicable laws.\nf. If you use a Form to collect personal information, as such term is defined under applicable Privacy Laws, or any information that can be used on its own or with other information to identify, contact, or locate an individual single person, you are solely responsible for the security of such information and compliance with all applicable laws, governing the collection, use, storage, disclosure and deposition of such information.  \ng. If you use the Software’s lookup feature in a Form it is your responsibility to ensure personal information, as such term is defined under applicable Privacy Laws, or any information that can be used on its own or with other information to identify, contact, or locate an individual single person, or any information you are under an obligation to hold confidential, is not improperly displayed to a Form user and you are solely responsible for complying with all applicable laws governing disclosure of such information.\nh. Visual Antidote shall not be responsible in any way for your Forms or the completeness or accuracy of Your Data or any other content you collect or display within your Forms, or any tabulations, correlations or calculations using such data or content.  \ni. In using the Services Your Data may be transmitted outside the Salesforce system. To the extent Your Data is transmitted outside the Salesforce system, Salesforce is not responsible for the privacy, security or integrity of Your Data. \nj.  The Services provide for the storage of Your Data within the Salesforce system. You will have 30 days from the date of termination of your final Service Order subscription term with Salesforce to request a copy of your data from Salesforce, which will be made available to you in a .csv format.\nk. Certain versions of Fast Forms may, for performance monitoring and live support purposes, provide Visual Antidote with access to your Forms, or record your Form editing activities, without providing access to Your Data.  Visual Antidote will use such information solely for the purpose of monitoring and improving the performance of Fast Forms and for providing live support.  This section does not apply to NativeCloud users.\n11. Indemnification: You agree to indemnify, defend and hold Visual Antidote and its licensors, employees, agents, and affiliates harmless from any liability, loss, claim and expense, including reasonable attorneys' fees, related to your violation of this Agreement, use of the Services, the creation or use of a Form, and the collection, possession, or use of Your Data.\n12. LIMITED WARRANTY AND DISCLAIMER:\na. Visual Antidote warrants that the Services will be provided substantially in accordance with the Documentation provided that; (i) the Services are accessed and used in accordance by all instructions provided by Visual Antidote; (b) you notify Visual Antidote of any defect within ten (10) calendar days after the appearance thereof; and (c) you have paid all amounts due hereunder and are not in default of any provision of this Agreement. If the Services are found defective, our sole obligation under this warranty is to remedy such defect in a manner consistent with our regular business practices.\nb. The Limited Warranty provided for in 12(a) above does not apply to a free version or free trial of Fast Forms, which is provided to you without any warranty whatsoever.\nc. VISUAL ANTIDOTE DOES NOT WARRANT THAT: (A) THE OPERATION OF THE SERVICES (OR ASSOCIATED SOFTWARE OR HARDWARE OR NETWORK) WILL BE UNINTERRUPTED OR ERROR-FREE OR THAT FUNCTIONS CONTAINED IN THE SERVICES WILL OPERATE IN COMBINATIONS OF SOFTWARE OR HARDWARE OR NETWORKS THAT YOU MAY SELECT TO USE IN CONJUNCTION WITH THE SERVICES; (B) THE SERVICES WILL BE FREE OF VIRUS, TROJANS OR OTHER SUCH HARMFUL OR MALICIOUS CONTENT; (C) THE SERVICES ARE INCAPABLE OF BEING HIJACKED; (D) THE SERVICES WILL MEET YOUR REQUIREMENTS OR EXPECTATIONS; OR (E) ANY RESULTS, OUTPUT, OR DATA PROVIDED THROUGH OR GENERATED BY THE SERVICES WILL BE ACCURATE, UP-TO-DATE, COMPLETE OR RELIABLE.\nd. VISUAL ANTIDOTE DOES NOT WARRANT THE USE OF NATIVECLOUD ALONE WILL ENABLE YOU TO COMPLY WITH PRIVACY LAWS AND OTHER REGULATORY REQUIREMENTS, IT BEING EXPRESSLY UNDERSTOOD BY THE PARTIES THAT IT IS YOUR OBLIGATION TO ENSURE YOUR USE OF SALESFORCE AND YOUR SALESFORCE ACCOUNT COMPLY WITH PRIVACY LAWS  AND ANY OTHER APPLICABLE REGULATORY REQUIREMENTS. \ne. THE LIMITED WARRANTY SET FORTH IN SECTION 12(A) IS THE ONLY WARRANTY MADE BY VISUAL ANTIDOTE. EXCEPT AS EXPRESSLY STATED IN THIS SECTION TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SERVICES ARE PROVIDED “AS IS’ AND “AS AVAILABLE”. WE SPECIFICALLY DISCLAIM ALL OTHER WARRANTIES, EXPRESS OR IMPLIED, ORAL OR WRITTEN, ARISING BY LAW OR OTHERWISE, RELATING TO THIS AGREEMENT AND THE SERVICES AND ANY ASSOCIATED SOFTWARE PROVIDED TO, USED OR ACCESSED BY YOU, INCLUDING WITHOUT LIMITATION, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT OF THIRD PARTY RIGHTS.\nf. IF APPLICABLE LAW REQUIRES ANY WARRANTIES WITH RESPECT TO THE SERVICES, ALL SUCH WARRANTIES ARE LIMITED IN DURATION TO THIRTY (30) DAYS FROM THE DATE OF DELIVERY.\ng. NEITHER VISUAL ANTIDOTE NOR ITS LICENSORS SHALL BE LIABLE TO YOU FOR ANY INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE, COVER OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR THE INABILITY TO USE EQUIPMENT OR ACCESS DATA, LOSS OF BUSINESS, LOSS OF PROFITS, BUSINESS INTERRUPTION OR THE LIKE), ARISING OUT OF THE USE OF, OR INABILITY TO USE, THE SERVICES AND BASED ON ANY THEORY OF LIABILITY INCLUDING BREACH OF CONTRACT, BREACH OF WARRANTY, TORT (INCLUDING NEGLIGENCE), PRODUCT LIABILITY OR OTHERWISE, EVEN IF VISUAL ANTIDOTE OR ITS REPRESENTATIVES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES AND EVEN IF A REMEDY SET FORTH HEREIN IS FOUND TO HAVE FAILED OF ITS ESSENTIAL PURPOSE.\nh. VISUAL ANTIDOTE'S TOTAL LIABILITY TO YOU FOR ACTUAL DAMAGES FOR ANY CAUSE WHATSOEVER WILL BE LIMITED TO THE GREATER OF $200 OR THE SUBSCRIPTION FEES PAID BY YOU DURING THE 6 MONTH PERIOD PRECEEDING THE OCCURRENCE OF THE EVENT GIVING RISE TO THE DAMAGES. \n13. Third-Party Services: The Software may contain links to other web sites (“Third-Party Services”). Visual Antidote is not responsible for the content, accuracy or opinions expressed in such Third-Party Services, and we do not investigate, check or monitor such Third-Party Services for accuracy, appropriateness or completeness. Inclusion of any linked Third-Party Services in our Software does not imply Visual Antidote’s approval or endorsement of the linked Third-Party Services. If you decide to access or use these Third-Party Services you do so at your own risk and without any warranties of any kind from Visual Antidote and Visual Antidote shall not be responsible in any way or under any theory of liability for any damages arising from your access or use of such Third-Party Services. \n14. Term and Termination:\na. The initial subscription term shall be the period specified in your initial subscription, and shall thereafter renew automatically for successive one month terms until terminated by either party by providing 30 days’ prior written notice to the other party. \nb. Visual Antidote may terminate this Agreement or suspend your access to the Services at any time without notice for breach of this Agreement, or otherwise upon 30 days’ prior written notice. \nc. If you are using a free version or free trial of Fast Forms Visual Antidote may terminate this Agreement at any time without notice at its sole discretion.\nd. As the Services are provided in conjunction with Salesforce services your access to the Services may be suspended due to your failure to pay charges owing to Salesforce and/or breach of your agreement with Salesforce. If your relationship with Salesforce is terminated for any reason whatsoever, this Agreement shall contemporaneously and automatically terminate.\ne. The remedies provided in this Section 14 are in no way limiting of one another or of any other rights and remedies granted to Visual Antidote under this Agreement. Visual Antidote may choose to, but is not required to, place Subscriber’s account on suspension in lieu of termination where termination is permitted under the terms of this Agreement or take other appropriate action.\n15. The following sections shall survive termination of this Agreement regardless of the manner in which this Agreement was terminated: 8, 10, 11, 12, and 15. General:  \na. This Agreement will be governed by and construe in accordance with the laws of the province of Ontario Canada and the federal laws of Canada applicable therein without reference to its conflicts of law principles. The courts of Ontario and the federal government of Canada shall have exclusive jurisdiction. You irrevocably hereby consent to the jurisdiction and venue of any such court in any such action or proceeding. \nb. No agency, partnership, or joint venture is created by this Agreement. You and Visual Antidote are and remain at all times independent contractors and not agents or employees of each other.\nc. Visual Antidote is under no liability to you in respect of anything which, apart from this provision, may constitute breach of this Agreement arising by reason of any matter outside of our reasonable control including, but not limited to, Acts of Nature (including fire, flood, earthquake, storm, hurricane or other natural disaster), war, invasion, act of foreign enemies, hostilities (whether war is declared or not), civil war, rebellion, revolution, insurrection, military or usurped power or confiscation, terrorist activities, nationalization, government sanction, blockage, embargo, labor dispute, strike, lockout, any power interruptions or failures of or interruptions to any communications equipment, software or hardware.\nd. This Agreement contains the complete agreement between Visual Antidote and you with respect to the subject matter hereof, and supersedes all prior or contemporaneous agreements or understandings, whether oral or written. You agree that any varying or additional terms contained in any purchase order or other written notification or document issued by you in relation to the Services shall be of no effect. The failure or delay of Visual Antidote to exercise any of its rights under this Agreement or upon any breach of this Agreement shall not be deemed a waiver of those rights or of the breach.\ne. If any provision of this Agreement is held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this Agreement will remain in full force and effect.\nf. All notices required or permitted to be given by one of a party the other under this Agreement shall be sufficient if sent by personal delivery, e-mail or certified mail, return receipt requested, to the other at their respective addresses. Visual Antidote’s address shall be the address listed on the Site as of the date of the notice, and your address shall be the address attached to your account as may be updated from time to time.\ng. All questions concerning this Agreement shall be directed to: Visual Antidote Incorporated, 1200 Bay Street, Unit 605, Toronto, Ontario, M5R 2A5, Attention: General Counsel.\n");
+      
+     var trialPopupHTML=$('<div/>');
+     $(trialPopupHTML).append($inputEULA);
+
+    
+     $(dialogTitle).html('Heads up, {!$User.FirstName}!<br />Our terms and conditions have changed.');
+     $(dialogDescription).html('<p>Please review and accept our revised terms and conditions below before continuing:</p> ');
+     $(dialogFormControls).append($(trialPopupHTML));
+$(dialogDescription).append($(dialogFormControls));
+$(dialogFont).append($(dialogTitle));
+$(dialogFont).append($(dialogDescription));
+ 
+$(dialogMainWrapper).append($(dialogFont));
+$(dialogBody).html($(dialogMainWrapper));
+
+      /* $("#dialog-confirm").html("<center><div class='dialogFont'><div class='primary'>Welcome to Fast Forms!</div><br /><div class='secondary'><p>Please fil out the information below to start your <strong>FREE 30-Day Trial</strong> of Fast Forms Enterprise Edition:</p> </div></div></center>");        */
+        // Define the Dialog and its properties.
+       $("#dialog-confirm").html($(dialogBody));
+        $.ui.dialog.prototype._focusTabbable = function(){};
+        $("#dialog-confirm").dialog({
+            resizable: false,
+            modal: true,
+            title: "",
+            height: "auto",
+            width: 862,
+            buttons: {
+                "I agree":{
+                    click: function () {
+                      AcceptEula();
+
+                      sendInfoToIntercom('trackEvent', 'eula_accepted');                
+                      $(this).dialog('close');
+                      $(document).foundation('joyride', 'start');                    
+                    },
+                    text: 'I agree',
+                    'class': 'vabutton1'
+                  },
+                  "I do not agree":{
+                    click: function () {
+                      window.history.back();
+                    },
+                    text: 'I do not agree',
+                    'class': 'vabutton2'
+                  }
+                   
+                                                    
+            }
+        });
+
+
+
+
+      </apex:outputText>
+
+
+
+      setTimeout(function() {
+        sendInfoToIntercom('update', {"package_tier": "{!packageTier}", "license_status": "{!if(daysLeftToExpiry > -1,'Trial','Active')}", "days_left": "{!daysLeftToExpiry}"});
+      }, 1000);
+        
+
+
+
+
+      <apex:outputText rendered="{!showPopup == false}">
+        $(document).foundation('joyride', 'start');
+
+      </apex:outputText>
+      
+                       
+           $( '#createNewForm' ).click(function () {
+            
+
+            if ( $( ".createnewformblock" ).css( "display" )=="none" ) {
+    $( ".createnewformblock" ).show();
+    $('.newForm').show();
+    showDiv();
+    goToNextTourStop();
+  } else {
+    $( ".createnewformblock" ).hide();
+    $('.newForm').hide();
+  }
+  });
+            
+            var clip = new ZeroClipboard( 
+            $('.code'), {
+            moviePath: "{!URLFOR($Resource.VisualAntidote__Clipboard,'ZeroClipboard.swf')}"
+            });
+     
+            if(getUrlVars() == 'form'){
+                showDiv();
+            }
+             
+          callToRemoteGetFormIDs();
+           <apex:outputText rendered="{!if(isFreemium ,true,false)}">
+                   resetDashboardFreemiumNotificationJS(true);
+                   </apex:outputText>
+            remoteGetFailedSubmissionsCountJS();
+        });/*Document ready ends*/
+function resetSubmissionNotificationTags(failedNotificationList){
+console.log(' reset notification tags');
+ $.each(failedNotificationList,function(idx,ffoption){
+  var failedCount=0;
+   try{
+     failedCount=  parseFloat(ffoption.FFText); 
+      }
+       catch(Err){}
+        var formid=ffoption.FFValue; 
+         if(!isNullOrEmpty(formid) && failedCount>0){
+          var notificationTagElem=$('.form-settings-wrapper .form-submission-wrapper[data-formid="'+formid+'"]').find('.notifications-tag');
+          $(notificationTagElem).addClass('ffscale-css');
+          $(notificationTagElem).html(failedCount+'');
+          }
+ });
+}
+function expandSubmissions(elemSource){
+  var expandDiv=false;
+  if(!$(elemSource).hasClass('active')){
+    expandDiv=true;
+  }
+  hideAllSubmissionPanels();
+  resetPublishOptionDrawer('');
+  if(expandDiv){
+    $(elemSource).addClass('active');
+    var submissionDetailElem=$(elemSource).parents('.form-information-wrapper-outer').find('.form-submission-wrapper-expanded');
+    $(submissionDetailElem).html('<div class="form-submission-wrapper-inner">Submission views</div>');
+    $(submissionDetailElem).append('<div class="grey-left-border10"></div>');
+    var formId=$(elemSource).attr('data-elemid');
+    remoteGetSubmissionStatusesCountJS(formId,submissionDetailElem);
+    
+  }
+}
+function populateSubmissionStatuses(elemParent,statusNotificationList){
+  var ulHTML='<ul class="fs-statuses"><li class="status-msg-li st-all"><span class="status-msg"></span><span class="status-text"></span></li><li class="status-msg-li st-successful"><span class="status-msg"></span><span class="status-text"></span></li><li class="status-msg-li st-pending"><span class="status-msg"></span><span class="status-text"></span></li> <li class="status-msg-li st-failed"><span class="status-msg"></span><span class="status-text"></span></li></ul>';
+  var divElem=$('<div/>',{'class':'fs-statuses-box'});
+  divElem.html(ulHTML);
+  var all=0;
+  var successfull=0;
+  var failed=0;
+  var declined=0;
+  var pending=0;
+  if(statusNotificationList!=null && statusNotificationList.length>0){
+$.each(statusNotificationList,function(idx,ffoption){
+  var statusText=ffoption.FFValue;
+  switch(statusText.toLowerCase()){
+    case 'pending' :
+    pending= parseFloat(ffoption.FFText); 
+    break;
+    case 'successful' :
+    successfull= parseFloat(ffoption.FFText); 
+    break;
+    case 'failed' :
+    failed= parseFloat(ffoption.FFText); 
+    break;
+    case 'declined' :
+    declined= parseFloat(ffoption.FFText); 
+    break;
+    default:
+    break;
+  }
+    
+});
+}
+all=successfull+pending+declined+failed;
+
+divElem.find('li.status-msg-li').each(function(indx,elem){
+  if($(elem).hasClass('st-all')){
+setStatusMessagesToElem(elem,'Overall: '+all);
+  }
+  else if($(elem).hasClass('st-failed')){
+setStatusMessagesToElem(elem,'Failed: '+failed);
+  }else if($(elem).hasClass('st-successful')){
+setStatusMessagesToElem(elem,'Successful: '+successfull);
+  }else if($(elem).hasClass('st-pending')){
+setStatusMessagesToElem(elem,'Pending: '+pending);
+  }
+  /*else if($(elem).hasClass('st-declined')){
+setStatusMessagesToElem(elem,'Rejected: '+declined);
+  }*/
+
+});
+var formId=safeStringValue($(elemParent).parent().attr('id'),"");
+if(!isNullOrEmpty(formId)){
+  formId=formId.replace('form-','');
+}
+var submissionLink='<a class="vabutton1" target="_blank"  href="/apex/'+SFPrefixForLinks+'submissiondashboard?formid='+formId+'"  ><span class="btn-text">View Submissions</span></a>';
+var submissionLinkWrapper=$('<div/>',{'class':'submission-link-box'});
+submissionLinkWrapper.html(submissionLink);
+  $(elemParent).find('.form-submission-wrapper-inner').html(divElem);
+ $(elemParent).find('.form-submission-wrapper-inner').append(submissionLinkWrapper);
+  $(elemParent).slideDown();
+}
+function setStatusMessagesToElem(elem,statusmsg){
+$(elem).find('.status-text').html(statusmsg);
+}
+function callDialogClose(thisDialog)
+{
+ 
+$('#dialog-confirm').dialog('close');
+}
+       function IntroFormValid(formElement)
+       {
+        var isFormValid=true;
+        $(formElement).find('textarea.form-textarea.popup-req').each(function(i, inputelem) {
+            if($(inputelem).val().indexOf('For example:') == 0)
+            {
+              isFormValid=false;
+
+              return false;
+            }
+        });
+        return isFormValid;
+       }
+        //Read a pages GET URL variables and return them as an associative array.
+        function getUrlVars()
+        {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+        
+        
+      
+        
+       var delFormId='';
+       
+       
+       function closePreview(){
+           $("#dialog").dialog("close");
+           $('.button').removeClass('active'); 
+       }
+       function delTemplate(){
+               $('.formName').val('');
+               $('.newForm').hide();
+               $('.tooltips').next().remove();
+               $('.tooltips').next().remove();
+               $('.tooltips').html('');
+               $('.tooltips').html('<div style="margin-top: 5px;display:inline-block;" class="help"></div><span><h6>Your primary object is the main object you want to capture for your form. Once you select a primary object, you can choose other objects related to it.</h6></span>');
+               $('#createNewForm').removeClass('btnSaved');
+               $('#createNewForm').addClass('button');
+               $('#form-'+delFormId).fadeOut('slow');                
+       }
+       
+       function editTemplate(editId){
+            editTemplate(editId);
+       }
+
+
+       function trackEditTemplate(editId)
+       {
+            var metadata = {
+              form_name: $('#form-' + editId + ' .form-information h1').eq(0).text()
+            };
+            sendInfoToIntercom('trackEvent', 'clicked-edit-form', metadata);  
+       }
+      
+       function previewTemplate(txt){  
+               $("#dialog").html("");
+               var appHtml=$('#'+txt).find("textarea").val();
+               if(appHtml.length == 0){
+                   $("#dialog").append("<center></center><div style='cursor:pointer;float:right;height:24px;padding-right: 10px;padding-top: 6px;padding-bottom: 10px;'><img src='{!URLFOR($Resource.iconImages,'Close.png')}' onmouseover='changeImg(this);' onmouseout='rechangeImg(this);' onclick='closePreview();'/></div><div style='width:100%;border-bottom:1px solid #ccc;clear:both;'></div><!--<h3>Form Preview</h3>--><div id='formPreview'>"+appHtml+"</div><div style='position: absolute;bottom: 0;width:100%;clear:both;height:5px'></div>");             
+               }else{
+                   $("#dialog").append("<center></center><div style='cursor:pointer;float:right;height:24px;padding-right: 10px;padding-top: 6px;padding-bottom: 10px;'><img src='{!URLFOR($Resource.iconImages,'Close.png')}' onmouseover='changeImg(this);' onmouseout='rechangeImg(this);' onclick='closePreview();'/></div><div style='width:100%;border-bottom:1px solid #ccc;clear:both;'></div><!--<h3>Form Preview</h3>--><div id='formPreview'>"+appHtml+"</div><div style='position: absolute;bottom: 0;width:100%;clear:both;height:5px'></div>");             
+               }
+               $("#dialog").dialog("open");
+               $('.button').removeClass('active');          
+                   $('#'+txt.substring(3,txt.length)).find('#tabList tr td').find('.button').each(function(){ 
+                        if($(this).text() == 'Preview'){
+                                $(this).addClass('active');
+                        }             
+               });           
+       }
+
+       function setFormActive(recId)
+       {
+                var btn =  $('#btnFormActiveDiv' + recId);
+
+            if ($(btn).hasClass('formActive'))
+            {
+                $(btn).removeClass('formActive');
+                $(btn).addClass('formInactive');
+                $(btn).parent().find('.lblFormActive').text('Form inactive')
+            } else {
+                $(btn).removeClass('formInactive');
+                $(btn).addClass('formActive');
+                $(btn).parent().find('.lblFormActive').text('Form active')
+            }
+
+       }
+
+       function editText(e){
+            e.readOnly='';
+            $(e).removeClass('editText');
+            $(e).addClass('editTextfocus');            
+        }
+        function saveEdit(e,upId){
+            saveEditText(upId,$(e).val());
+            e.readOnly=true;            
+            $(e).removeClass('editTextfocus');
+            $(e).addClass('editText');                        
+        }
+        function changeImg(x,con){
+            if(con=='add'){
+                x.src="{!URLFOR($Resource.iconImages,'AddHover.png')}";
+            }
+            if(con=='remove'){
+                x.src="{!URLFOR($Resource.iconImages,'RemoveHover.png')}";
+            }
+            if(con=='Copy'){
+                x.src="{!URLFOR($Resource.alpha,'HelpHover.png')}";
+            }            
+            if(con==undefined){
+                x.src="{!URLFOR($Resource.iconImages,'CloseHover.png')}";
+            }
+        }
+        function rechangeImg(x,con){
+            if(con=='add'){
+                x.src="{!URLFOR($Resource.iconImages,'Add.png')}";
+            }
+            if(con=='remove'){
+                x.src="{!URLFOR($Resource.iconImages,'Remove.png')}";
+            }
+            if(con=='Copy'){
+                x.src="{!URLFOR($Resource.alpha,'HelpActive.png')}";
+            }
+            if(con==undefined){
+                x.src="{!URLFOR($Resource.iconImages,'Close.png')}";
+            }
+        }
+
+        function hideHelpIcon()
+        {
+            $('.intercomHelpIcon').hide(500);
+        }
+        
+     </script>
+   <style>
+  
+ 
+   </style>
+   <script>
+   var ffid='';
+
+function togglePublishOptionsFormID()
+{
+if(ffid!='')
+{
+return true;
+}
+else{
+false;
+}
+}
+function hideAllSubmissionPanels()
+{
+   $('.form-outer-container').each(function(index,elem){
+       
+            $(elem).find('.form-submission-wrapper-expanded').slideUp();
+            $(elem).find('.form-submission-wrapper-expanded').html('');
+            $(elem).find('.form-submission-wrapper-expanded').parent().find('.form-submission-wrapper .vabutton2').removeClass('active')
+         
+    });
+}
+function hideAllPublishPanels()
+{ 
+  $('.form-outer-container').each(function(index,elem){
+           // $(elem).find('.form-information-wrapper-outer').removeClass('disable-selection');       
+            $(elem).find('.form-information-wrapper-outer').removeClass('f-selected');       
+            $(elem).find('.publishComponentCSS').slideUp();
+            $(elem).find('.publishComponentCSS').html('');
+            $(elem).find('.publishComponentCSS').parent().find('.vabutton2-noactive.active').removeClass('active');
+         
+    });
+   
+}
+function resetNavigationlinks(){
+  resetFastFormsHREFLinks('.mainDiv',SFPrefixForLinks);
+}
+function hidePublishPanels(linkelem)
+{    
+    hideAllSubmissionPanels();
+    $(linkelem).parent().toggleClass('active');
+    
+    console.log('linkelem '+linkelem);
+    console.log('linkelem data-eementid '+$(linkelem).attr('data-elemid'));
+    var formid=$(linkelem).attr('data-elemid');
+    $('.form-outer-container').each(function(index,elem){
+        if($(elem).find('.form-information-wrapper-outer').attr('id')!='form-'+formid){
+         // $(elem).find('.form-information-wrapper-outer').removeClass('disable-selection');
+            $(elem).find('.publishComponentCSS').slideUp();
+            $(elem).find('.publishComponentCSS').html('');
+            $(elem).find('.form-settings-wrapper-inner a.active').removeClass('active');
+        }
+        else
+        {
+            $(elem).find('.publishComponentCSS').slideDown();
+            //console.log('Found open'+$(elem).find('.form-information-wrapper-outer').attr('id'));
+            $(elem).find('.form-information-wrapper-outer').removeClass('f-selected'); 
+            //$(elem).find('.form-information-wrapper-outer').addClass('disable-selection');
+           // disableActionBtns();
+        }
+    });
+}
+
+function showNotification(elemid, textmsg)
+    {
+        $('#' + elemid).show();
+        $('#' + elemid).find('.msg-text-div').html(textmsg);
+    }
+    function hideNotification(elemid)
+    {
+        $('#' + elemid).find('.msg-text-div').html('');
+        $('#' + elemid).hide();
+    }
+    function hideMessage(elemid)
+    {
+        $(elemid).parent().hide();
+    }
+    
+
+    function ToggleFormActive(editId)
+    {     
+      
+        doToggleFormActive(editId);
+         
+    }
+    
+     function DiscardDraft(deleteDraftId){
+                  $("#dialog-confirm").html("<div class='dialogHeader'><div class='dialogIcon dialogIconAlert'>&nbsp;</div></div><div class='dialogFont'><div class='primary'>Are you sure you want to discard this draft?</div></div>");        
+            // Define the Dialog and its properties.
+            $("#dialog-confirm").dialog({
+                resizable: false,
+                modal: true,
+                title: "Delete",
+                height: "auto",
+                width: 413,
+                buttons: {
+                    "Yes":{
+                        click: function () {
+                        $(this).dialog('close');
+                        callback(true);
+                        $('.button').removeClass('active');          
+                           $('#'+delId).find('#tabList tr td').find('.button').each(function(){ 
+                                if($(this).text() == 'Delete'){
+                                    $(this).addClass('active');
+                                }              
+                            });
+                    },
+                        text: 'Yes',
+                        'class': 'vabutton1'
+                    },
+                    "No":{
+                        click: function () {
+                        $(this).dialog('close');
+                        callback(false);
+                        },
+                        text: 'No',
+                        'class': 'vabutton2'
+                    }
+                }
+            });
+            $('.ui-dialog :button').blur();
+            function callback(value) {
+            if (value) {
+                doDiscardDraft(deleteDraftId);            
+            } else {
+                return false;
+            }
+       }
+       }     
+
+        var isFinalStep = false;  
+       function goToNextTourStop()
+       {
+          if ($(".joyride-tip-guide").length > 0 && !isFinalStep)
+            $("#takeTour").foundation('joyride','go_next');
+       }         
+        
+
+
+ 
+         function duplicateTemplateCall(cloneid)
+       {
+        <apex:outputText rendered="{!IF(isFreemium && noOfForms!=null && (1<noOfForms),true,false)}">
+          upgradeNowMessage('A maximum of two forms can be created in Fast Forms free edition.','','');
+          console.log(' Is a freemium and form count is greater  then {!noOfForms}');
+         </apex:outputText>
+        <apex:outputText rendered="{!IF(!isFreemium || (isFreemium && (noOfForms<2)),true,false)}">
+        console.log(' Is not freemium or form count is less then  {!noOfForms}');
+        remoteDuplicateTemplateJS(cloneid);
+        </apex:outputText>
+        
+       } 
+        function remoteGetAllFormIDsJS()
+        {
+          resetInlineLoadingBar(true);                        
+          Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.CKEditorMenuController.remoteGetAllFormIDs)}',formSearchText, orderByField,orderByDirection,          
+                function(result, event) {
+                    
+                      if (event.status) {
+                        resetInlineLoadingBar(false);     
+                        if(result!=null )
+                        {
+                          formRecIDs=result;
+                            initializePagination(1,pageSize);
+                            resetCurrentPageData(1,true);
+                        
+                        }
+                        else
+                        {
+                            
+                        }
+                      } else {
+                        resetInlineLoadingBar(false);                        
+                        console.log(' Fail-'+result);
+                      }
+                   
+                },
+                { buffer: true, escape: true, timeout: 30000 }
+            );
+        }
+       function deleteId(delId){ 
+          var  delIdArr=[];          
+           $("#dialog-confirm").html("<div class='dialogHeader'><div class='dialogIcon dialogIconAlert'>&nbsp;</div></div><div class='dialogFont'><div class='primary'>Are you sure you want to delete this form?</div></div>");        
+            // Define the Dialog and its properties.
+            $("#dialog-confirm").dialog({
+                resizable: false,
+                modal: true,
+                title: "Delete",
+                height: "auto",
+                width: 413,
+                buttons: {
+                    "Yes":{
+                        click: function () {
+                        $(this).dialog('close');
+                        callback(true);
+                         
+                    },
+                        text: 'Yes',
+                        'class': 'vabutton1'
+                    },
+                    "No":{
+                        click: function () {
+                        $(this).dialog('close');
+                        callback(false);
+                        },
+                        text: 'No',
+                        'class': 'vabutton2'
+                    }                    
+                }
+            });
+            $('.ui-dialog :button').blur();
+            function callback(value) {
+            if (value) {
+               // deleteTemplate(delId);               
+             delIdArr.push(delId);
+                  if(delIdArr!=null && delIdArr.length>0){
+                    remoteDeleteTemplatesJS(delIdArr); 
+                  }
+            } else {
+                return false;
+            }
+        }
+       } 
+       function resetDashboardFreemiumNotificationJS(readonly)
+        {
+         
+            
+                    Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.CKEditorMenuController.resetDashboardFreemiumWarning)}',readonly,
+                function(result, event) {
+                    
+                      if (event.status) { 
+                        if(result=='disabled')
+                        {
+                          $('.freemium-msg-box-outer').fadeOut('fast');
+                        }
+                        else
+                        {
+                           $('.freemium-msg-box-outer').fadeIn('slow');
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                      }
+                   
+                },
+                { buffer: true, escape: true, timeout: 30000 }
+            );
+        }
+        function remoteGetFailedSubmissionsCountJS()
+        {
+         
+            
+                    Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.CKEditorMenuController.remoteGetFailedSubmissionsCount)}', 
+                function(result, event) {
+                    
+                      if (event.status) { 
+                        if(result!=null && result.length>0)
+                        {
+                        var responseArr= result;
+                        resetSubmissionNotificationTags(responseArr);  
+                       
+                        }
+                        else
+                        {
+                            
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                      }
+                   
+                },
+                { buffer: true, escape: true, timeout: 30000 }
+            );
+        }
+        function remoteGetSubmissionStatusesCountJS(formId,elemParent)
+        {
+         
+            
+                    Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.CKEditorMenuController.remoteGetSubmissionStatusesCount)}',formId, 
+                function(result, event) {
+                    
+                      if (event.status) { 
+                        if(result!=null && result.length>0)
+                        {
+                        var responseArr= result;
+                        populateSubmissionStatuses(elemParent,responseArr);  
+                       
+                        }
+                        else
+                        {
+                            populateSubmissionStatuses(elemParent,null);  
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                      }
+                   
+                },
+                { buffer: true, escape: true, timeout: 30000 }
+            );
+        }
+        function remoteDuplicateTemplateJS(recId)
+        {
+         
+            $('#duplicateFormProcessing').show();
+                    Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.CKEditorMenuController.remoteDuplicateTemplate)}',recId,
+                function(result, event) {
+                    
+                      if (event.status) { 
+                        if(result.length>0 && result[0].IsValid)
+                        {
+                          var orgDraftRecId='';
+                          var orgPublishedRecId='';
+                          var dupDraftRecId='';
+                          var dupPublishedRecId='';
+                          for(resultIndx=0;resultIndx<result.length;resultIndx++)
+                           {
+                            if(!isNullOrEmpty(result[resultIndx].OtherText)){
+                              var recType=result[resultIndx].OtherText;
+                               switch (recType.toLowerCase()) {
+                                  case "originaldraft":
+                                      orgDraftRecId=result[resultIndx].ResultText;
+                                  break;
+                                  case "originalpublished":
+                                      orgPublishedRecId=result[resultIndx].ResultText;
+                                  break;
+                                  case "dupdraft":
+                                      dupDraftRecId=result[resultIndx].ResultText;
+                                  break;
+                                  case "duppublished":
+                                      dupPublishedRecId=result[resultIndx].ResultText;
+                                  break;
+                                  default:
+                                  break;
+                                }
+                            }
+                             
+                           }
+                           if(!isNullOrEmpty(orgDraftRecId) && !isNullOrEmpty(orgPublishedRecId) &&
+                            !isNullOrEmpty(dupDraftRecId) && !isNullOrEmpty(dupPublishedRecId)){
+                           remoteUpdatePaymentsForClonedTemplatesJS(orgDraftRecId,orgPublishedRecId,dupDraftRecId,dupPublishedRecId);
+                         }
+                         else{
+                          console.log(' In else remoteDuplicateTemplateJS ');
+                           hideLoadingBox('#duplicateFormProcessing'); 
+                         }
+                        }
+                        else
+                        {
+                            console.log(' In else remoteDuplicateTemplateJS result is not valid ');
+                          hideLoadingBox('#duplicateFormProcessing'); 
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                      }
+                   
+                },
+                { buffer: true, escape: true, timeout: 30000 }
+            );
+        }
+        function remoteUpdatePaymentsForClonedTemplatesJS(orgDraftRecId,orgPublishedRecId,dupDraftRecId,dupPublishedRecId)
+        {
+         
+            
+                    Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.CKEditorMenuController.remoteUpdatePaymentsForClonedTemplates)}',orgDraftRecId,orgPublishedRecId,dupDraftRecId,dupPublishedRecId,
+                function(result, event) {
+                    
+                      if (event.status) { 
+                        if(result!=null && result.IsValid)
+                        {
+                           
+                          var publishedRecId=result.ResultText;
+                           
+                           if(!isNullOrEmpty(publishedRecId)){
+                           duplicateTemplateComplete(publishedRecId);
+                         }
+                         else{
+                          console.log('Error in remoteUpdatePaymentsForClonedTemplatesJS-');
+                           hideLoadingBox('#duplicateFormProcessing'); 
+                         }
+                        }
+                        else if(result!=null && !result.IsValid)
+                        {
+                          console.log('Error in remoteUpdatePaymentsForClonedTemplatesJS result is invalid-'+result.OtherText);
+                         hideLoadingBox('#duplicateFormProcessing'); 
+                        }
+                        else
+                        {
+                            console.log('Exception in remoteUpdatePaymentsForClonedTemplatesJS ');
+                             hideLoadingBox('#duplicateFormProcessing'); 
+                        }
+                      } else {
+                        console.log(' Fail-'+result);
+                      }
+                   
+                },
+                { buffer: true, escape: true, timeout: 30000 }
+            );
+        }
+        function remoteDeleteTemplatesJS(delIdArr)
+        {
+         resetInlineLoadingBar(true);
+           remoteValidateDeleteActionJS(delIdArr);
+        }
+        function remoteDoDeleteTemplatesJS(delIdArr)
+        {
+           resetInlineLoadingBar(true);
+            
+                    Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.CKEditorMenuController.remoteDeleteTemplates)}',delIdArr,
+                function(result, event) {
+                    
+                      if (event.status) {
+                      resetInlineLoadingBar(false);                        
+                        if(result!=null)
+                        {
+                          callToRemoteGetFormIDs();
+                          console.log('Success in remoteDeleteTemplatesJS-');
+                          
+                        }
+                        else if(result!=null && !result.IsValid)
+                        {
+                          console.log('Error in remoteDeleteTemplatesJS result is invalid-'+result.OtherText);
+                         
+                        }
+                        else
+                        {
+                            console.log('Exception in remoteDeleteTemplatesJS ');
+                             
+                        }
+                      } else {
+                        resetInlineLoadingBar(false);                        
+                        console.log(' Fail-'+result);
+                      }
+                   
+                },
+                { buffer: true, escape: true, timeout: 30000 }
+            );
+        }
+        function hideLoadingBox(elemSource)
+{
+   $(elemSource).hide(); 
+}
+
+       </script> 
+
+
+
+         <div class="mainHeader">
+          <div class="mainHeaderInner">
+        <div style="line-height: 22px;margin: auto auto;float: left;margin-top: 8px;display: inline-block; ">
+   
+             <a id="createNewForm"    class="vabutton3" onclick="mixpanel.track('Create new form clicked');sendInfoToIntercom('trackEvent', 'clicked-create-new-form');"      ><span class="btn-icon"></span> <span class="btn-text">Create New Form</span></a>
+           
+        
+        </div>
+            <apex:outputPanel layout="block" style="float: right;line-height:0px;" rendered="{!IF((packageTier=='NativeCloud'),true,false)}">
+            <div class="ff-logo-box">
+                <div class="ff-logo"><img alt="Fast Forms Native Cloud" title="Fast Forms Native Cloud" src="{!URLFOR($Resource.logos,'native-cloud.png')}" /></div>
+                <div class="ff-logo-title">
+                    <span class="ffsup">Fast Forms</span>
+                    <h1 style="margin-bottom: 5px;" class="sub-h1">NATIVE</h1><h1 style="clear:left;" class="E-bold">CLOUD</h1>
+                </div>
+            </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="block" style="float: right;line-height:0px;" rendered="{!IF((packageTier=='NativeCloud'),false,true)}">
+            <div class="ff-logo-box">
+                        <div class="ff-logo"><img src="{!URLFOR($Resource.logos,'color_logo_only.png')}" /></div>
+                        <div class="ff-logo-title"> <h1 class="E-bold">FAST</h1><h1 class="sub-h1">FORMS</h1><span class="ffsub">{!packageTier} Edition</span></div>     
+                        </div>
+            </apex:outputPanel>      
+            
+            <div class="help-text-r"><a target="_blank" href="http://www.visualantidote.com/fastforms/help?utm_source=fastformsapp&utm_medium=FormDashboardPage&utm_campaign=help" ><img src="{!URLFOR($Resource.helptext_image)}" /></a>
+            </div>                        
+        </div>
+                                 
+        
+     </div>
+
+
+
+    <apex:form id="frm"> 
+      <apex:actionFunction name="remoteGetAllFormsJS" action="{!loadFormList}"  status="status"  rerender="mainrepeaterpanel,noRecordsFoundBox" oncomplete="hideAllPublishPanels();resetNavigationlinks();" >
+    <apex:param name="draftIdList" value="draftIdList" />
+    <apex:param name="orderByFieldName" value="orderByFieldName" />
+    <apex:param name="direction" value="direction" />
+</apex:actionFunction>
+<apex:actionFunction immediate="true"  name="AcceptEula" action="{!AcceptEula}" rerender="" ></apex:actionFunction>
+<apex:actionFunction immediate="true"  name="updateAcceptEula" rerender="" action="{!updateAcceptedEulaFlag}"  ></apex:actionFunction>
+      
+        <apex:outputPanel styleClass="createnewformblock" id="NewFormComponent" style="display:none">
+         <c:NewFormComponentMulti id="pgCp" />
+        </apex:outputPanel>
+        
+        <ol data-joyride="data-joyride" id="takeTour" style="display:none">
+          <li data-id="createNewForm" data-options="next_button: false;tip_location: bottom;">Welcome to Fast Forms! <br /><br />Click this button to create your first form.<br /></li>        
+          <li data-id="pg:frm:pgCp:cp:formName" data-options="next_button: false;tip_location: bottom;">Let's give our first form a name, something easily identifiable.<br /></li>        
+          <li data-id="s2id_mergeTypeSelect" data-options="next_button: false;tip_location: right;">Next, let's pick an object. This is where you want your form data to be captured in Salesforce. <br /><br />For example, if you are preparing a Contact Us form, you'll want to select Contact here.<br /></li>   
+          <li data-id="hoverRel" data-options="tip_location: right;">We can also pick related objects when we want to store other types of data that are related to our object above. <br /><br />For example, we may want to capture account information and associate that account to our contact. In that case, we can click this button and select Account.<br /><br /><a href="http://visualantidote.com/sfffdocumentation#Related-Objects" class="tourAnchor" target="_blank">Read more...</a><br /><br /></li>                 
+          <li data-id="createBtn" data-options="next_button: false;tip_location:bottom;">Once we've given our form a name and selected our objects, it's time to start building! <br /><br />Click here to get started.<br /></li>                           
+        </ol>        
+         <apex:actionFunction name="resetPublishOptionDrawer" action="{!togglePublishOption}"  status="status"   oncomplete="hideAllPublishPanels();" >
+    <apex:param name="currentOpenedId" value="currentOpenedId" />
+</apex:actionFunction>
+        <apex:actionStatus id="status">
+                <apex:facet name="start">
+                 <div id="load-status" > 
+                    <div class="overlay"></div>
+                        <div class="status">
+                            <div class='dialogHeader'><div class='dialogIcon dialogIconWait'>&nbsp;</div></div><div class='dialogFont'><div class="primary">Loading, please wait...<br /><br /><br /></div></div>
+                        </div>
+                  </div>
+               </apex:facet>
+    </apex:actionStatus>
+    <div id="duplicateFormProcessing" style="position:fixed;z-index:1000;display:none"> 
+                    <div class="overlay"></div>
+                        <div class="status">
+                            <div class="dialogHeader"><div class="dialogIcon dialogIconWait">&nbsp;</div></div><div class="dialogFont"><div class="primary">Loading, please wait...<br /><br /><br /></div></div>
+                        </div>
+                  </div>
+             <apex:actionFunction name="doDiscardDraft" action="{!doDiscardDraft}" reRender="mainrepeater" status="status">
+    <apex:param name="deleteDraftId" value="deleteDraftId" />
+</apex:actionFunction>
+ <apex:actionFunction name="doToggleFormActive" action="{!doToggleFormActive}" reRender="mainrepeater" status="status" oncomplete="setFormActive('{!editId}');" >
+    <apex:param name="eId" value="eId" assignTo="{!editId}" />
+</apex:actionFunction>
+<apex:actionFunction name="doSetPopupDismissed" action="{!doSetPopupDismissed}" reRender="none">
+</apex:actionFunction>
+        <apex:actionFunction name="deleteTemplate" action="{!deleteTemplate}" reRender="mainrepeater" status="status"  >
+            <apex:param name="fId" value="fId" assignTo="{!delId}" />
+        </apex:actionFunction>
+        <apex:actionFunction name="saveEditText" action="{!saveEditText}" reRender="pg">
+            <apex:param assignTo="{!updateId}" name="updateId" value="updateId" />
+            <apex:param assignTo="{!updateName}" name="updateName"
+                value="updateName" />
+        </apex:actionFunction>
+         
+        <apex:actionFunction name="duplicateTemplateComplete" action="{!duplicateTemplateComplete}"   reRender="mainrepeater" oncomplete="hideLoadingBox('#duplicateFormProcessing');">
+           
+            <apex:param name="dupPublishedRecId" value="dupPublishedRecId"   />
+             
+        </apex:actionFunction>
+        <apex:actionFunction name="editTemplate" action="{!editTemplate}" status="status" reRender="pg">
+            <apex:param name="eId" value="eId" assignTo="{!editId}" />
+        </apex:actionFunction>
+        <div class="ohidden">                
+         <apex:outputPanel layout="block" style="padding-top:25px;display:none" styleClass="freemium-msg-box-outer" rendered="{!IF(isFreemium,true,false)}">
+         <div class="freemium-msg-box"   >
+                                
+                                <div class="msg-text-div"  >Some features have been disabled in Fast Forms free edition.</div>
+                               <span onclick="closeFreemiumNotification(this,'formmenu');" class="close-icon"></span>
+                                </div>
+        </apex:outputPanel> 
+<!--Search box and sort box header HTML starts -->
+<div class="ffheader-wrapper-outer ">
+                                            <div class="ffheader-wrapper p12_0 grey-left-border10">
+                                            <div class="ffheader-wrapper-inner ">
+                                            
+                                            <div class="ff-form-filter"> 
+                                     <input id="inputTxtFormNames" type="text"   class="txt-form-name"   />
+                                     
+                                     <input id="inputTxtFormNamesHidden" type="hidden"    />
+                             <div class="btnFilterForm vabutton3" onclick="filterByFormName(this);return false;">
+                         <span class="btnText">OK</span></div>
+                        <span id="suggestionList"></span>
+                                                                                                 
+                             
+                        </div>
+                        <div class="ff-sort-box"> 
+                                 <span class="sort-title"><h3>Sort order:</h3> </span>
+  <select class="select-elem form-sort-filter" style="width:290px" onchange="focusInputFilter(this);return false;" tabindex="-1" title=""> 
+<option selected="selected" value="LastModifiedDate-DESC">Last Modified</option>   
+<option value="LastModifiedDate-ASC">First Modified</option>   
+<option value="Name-ASC">Alphabetical A-Z</option>   
+<option value="Name-DESC">Alphabetical Z-A</option>   
+</select>   </div> 
+                    <div style="clear:both">    </div> </div>  
+                    </div>  </div>
+
+                 <!--Search box and sort box header HTML ends -->
+        <div class="ffactions-wrapper-outer ">
+                                         <div class="action-btn-container">
+                                           <div class="btnSelectAll vabutton4" onclick="toggleFormSelections(this);return false;">
+                        <span class="btnIcon"></span><span class="btnText">Select All</span>
+                        </div>
+                        <div class="btnDelete vabutton4 va-disabled" onclick="deleteSelectedForms(this);return false;">
+                         <span class="btnText">Delete</span>
+                        </div>
+                                         </div>
+                                         
+                                         <div class="inline-loading-wrapper" style="clear:both">
+                                              <div class="inline-loading" style="display: none;"></div>
+                                            </div>
+                                         </div>
+        <div class="mainDiv">
+        <apex:outputPanel id="refresh"></apex:outputPanel>
+        <apex:outputPanel id="msgpanel" styleClass="ohidden">
+
+                                    <apex:pageMessages escape="false" />
+                                </apex:outputPanel>
+                                <apex:outputPanel id="noRecordsFoundBox"  layout="block">
+                                <center>
+        <apex:outputPanel styleClass="no-record-found"  layout="block" rendered="{!IF(listFormObjects==null || listFormObjects.size==0,true,false)}" >
+        No record found
+        </apex:outputPanel></center>
+        </apex:outputPanel>
+                                 <apex:outputPanel id="mainrepeaterpanel"  layout="block">
+        <apex:repeat id="mainrepeater" value="{!listFormObjects}" var="formObj">
+            <apex:outputPanel layout="block" styleClass="form-outer-container" id="itemFormWrapper">
+             
+             
+                <div    class="form-information-wrapper-outer " id="form-{!formObj.SFForm.id}">
+                      <div class="form-information-wrapper grey-left-border10" style="display:table"> 
+                      <div class="form-item-row">
+                      <div class="form-selection tb-cell" onclick="toggleFormSelection(this,true);"></div>
+                      <div class="form-information-inner tb-cell"> 
+                        <div class="form-information ">   
+                             
+                              <h1  id="formTitle" class="ff-form-title"  >{!formObj.SFForm.Name}</h1>
+                              <apex:outputText rendered="{!IF(isFreemium && formObj.HasPremiumFeatures,true,false)}">
+                              <span  class="premium-features-help blue-tooltip"  ><span class='tooltip-source-text'>?</span><span class="blue-tooltip-text -ml115 -mt80">This form has some premium features which are not available in Fast Froms free edition.</span></span>
+                              </apex:outputText>
+                              
+                             <div class="ObjectName" style="margin-top:-1%;">
+                                
+                                  <h4  >
+                                   
+                                  <span style="display:block">
+                                  <i>Primary Object:</i>&nbsp;&nbsp;
+                                  <apex:outputText rendered="{!if(formObj.IsValid,true,false)}">
+                                  <span data-object="{!formObj.SFForm.Object_Name__c}" class="{!formObj.SFForm.Object_Name__c}" id="priName" style="margin-bottom: 4px;display: inline-block;">{!if(formObj.IsValid,primaryObjectLabelMap[formObj.SFForm.Object_Name__c],'')}</span> 
+                                  </apex:outputText>
+                                  <apex:outputText rendered="{!if(formObj.IsValid,false,true)}">
+                                  <span data-object="{!formObj.SFForm.Object_Name__c}" class="{!formObj.SFForm.Object_Name__c}" id="priName" style="margin-bottom: 4px;display: inline-block;">
+                                  <span class="ff-warning">{!if(formObj.IsValid,'',formObj.SFForm.Object_Name__c)}</span></span> 
+                                  </apex:outputText>
+                                  </span>  
+                                  <apex:variable var="childCount" value="{!0}" /> 
+                                  
+                                  <apex:repeat value="{!preFormMap[formObj.SFForm.id] }" var="sepObj">
+                                       <apex:variable var="childCount" value="{!IF(sepObj.FFTitle=='detail||repeat' || sepObj.FFTitle=='detail',childCount+1,childCount)}"/>
+                                    <span class="secName-wrap object-{!IF(sepObj.FFTitle=='detail||repeat'  || sepObj.FFTitle=='detail','detail',sepObj.FFTitle)} relobj-{!IF(sepObj.FFTitle=='detail||repeat' || sepObj.FFTitle=='detail',childCount,'')}{!IF(sepObj.FFTitle=='detail||repeat',' is-repeat','')}" >
+                                    <img src="{!URLFOR($Resource.ffcommon,'iconimages/TreeEditorSingle.png')}"></img> 
+                                    <span class="secName" id="{!sepObj.FFText}">{!sepObj.FFText}<apex:outputText rendered="{!IF(sepObj.FFTitle=='detail||repeat' || sepObj.FFTitle=='detail',true,false)}"><span class="color-span"></span></apex:outputText> </span></span>
+                                    </apex:repeat>
+                                     
+                                  </h4>
+                              </div>
+                               <div class="other-information" >
+                              <div class="formActiveDiv" >
+                                <div id="btnFormActiveDiv{!formObj.SFForm.id}" class="btnFormActive {!IF(formObj.SFForm.Active__c == true,'formActive','formInactive')}" onclick="ToggleFormActive('{!formObj.SFForm.id}');">
+                                    <div class="formActiveSwitch">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                                <h5><div class="lblFormActive">Form {!IF(formObj.SFForm.Active__c == true,'active','inactive')}</div></h5>
+                            </div>
+                             
+                            <apex:outputText styleClass="modified-date" value="Last modified on: {0,date,dd/MM/yyyy}"> <apex:param value="{!formObj.SFForm.LastModifiedDate}" /> </apex:outputText>
+                             
+                            </div>
+
+                         
+                        </div>
+                        
+                        <div class="form-editor-title-box">
+            <div class="form-actions publish-actions">
+            <div class="action-icons-left">
+            <span  style="float:left;display:{!IF(formObj.SFForm.Draft_Status__c!='' && formObj.SFForm.Draft_Status__c=='Unpublished' ,'inline-block','none')}" class="button-draft draft-event draft-mode draft-status-{!formObj.SFForm.Draft_Status__c} blue-tooltip"    >
+            <span class="blue-tooltip-text -mt40 -ml40">This form has changes that have not been published yet</span>
+            <span class="draft-text">Draft</span>
+            
+             <a class="delete-icon" href="#"    onClick="DiscardDraft('{!formObj.SFForm.id}')"></a>              
+
+                 
+
+             </span>
+             <div class="button-draft draft-event draft-saving italic-text blue-tooltip" id="draftSaveState" style="display:none"    >
+               
+               <span class="draft-text">Draft Saving</span>
+              </div>
+            
+            </div>
+            <div class="action-icons-right">
+            <apex:outputText rendered="{!if(formObj.IsValid,true,false)}">
+            <a class="action-icon edit-icon blue-tooltip vfns-link" href="{!$Site.BaseUrl}/apex/FormEditor?id={!formObj.SFForm.id}" onclick="trackEditTemplate('{!formObj.SFForm.id}');"      ><span class="blue-tooltip-text -ml18">Edit</span></a>
+            <a class="action-icon duplicate-icon blue-tooltip" href="javascript:void(0);"  onClick="duplicateTemplateCall('{!formObj.SFForm.id}')"     ><span class="blue-tooltip-text -ml30">Duplicate</span></a>
+           <a class="action-icon preview-icon blue-tooltip vfns-link" href="{!$Site.BaseUrl}/apex/FormdraftPreview?id={!formObj.SFForm.id}" target="_blank"      ><span class="blue-tooltip-text -ml25">Preview</span></a>
+           <a class="action-icon delete-icon blue-tooltip" href="#"    onClick="deleteId('{!formObj.SFForm.id}')"><span class="blue-tooltip-text -ml20">Delete</span></a>
+</apex:outputText>
+<apex:outputText rendered="{!if(formObj.IsValid,false,true)}">
+ <a class="action-icon edit-icon blue-tooltip"   onclick="trackEditTemplate('{!formObj.SFForm.id}');commonAlertMessage('{!HTMLENCODE(formObj.OtherText)}','');return false;"      ><span class="blue-tooltip-text -ml18">Edit</span></a>
+            <a class="action-icon duplicate-icon blue-tooltip"    onClick="commonAlertMessage('{!HTMLENCODE(formObj.OtherText)}','');return false;"     ><span class="blue-tooltip-text -ml30">Duplicate</span></a>
+           <a class="action-icon preview-icon blue-tooltip"    onClick="commonAlertMessage('{!HTMLENCODE(formObj.OtherText)}','');return false;"   ><span class="blue-tooltip-text -ml25">Preview</span></a>
+           <a class="action-icon delete-icon blue-tooltip"      onClick="deleteId('{!formObj.SFForm.id}')"><span class="blue-tooltip-text -ml20">Delete</span></a>
+</apex:outputText>
+
+            </div>
+            </div>
+            </div>
+            <div class="form-settings-wrapper">
+           <div data-formid="{!formObj.SFForm.id}" class="form-submission-wrapper">
+             <a class="vabutton2" href="#"  onclick="expandSubmissions(this);return false;" data-elemid="{!formObj.SFForm.id}"><span class="btn-text"  >Submissions</span><span class="btn-icon"></span></a><span class="notifications-tag">0</span>
+           </div>
+             <div class="form-settings-wrapper-inner">
+            <apex:outputText rendered="{!if(formObj.IsValid,true,false)}">
+            <apex:commandLink id="publishlink" html-data-elemid="{!formObj.SFForm.id}" styleClass="vabutton2-noactive" action="{!togglePublishOption}"  status="status" rerender="publishcomponent" oncomplete="hidePublishPanels(this);">
+            <apex:param name="togglePublishId"
+                value="{!formObj.SFForm.id}"/>    <span data-elemid="{!formObj.SFForm.id}" class='btn-text'>Publish Options</span><span data-elemid="{!formObj.SFForm.id}" class='btn-icon'></span>              
+        </apex:commandLink>
+        </apex:outputText>
+<apex:outputText rendered="{!if(formObj.IsValid,false,true)}">
+        <a class="vabutton2-noactive" href="#"  onclick="commonAlertMessage('{!HTMLENCODE(formObj.OtherText)}','');return false;" data-elemid="{!formObj.SFForm.id}">    <span class="btn-text" data-elemid="{!formObj.SFForm.id}">Publish Options</span><span class="btn-icon" data-elemid="{!formObj.SFForm.id}"></span></a>
+         </apex:outputText>
+            </div>             
+            </div>
+            
+            </div>
+            </div>
+       
+                   </div>     
+             
+               
+           <div style="clear:both">  
+               </div>
+            <apex:outPutPanel styleClass="publishComponentCSS" id="publishcomponent" layout="block" style="display:none;"   >
+            <apex:outputPanel id="draftPublished" rendered="{!IF(formObj.SFForm.Id==currentOpenedId,true,false)}" layout="block" >
+           
+ <apex:outputPanel styleClass="marginLRauto ohidden text-align-center" rendered="{!IF(!isSelectedFormValid,true,false )}" >
+ 
+     <div class="vff-alert " id="alertActionBox" style="display:{!IF(!isSelectedFormValid ,'inline-block','none')}">
+                
+                <div class="vff-alert-msg msg-text-div"  style="display:block">Warning: One or more of your form's payment fields are not configured
+ 
+        <a class="vabutton1 vfns-link" href="{!$Site.BaseUrl}FormEditor?id={!formObj.SFForm.id}" >Go to Form Editor</a>
+        </div>
+                </div>
+    </apex:outputPanel>
+
+ <apex:outputPanel styleClass="marginLRauto ohidden text-align-center" rendered="{!IF(formObj.SFForm.VisualAntidote__Hosted_Form_ID__c==''  ,true,false  )}" >
+ 
+     <div class="vff-alert " id="alertActionBox" style="display:{!IF(formObj.SFForm.Hosted_Form_ID__c=='' && isSelectedFormValid  ,'inline-block','none')}">
+                
+                <div class="vff-alert-msg msg-text-div"   style="display:block">Warning: This form has not been published yet
+ <a class="vabutton1 vfns-link" href="{!$Site.BaseUrl}FormEditor?id={!formObj.SFForm.id}" >Go to Form Editor</a>
+        </div>
+                </div>
+    </apex:outputPanel>
+    
+    <apex:outputPanel styleClass="marginLRauto ohidden text-align-center" rendered="{!IF(formObj.SFForm.VisualAntidote__Hosted_Form_ID__c!='' && formObj.SFForm.VisualAntidote__Draft_Status__c!=''  && formObj.SFForm.VisualAntidote__Draft_Status__c=='Unpublished'  ,true,false)}" >
+ 
+     <div class="vff-alert " id="alertActionBox" style="display:{!IF(formObj.SFForm.Hosted_Form_ID__c!='' && isSelectedFormValid && formObj.SFForm.Draft_Status__c!='' && formObj.SFForm.Draft_Status__c=='Unpublished' ,'inline-block','none')}">
+                
+                <div class="vff-alert-msg msg-text-div" onclick="hideMessage(this);" style="display:block">Warning: This form has an unpublished draft
+ <a class="vabutton1 vfns-link" href="{!$Site.BaseUrl}FormEditor?id={!formObj.SFForm.id}" >Go to Form Editor</a>
+        </div>
+                </div>
+    </apex:outputPanel>
+    
+    
+
+
+</apex:outputPanel>
+ <c:PublishComponent ffrecord="{!formObj.SFForm.id}" ffFreemium="{!isFreemium}"  rendered="{!IF(formObj.SFForm.Id==currentOpenedId && isSelectedFormValid ,true,false)}"   />
+    
+<div class="grey-left-border10"></div>
+</apex:outPutPanel>
+<div class="form-submission-wrapper-expanded"></div>
+         
+                     </div>
+             
+         </apex:outputPanel>
+        </apex:repeat>
+
+        
+</apex:outputPanel>
+<div class="fscontent-pagination-wrapper" >
+     <div class="ff-pagination-box" ></div>
+  </div>
+        </div>
+        </div>
+
+        <br />
+        <div id="dialog" class="preview"></div>
+        <div id="dialog-confirm" class="content"></div>
+
+    </apex:form>
+
+<div class="intercomHelpIcon" title="Questions? We're here to help!" alt="Questions? We're here to help!"><div class="intercomHelpIconText"><a id="Intercom" href="mailto:uh2s363g@incoming.intercom.io" class="intercomHelpIconLink">?</a></div><div class="intercomHelpIconClose" onclick="hideHelpIcon();">x</div></div>
+
+
+<script type="text/javascript">
+  var _mfq = _mfq || [];
+  (function() {
+    var mf = document.createElement("script");
+    mf.type = "text/javascript"; mf.async = true;
+    mf.src = "//cdn.mouseflow.com/projects/59c9bd1d-b0c1-42f4-98eb-590c0642300b.js";
+    document.getElementsByTagName("head")[0].appendChild(mf);
+  })();
+  _mfq.push(["setVariable", "Org ID", "{!$Organization.Id}"]);
+</script>
+<script>
+/*New form dashboard methods*/
+ 
+function toggleFormSelections(elemSource){
+  if(!$(elemSource).hasClass('va-disabled')){
+    var selectAll=false;
+    if($(elemSource).find('.btnText').text()=='Select All'){
+      selectAll=true;
+    }
+    if(!selectAll){
+
+    }
+$('.form-information-wrapper-outer').each(function(indx,rowElem) {
+    $(rowElem).removeClass('f-selected');
+   if(selectAll){
+      $(rowElem).addClass('f-selected');
+    }   
+    });
+resetSelectAllBtn();
+  resetDeleteBtn();
+}
+}
+function toggleFormSelection(elemSource,resetLinks){
+  if($(elemSource).parents('.form-information-wrapper-outer').hasClass('f-selected')){
+   $(elemSource).parents('.form-information-wrapper-outer').removeClass('f-selected');
+  }
+  else{
+   $(elemSource).parents('.form-information-wrapper-outer').addClass('f-selected');
+  }
+  if(resetLinks){
+  resetSelectAllBtn();
+  resetDeleteBtn();
+ }
+}
+function resetSelectAllBtn(){
+  if(enableDeselectAll()){
+    $('.action-btn-container .btnSelectAll').find('.btnText').text('Deselect All');
+  }
+  else{
+     $('.action-btn-container .btnSelectAll').find('.btnText').text('Select All');
+  }
+}
+function resetDeleteBtn(){
+  if(isDeleteAllowed()){
+    $('.action-btn-container .btnDelete').removeClass('va-disabled');
+  }
+  else{
+    $('.action-btn-container .btnDelete').addClass('va-disabled');
+  }
+}
+function isSelectionAllEnabled(){
+   
+  var isSelectionAllowed=false;
+  
+  $('.form-information-wrapper').each(function(indx,rowElem) {
+    
+   if(!$(rowElem).find('.form-item-row').parent().parent().hasClass('f-selected')){
+isSelectionAllowed=true;
+    }   
+    });
+
+ return isSelectionAllowed;
+}
+function enableDeselectAll(){
+   
+  var allselected=false;
+  if($('.form-information-wrapper-outer').length>0 && $('.form-information-wrapper-outer.f-selected').length==$('.form-information-wrapper-outer').length){
+    allselected=true;
+  }
+   
+ return allselected;
+}
+function isDeleteAllowed(){
+    
+  var isAnySelected=false;
+  $('.form-information-wrapper').each(function(indx,rowElem) {
+    
+    if($(rowElem).find('.form-item-row').parent().parent().hasClass('f-selected')){
+isAnySelected=true;
+    }
+     
+        
+    });
+
+ return  isAnySelected;
+}
+
+function initializePagination(curpage,pagesize){
+var totalRecords=formRecIDs.length;
+          
+
+          var paginationElemMain=$('.ff-pagination-box');
+        var totalPages=  Math.ceil(totalRecords/pagesize);
+        var ulElem = $('<ul/>',{'class':'ff-pagination ul-nav-item'});
+         console.log('totalPages:'+totalPages);
+        if(totalPages>0){
+          if(totalPages>5){
+         //var ulElem = $('<ul/>',{'class':'ff-pagination ul-nav-item'});
+         var aTag = $('<a/>',{'class':'nav-link first-link' ,'data-page':'1','html':'<','onclick':'navPageClick(this);'});
+         var liElem = $('<li/>',{'class':'first-item'});
+               liElem.append(aTag);
+              ulElem.append(liElem);
+            }
+            for(var indx=1;indx<=totalPages;indx++){
+              var htmltext
+              var aTag = $('<a/>',{'class':'nav-link' ,'data-page':indx,'html':indx,'onclick':'navPageClick(this);'});
+               
+              if(indx==curpage){
+               // aTag = $('<span/>',{'class':'nav-link' ,'html':indx});
+                 aTag.addClass('active');
+              }
+              var liElem = $('<li/>',{'class':'nav-item'});
+               liElem.append(aTag);
+              ulElem.append(liElem);
+            }
+            if(totalPages>5){
+        // var ulElem = $('<ul/>',{'class':'ff-pagination ul-nav-item'});
+         var aTag = $('<a/>',{'class':'nav-link last-link' ,'data-page':totalPages,'html':'>','onclick':'navPageClick(this);'});
+         var liElem = $('<li/>',{'class':'last-item'});
+               liElem.append(aTag);
+              ulElem.append(liElem);
+            }
+          }
+           //var navulElem = $('<nav/>' );
+         // navulElem.append(ulElem);
+          paginationElemMain.html(ulElem);
+        }
+        function navPageClick(elemSource){
+          if($(elemSource).hasClass('active') || $(elemSource).hasClass('disabled')){
+
+          }else{
+            $(elemSource).parents('.ff-pagination').find('.nav-link').removeClass('active');
+            if($(elemSource).hasClass('first-link')){
+              $(elemSource).parent().next().find('.nav-link').addClass('active');
+            }
+            else if($(elemSource).hasClass('last-link')){
+              $(elemSource).parent().prev().find('.nav-link').addClass('active');
+            }
+            else{
+            $(elemSource).addClass('active');
+            }
+            resetCurrentPageData($(elemSource).attr('data-page'),false);
+            $('html, body').animate({scrollTop: 0}, 500);
+          }
+        }
+        function resetPaginationLinks(){
+           var totalRecords=formRecIDs.length;
+        var totalPages=  Math.ceil(totalRecords/pageSize);
+          if(currentPage==1){
+        $('.ul-nav-item').find('.first-link').addClass('disabled');
+        }
+        else{
+           $('.ul-nav-item').find('.first-link').removeClass('disabled');
+        }
+        if(currentPage==totalPages){
+          $('.ul-nav-item').find('.last-link').addClass('disabled');
+        }
+        else{
+           $('.ul-nav-item').find('.last-link').removeClass('disabled');
+        }
+          $('.ul-nav-item .nav-item').each(function(indx,navItem){
+            var pageNumber=$(navItem).find('.nav-link').attr('data-page')
+            if(!isNullOrEmpty(pageNumber)){
+              $(navItem).find('.nav-link').text(pageNumber);
+            }
+
+          });
+          var leastNumToShow=0;
+          var numRangePlus=0;
+          var leastNumRange=3;
+          var maxNumRange=3;
+          var maxNumToShow=4;
+           var maxRecAvailable=parseInt(totalPages);
+           var intPage=parseInt(currentPage);
+
+          var pageDiff=maxRecAvailable-intPage;
+           
+         if( intPage<4 ){
+          maxNumToShow=6;
+         }
+          else if( intPage>=4 ){
+            maxNumToShow= intPage+maxNumRange;
+         
+          }
+
+          if(pageDiff<4 ){
+
+            leastNumToShow=intPage-((leastNumRange+leastNumRange)-pageDiff);
+ 
+          }
+          else if( intPage>=4){
+            leastNumToShow=intPage-leastNumRange;
+          }
+       
+          
+          console.log('currentPage '+intPage);
+          console.log('leastNumToShow '+leastNumToShow);
+          console.log('maxNumToShow '+maxNumToShow);
+          $('.ul-nav-item .nav-item').each(function(indx,navItem){
+            var pageNumber=$(navItem).find('.nav-link').attr('data-page')
+            if(pageNumber<leastNumToShow || pageNumber>maxNumToShow){
+              $(navItem).hide();
+            }
+            else{
+              if(pageNumber!==currentPage && (pageNumber==leastNumToShow || pageNumber==maxNumToShow)){
+                $(navItem).find('a').text('...');
+                $(navItem).find('a').addClass('ls2');
+              }
+              else{
+                 $(navItem).find('a').text(pageNumber);
+                 $(navItem).find('a').removeClass('ls2');
+               }
+              $(navItem).show();
+               
+            }            
+
+          });
+            
+           var htmlPageInfo='Page '+currentPage+' of '+totalPages;
+            var divPageInfo = $('<div/>',{'class':'ff-page-info','html':htmlPageInfo});
+          $('.ff-pagination-box').find('.ff-page-info').remove();
+          $('.ff-pagination-box').append(divPageInfo);
+          resetSelectAllBtn();
+          resetDeleteBtn();
+        }
+        function resetCurrentPageData(curpage,initialLoad){
+
+
+          currentPage=curpage;
+        resetPaginationLinks();
+        var  startRec = Math.max(curpage - 1, 0)*pageSize;
+            var  endRec = startRec + pageSize;
+                           var currentIdObjs=formRecIDs.slice(startRec,endRec);
+                           var currentIds=[];
+                           $.each(currentIdObjs,function(indx,item){
+                            currentIds.push( item.Id );
+                           });
+                           var csvIds=currentIds.join();
+                           remoteGetAllFormsJS(csvIds,orderByField,orderByDirection);
+
+              
+        }
+        function filterByFormName(elemSource){
+          formSearchText=$('#inputTxtFormNames').val();
+          callToRemoteGetFormIDs();
+        } 
+        function focusInputFilter(elemSource){
+          var sortOrder=$(elemSource).val();
+          if(!isNullOrEmpty(sortOrder) && sortOrder.split('-').length>1){
+          orderByDirection=safeStringValue(sortOrder.split('-')[1],'DESC');
+          orderByField=safeStringValue(sortOrder.split('-')[0],'LastModifiedDate');
+          } 
+          callToRemoteGetFormIDs();
+        }
+        function callToRemoteGetFormIDs(){
+           remoteGetAllFormIDsJS();
+        }
+        function deleteSelectedForms(elemSource){
+          var delFormNameArr=[];
+           var lstOfForms='<ul style="text-align:left">';
+                  $('.form-information-wrapper-outer.f-selected').each(function(indx,rowElem) {
+                   var formname= $(rowElem).find('.ff-form-title').text();
+                    if(!isNullOrEmpty(formname)){ 
+                      delFormNameArr.push(formname);
+                      if(indx<5){
+                     lstOfForms +='<li>'+formname+'</li>';
+                   }
+                    }
+                  });
+                  if(delFormNameArr!=null && delFormNameArr.length>0){
+
+        if(delFormNameArr.length>5)
+        {
+            var extraFieldsCount= delFormNameArr.length-5;
+            lstOfForms +='<li> and '+extraFieldsCount+' more </li>';
+        }
+        lstOfForms = lstOfForms+'</ul>';
+          $("#dialog-confirm").html("<div class='dialogHeader'><div class='dialogIcon dialogIconAlert'>&nbsp;</div></div><div class='dialogFont'><div class='primary'>Are you sure you want to delete following selected forms?<br/>"+lstOfForms+"</div></div>");        
+            // Define the Dialog and its properties.
+            $("#dialog-confirm").dialog({
+                resizable: false,
+                modal: true,
+                title: "Delete",
+                height: "auto",
+                width: 413,
+                buttons: {
+                    "Yes":{
+                        click: function () {
+                        $(this).dialog('close');
+                        callback(true);
+                         
+                    },
+                        text: 'Yes',
+                        'class': 'vabutton1'
+                    },
+                    "No":{
+                        click: function () {
+                        $(this).dialog('close');
+                        callback(false);
+                        },
+                        text: 'No',
+                        'class': 'vabutton2'
+                    }                    
+                }
+            });
+            $('.ui-dialog :button').blur();
+            function callback(value) {
+            if (value) {
+                    var delIdArr=[];
+                  $('.form-information-wrapper-outer.f-selected').each(function(indx,rowElem) {
+                   var delId= $(rowElem).attr('id');
+                    if(!isNullOrEmpty(delId)){
+                      delId=delId.replace('form-','');
+                      delIdArr.push(delId);
+                    }
+                  });
+                  if(delIdArr!=null && delIdArr.length>0){
+                    remoteDeleteTemplatesJS(delIdArr);
+                  }              
+            } else {
+                return false;
+            }
+        }
+          }
+        }
+        function resetInlineLoadingBar(show){
+          if(show){
+          $('.ffactions-wrapper-outer .inline-loading').fadeIn();
+          }
+          else{
+             $('.ffactions-wrapper-outer .inline-loading').fadeOut();
+          }
+        }
+        function getFormNameListJS(response,param){   
+    Visualforce.remoting.Manager.invokeAction(   
+     '{!$RemoteAction.CKEditorMenuController.getFormNameList}',   
+     param,    
+     function(result, event){   
+      if (event.status) {         
+       var objList = [];   
+       for(var i = 0; i < result.length; i++){   
+        var obj   = result[i];   
+          obj=unescapeHTMLString(obj);
+        objList.push(obj);   
+       }   
+       response(objList);   
+      }else {   
+       alert(event.message);   
+      }   
+     },    
+     {escape: true}   
+    );   
+   } 
+        /*New form dashboard methods block ends*/
+         /*Fast prefill methods block starts*/
+function remoteValidateDeleteActionJS(delIdList){   
+    Visualforce.remoting.Manager.invokeAction(   
+     '{!$RemoteAction.CKEditorMenuController.remoteValidateDeleteAction}',   
+     delIdList,    
+     function(result, event){   
+      if (event.status) { 
+      resetInlineLoadingBar(false);         
+       var formcount = 0;  
+       var ul=$('<ul/>'); 
+       for(var i = 0; i < result.length; i++){   
+        if(result[i].IsValid && result[i].ResultText=='DELETE_NOT_ALLOWED'){
+         var liItem=$('<li/>');liItem.html(result[i].OtherText);
+         ul.append(liItem);
+         formcount++;
+        }      
+       }
+       if(formcount>0){
+        var primaryMsg='This form has auto-generated prefil links enabled. Please go to the form\'s Publish Options and disable auto-generated prefill links before continuing.';
+        var secondaryMsg='';
+        var divWrapper=$('<div/>');
+        
+         $(divWrapper).html(ul);
+         if(formcount>1){
+          primaryMsg='The following forms have auto-generated prefil links enabled. Please go to each form\'s Publish Options and disable auto-generated prefill links before continuing.';
+         }
+        commonAlertMessage(primaryMsg,$(divWrapper).html());
+       }else{
+        remoteDoDeleteTemplatesJS(delIdList);
+       }   
+          
+      }else {  
+      resetInlineLoadingBar(false);        
+       console.log(''+event.message);   
+      }   
+     },    
+     {escape: true}   
+    );   
+   }
+          /*Fast prefill methods block ends*/
+</script>
+</apex:page>
