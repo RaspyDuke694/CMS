@@ -1,0 +1,18 @@
+/*-------------STUDENT REGISTRATION FRAME(NEW STUDENTS.HTML)----------------------------*/
+
+
+
+
+
+
+iframe
+{
+	border:solid 2px #000000; box-shadow: 0 0.5px 5px 0.5px;
+}
+
+iframe:hover
+{
+	box-shadow: 0 1px 10px 1px;
+}
+
+}
