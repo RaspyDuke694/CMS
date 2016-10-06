@@ -1,0 +1,1102 @@
+<apex:page sidebar="false" showChat="false" tabStyle="FastForms__tab" controller="VisualAntidote.NativeCloudWizardController"  >
+ 
+<apex:remoteObjects jsNamespace="ffOrg">
+<apex:remoteObjectModel name="Organization" jsShorthand="org" fields="Id,InstanceName,IsSandbox,OrganizationType">  
+    </apex:remoteObjectModel>    
+</apex:remoteObjects>
+
+<apex:remoteObjects jsNamespace="ffCSTokenNs">
+<apex:remoteObjectModel name="VisualAntidote__FastFormsTokenInfo__c" jsShorthand="ffTokenObj" fields="Id,VisualAntidote__Is_Native_Setup_Done__c">  
+    </apex:remoteObjectModel>    
+</apex:remoteObjects>
+
+ 
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge;" />     
+         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+
+</head>
+ <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
+ 
+         <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script> 
+            <link rel="stylesheet" href="{!URLFOR($Resource.ffcommon,'ffcommon.css')}" />
+<apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js" /> 
+         <apex:includeScript value="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" />
+         <script src="{!URLFOR($Resource.Clipboard,'ZeroClipboard.js')}"></script>  
+<script src="{!URLFOR($Resource.commonJSHelper)}"></script>
+<link rel="stylesheet" href="{!URLFOR($Resource.select2,'select2.css')}" />
+        <script src="{!URLFOR($Resource.select2,'select2.js')}"></script>
+  <!-- Begin Default Content REMOVE THIS -->
+   <style>
+   .ff-logo-box .ff-logo-title {
+    
+    margin-right: 45px;
+}
+   .help-text-r{
+    height:150px;
+
+   }
+   .mainHeader{
+    overflow: hidden;
+   }
+   span,a,div,p,label{
+    font-family: 'Open Sans';
+   }
+   a{color: #33aefd;font-size: 14px; cursor: pointer;}
+   label{
+        color: #052942;
+    font-size: 14px; padding-bottom: 8px;
+    display: inline-block;
+    }
+     .ff-accordion .acc-content{ padding:0px;}
+     .ff-accordion .inner-toggle {
+    margin-left: 35px;
+    margin-top: 10px;
+}
+.ff-accordion .acc-content-inner {
+    background-color: #E6ECEF; padding-left: 75px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  .acc-content .acc-content-inner.odd-in {
+    background-color: #DBE2E6;
+  }
+  .vabutton1{
+    min-width: 80px;
+    text-align: center;
+  }
+  .vabutton10{
+    color: #052942;
+    text-align: center;
+    background-color: #C1C8CB;
+    text-decoration: none;
+    padding: 6px  10px;
+    display: inline-block;
+    font-size: 14px;
+    min-width: 80px;
+    border-radius: 6px;
+    border: solid 1px #C1C8CB;
+    cursor: pointer;
+  }
+  input.type-text {
+    border-radius: 5px;
+    background: white;
+    font-family: 'Open Sans';
+    border: 1px solid #a3a3a3;
+    color: #052942;
+    background-color: #ced7db;
+    padding: 7px;
+    font-size: 13.5px;
+    outline: none;
+}
+.va-readonly {
+    pointer-events: none;
+    background: none repeat scroll 0 0 #cecece !important;
+    border-color: #cecece !important;
+    color:  #052942;
+    text-decoration: none;
+}
+.vertical-tabs > li{
+      float: left;clear:both;
+    }
+    .ffsup{
+      margin-top: -11px;
+    float: left;
+    font-weight: 900;
+    }
+    .mainHeaderInner { 
+    overflow: visible;
+    height: 60px;
+}
+.nch-acc{
+  background-color: #F7F9F8;
+}
+.nested-acc .accordion-wrapper {
+    background-color: #E6EBEF;
+}
+.nch-acc .accordion-header {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+.setup-wizard-wrapper{
+  width:540px;
+  margin:20px auto;
+  border-radius:5px;border:1px solid #CFDCEA;min-height: 500px;
+    background: white;
+    overflow: hidden;
+}
+.setup-wizard-wrapper .header-sec{
+  padding: 45px;
+    background: #ffffff;
+    text-align: center;width: inherit;
+    box-shadow: -4px 3px 6px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+}
+.copy-block-wrapper{
+  width:350px;
+  margin-top:8px;
+      margin-left: 25px;
+}
+.copy-block-wrapper .ff-req{
+  float: right;
+    margin-right: -20px;color:red;
+}
+.copy-block-wrapper input{
+  width:inherit;
+}
+.copy-block-wrapper .copy-code-block{
+  float:none;
+  width:inherit;
+  text-align:right;
+}
+.step-footer { 
+    padding: 20px 45px;    overflow: hidden;
+}
+.step-footer label {
+    width: 350px;
+}
+.step-footer a.next-step {
+    float: right;
+} 
+.acc-inner{padding-top: 20px;}
+.acc-content ul{list-style-type: none; padding:0px;margin:0px;padding-left: 45px;padding-right: 40px;}
+.acc-content ul li{padding:6px 0px;font-size: 14px;margin: 0px; overflow: hidden;}
+.acc-content ul li b:first-child{padding-right:10px; font-family: "Open Sans Bold";width: 27px;
+    display: inline-block;float:left;
+    text-align: center;}
+ .ff-accordion .step-done span.step-index {
+    border-color: #10C046 !important;
+    text-indent: -9999px;
+    background-image: url("{!URLFOR($Resource.ffcommon,'icon_draft_actions/ff-tick.png')}");
+    background-repeat: no-repeat;background-position: center;
+}
+.nch-acc .accordion-header h2 {
+font-weight: 900 !important;
+}
+.nch-acc .step-done .accordion-header h2 {
+text-decoration: line-through;
+color:rgb(131, 144, 153);
+}
+.setup-wizard-splash-screen{
+  overflow: hidden;
+    background-color: #ffffff;
+}.setup-wizard-splash-inner{
+    margin: 100px auto 140px;
+    max-width: 350px;
+    text-align: center;
+  }
+  .pl45r40{
+    padding-left: 45px;
+    padding-right: 40px;
+  }
+  .btnSetupUrl .btnIcon{
+    display: none;
+    background-image:url("{!URLFOR($Resource.ffcommon,'icon_publish_options/publish_option_sprite.png')}");
+    background-repeat: no-repeat;
+        background-position: -12px -236px;
+    width: 13px;
+    height: 16px;
+  }
+  .btnSetupUrl.setup-done .btnIcon{
+    display:inline-block;
+  }
+  .btnSetupUrl.setup-done{
+      pointer-events: none;
+    background: none repeat scroll 0 0 #cecece !important;
+    border-color: #cecece !important;
+    color: #052942;
+    text-decoration: none;
+}
+#mainErrorBox{
+    text-align: center;
+}
+.vff-alert-inline-box{
+    padding:5px 40px;
+}
+div.li-indented { 
+    display: inline-block;
+    float: left;
+    width: 90%;margin-top: -3px;
+} 
+div.nested-acc  .copy-block-wrapper{
+margin-left:0px;
+width:300px;
+}
+input.white-back{
+    background-color: #ffffff;
+}
+.acc-inner > div > ul{
+    padding-bottom:20px;
+}
+li input[type="text"]{
+    width: inherit;margin-bottom:2px;
+}
+.ff-accordion.nested-acc .acc-content {
+    background-color: #D7DBDE;
+}
+.nch-acc .acc-inner img{
+    max-width: 250px;
+    padding-top: 8px;
+}
+    </style>
+    <div class="mainHeader">
+    <div class="mainHeaderInner">
+        <div style="line-height: 22px;margin: 8px auto auto 20px;float: left; display: inline-block; ">
+
+            <div>
+                <img alt="Native Cloud Setup Wizard" title="Native Cloud Setup Wizard" style="display: inline-block;vertical-align: middle;" src="{!URLFOR($Resource.logos,'setup-wizard.png')}" /><h1 style="display: inline-block;vertical-align: middle;margin-left: 20px;" class="E-bold">Setup Wizard</h1>
+            </div>
+
+        </div>
+        <div style="float: right;line-height:0px;">
+
+            <div class="ff-logo-box">
+                <div class="ff-logo"><img alt="Fast Forms Native Cloud" title="Fast Forms Native Cloud" src="{!URLFOR($Resource.logos,'native-cloud.png')}" /></div>
+                <div class="ff-logo-title">
+                    <span class="ffsup">Fast Forms</span>
+                    <h1 style="margin-bottom: 5px;" class="sub-h1">NATIVE</h1><h1 style="clear:left;" class="E-bold">CLOUD</h1>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="help-text-r">
+            <a target="_blank" href="http://www.visualantidote.com/fastforms/help?utm_source=fastformsapp&utm_medium=FormDashboardPage&utm_campaign=help"><img src="{!URLFOR($Resource.helptext_image)}" /></a>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="container">
+    <div class="setup-wizard-splash-screen">
+        <div class="setup-wizard-splash-inner">
+            <h1 style="font-family: 'Open Sans Bold';">Welcome to Fast Forms <br />NativeCloud!</h1>
+            <label style="display:block;clear:both;margin-top:20px;">You're only few clicks away from building <br />your first Salesforce-native form.</label>
+            <div class="mt40"><a class="vabutton5" onclick="switchSetupView();">Get Started</a></div>
+        </div>
+    </div>
+    <div id="mainErrorBox" style="display:none"><div   class="vff-alert"  ><div class="vff-alert-msg msg-text-div"  >Remote site is not added successfully. see <a href="https://help.salesforce.com/apex/HTViewHelpDoc?id=configuring_remoteproxy.htm&language=en" target="_blank">help article </a>. Please contact Fast Forms Support Team for further help.</div></div></div>
+    <div class="setup-wizard-wrapper" style="display:none;">
+        <div class="header-sec"><h2>Follow the steps below to proceed with your setup</h2></div>
+        <div class="ff-accordion nch-acc pb40">
+            <div class="accordion-wrapper ">
+                <div class="accordion-header  ">
+                    <h2 data-targetclass="step-1" onclick="toggleAccordionContent(this);return false;" class=""><span class="step-index">1</span>Create a Force.com site<span class="acc-ic"></span></h2>
+                </div>
+                <div class="acc-content step-1 f-collapse">
+                    <div class="acc-content-inner">
+                        <label>Do you have any existing Force.com site you would like to use?</label>
+                        <ul class="nav nav-tabs vertical-tabs">
+                            <li class="">
+                                <a href="#forcecomsiteYes" onclick="toggleSiteExists(this)"><span class="ff-radio-css"></span>Yes</a>
+                                <div class="clear-both inner-toggle" style="display: none">
+                                    <label>Please select the site you would like to use for Fast Forms:</label><br /><select width="231" class="sel-231" id="selForceComSites" onchange="onSiteSelectionChange(this)"><option value="">-select a site-</option></select>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="#forcecomsiteNo" onclick="toggleSiteExists(this)"><span class="ff-radio-css"></span>No</a>
+                                <div class="clear-both inner-toggle" style="display: none"> <label>To create one</label><br /><a onclick="openNewWindow('/0DM/o');">&gt; Click here</a></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="acc-content-inner odd-in" style="display: none;">
+                        <div class="tab-content vertical-tab-content">
+                            <div class="tab-pane" id="forcecomsiteBlock">
+                                <label>Your force.com website</label>
+                                <div class="copy-block-wrapper">
+                                    <input type="text" id="txtbxForcecomSite" onblur="resetNextButton(this);" data-isrequired="true" class="type-text"></input>
+                                    <div class="copy-code-block">
+                                        <span id="clip_copy_txtbxForcecomSite" data-clipboard-target="txtbxForcecomSite" class="copy-code-text">Copy to clipboard</span>
+                                    </div>
+                                </div>
+                            </div><div class="step-footer"><a class="vabutton1 next-step va-readonly" onclick="nextStep(this);">Next</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-wrapper ">
+                <div class="accordion-header ">
+                    <h2 data-targetclass="step-2" onclick="toggleAccordionContent(this);return false;" class=""><span class="step-index">2</span>Assign permissions to site user<span class="acc-ic"></span></h2>
+                </div>
+                <div class="acc-content step-2 f-collapse">
+                    <div class="acc-inner">
+                        <ul>
+                            <li>
+                                <b>1</b><a title="Go to the Sites setup page" onclick="openNewWindow('/0DM/o');">Go to the Sites setup page &gt;</a>
+                            </li>
+                            <li>
+                                <b>2</b>Find your site in the list shown and click on its name
+                            </li>
+                            <li>
+                                <b>3</b>Click <i>'Public Access Settings'</i>
+                            </li>
+                            <li>
+                                <b>4</b>Click <i>'Assigned users'</i>
+                            </li>
+                            <li>
+                                <b>5</b>Click the name of the Site Guest user shown in the list
+                            </li>
+                            <li>
+                                <b>6</b>Under <i>'Permission Set Assignments'</i>,click <i>'Edit Assignments'</i>
+                            </li>
+                            <li>
+                                <b>7</b>Click <i>NativeCloud Permissions</i> and click the right arrow to add it to the box to the right
+                            </li>
+                            <li><b>8</b>Click Save</li>
+                        </ul>
+                    </div>
+                    <div class="step-footer"><label>Click this button when you are finished going through these steps.</label><a class="vabutton1 next-step" onclick="checkPermissionSetAssignment(this);">Next</a></div>
+                </div>
+            </div>
+            <div class="accordion-wrapper">
+                <div class="accordion-header">
+                    <h2 data-targetclass="step-3" onclick="toggleAccordionContent(this);return false;" class=""><span class="step-index">3</span>Update your environment URLs<span class="acc-ic"></span></h2>
+                </div>
+                <div class="acc-content step-3 f-collapse">
+                         
+
+<div class="ff-accordion nested-acc nch-acc pb40">
+    <div class="accordion-wrapper">
+        <div class="accordion-header">
+            <h2 data-targetclass="step-3-1" onclick="toggleAccordionContent(this);return false;" class=""><b>Step 1</b> Get the instance URL<span class="acc-ic"></span></h2>
+        </div>
+        <div class="acc-content step-3-1 f-collapse">
+            <div class="acc-inner">
+                <div class="pl45r40">
+                    <ul>
+                        <li><b>1</b><div class="li-indented">Go to the <i>'Develpoer Console'</i> in User Menu<br /><img src="{!URLFOR($Resource.NativeCloudHelperImages,'3_1_1.png')}" alt="Developer console in User Menu" title="Developer console in User Menu" /></div></li>
+                        <li><b>2</b><div class="li-indented">Click <i>'Debug'</i> in the menu and <i>'Open Execute Anonymous Window'</i> in the drop-down menu<br /><img src="{!URLFOR($Resource.NativeCloudHelperImages,'3_1_2.png')}" alt="Open execute anonymous window" title="Open execute anonymous window" /></div></li>
+                        <li>
+                            <b>3</b><div class="li-indented">
+                                Paste the following code into the window that opens:<br /><div class="copy-block-wrapper">
+                                    <input type="text" id="txtbx3_1InstanceUrlCode" value="system.debug('INSTANCE URL:'+URL.getSalesforceBaseUrl().toExternalForm());" class="type-text"></input>
+                                    <div class="copy-code-block">
+                                        <span id="clip_copy_txtbx3_1InstanceUrlCode" data-clipboard-target="txtbx3_1InstanceUrlCode" class="copy-code-text">Copy to clipboard</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li><b>4</b><div class="li-indented">Make sure that the <i>'Open Log'</i> checkbox is checked.</div></li>
+                        <li><b>5</b><div class="li-indented">Click <i>'Execute'</i></div></li>
+                        <li><b>6</b><div class="li-indented">Check the <i>'Debug Only'</i> checkmark under the list of entries in the log.<br /><img src="{!URLFOR($Resource.NativeCloudHelperImages,'3_1_6.png')}" alt="Debug Only filter" title="Debug Only filter" /></div></li>
+                        <li><b>7</b><div class="li-indented">In the resulting list-- double click the one item left.</div></li>
+                        <li><b>8</b><div class="li-indented">In the window that opened, copy the URL after <i>'Instance URL'</i><br /><img src="{!URLFOR($Resource.NativeCloudHelperImages,'3_1_7.png')}" alt="Copy Url after Instance URL" title="Copy Url after Instance URL" /></div></li>
+                        <li>
+                            <b>9</b><div class="li-indented">
+                                Paste the link in the field below:<br />
+                                <input style="margin-top:8px;" type="text" id="txtbxInstanceURL" class="type-text white-back"></input>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="accordion-wrapper">
+        <div class="accordion-header">
+            <h2 data-targetclass="step-3-2" onclick="toggleAccordionContent(this);return false;" class=""><b>Step 2</b> (optional) Get keys for Google reCaptcha<span class="acc-ic"></span></h2>
+        </div>
+        <div class="acc-content step-3-2 f-collapse">
+            <div class="acc-inner">
+                <div class="pl45r40">
+                    <ul>
+                        <li><b>10</b><div class="li-indented"><a onclick="openNewWindow('https://www.google.com/recaptcha/admin#list')" title="Google reCaptcha Setup ">Follow this link</a> </div></li>
+                        <li><b>11</b><div class="li-indented">Login to google account</div></li>
+                        <li>
+                            <b>12</b><div class="li-indented">
+                                In the form on the page, add domain names of the sites, where you are planning to have your forms, as well as the one below:<br /><div class="copy-block-wrapper">
+                                    <input type="text" id="txtbx3_2domain" value="force.com" class="type-text"></input>
+                                    <div class="copy-code-block">
+                                        <span id="clip_copy_txtbx3_2domain" data-clipboard-target="txtbx3_2domain" class="copy-code-text">Copy to clipboard</span>
+                                    </div>
+                                </div> <label style="font-size: 12px;">E.g.: force.com,fastforms.io</label>
+                            </div>
+                        </li>
+                        <li><b>13</b><div class="li-indented">Add owners</div> </li>
+                        <li><b>14</b><div class="li-indented">Click the <i>'Register'</i> button</div></li>
+                        <li>
+                            <b>15</b><div class="li-indented">
+                                Copy the keys from the page into the fields below
+                                <br />
+                                <label>Site Key:</label><br />
+                                <input type="text" id="txtbxSiteKey" class="type-text white-back"></input><br />
+
+                                <label>Secret Key:</label><br />
+                                <input type="text" id="txtbxSecretKey" class="type-text white-back"></input><br />
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="accordion-wrapper">
+        <div class="accordion-header">
+            <h2 data-targetclass="step-3-3" onclick="toggleAccordionContent(this);return false;" class=""><b>Step 3</b> Set up the URLs<span class="acc-ic"></span></h2>
+        </div>
+        <div class="acc-content step-3-3 f-collapse">
+            <div class="acc-inner">
+                <div class="pl45r40"><label>Click here to set your environmental URLs</label><br /><a class="vabutton1 btnSetupUrl" onclick="setEnvironmentVariables(this);"><span class="btnIcon"></span><span class="btnText">Set up URLs</span></a></div>
+
+            </div>
+            <div class="step-footer"><a class="vabutton1 next-step va-readonly" onclick="nextStep(this);">Next</a></div>
+        </div>
+    </div>
+</div>
+
+
+
+
+                </div>
+            </div>
+            <div class="accordion-wrapper ">
+                <div class="accordion-header">
+                    <h2 data-targetclass="step-4" onclick="toggleAccordionContent(this);return false;" class=""><span class="step-index">4</span>Set up your site access points<span class="acc-ic"></span></h2>
+                </div>
+                <div class="acc-content step-4 f-collapse">
+                    <div class="acc-inner">
+                        <ul>
+                            <li>
+                                <b>1</b><a title="Go to the Remote Site Settings setup page" onclick="openNewWindow('/0rp');">Go to the Remote Site Settings setup page &gt;</a>
+                            </li>
+                            <li>
+                                <b>2</b>Click <i>'New Remote Site'</i>
+                            </li>
+                            <li>
+                                <b>3</b>Enter the following details:
+                            </li>
+                            <li>
+                                <b>3.a</b>Remote Site Name:<br />
+                                <div class="copy-block-wrapper">
+                                    <input type="text" id="txtbxRS3A" value="FastFormsSiteEndpoint" class="type-text remote-site-name"></input>
+                                    <div class="copy-code-block">
+                                        <span id="clip_copy_txtbxRS3A" data-clipboard-target="txtbxRS3A" class="copy-code-text">Copy to clipboard</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <b>3.b</b>Remote Site URL:<br />
+                                <div class="copy-block-wrapper">
+                                    <input type="text" id="txtbxRS3B" data-siteurl="true" class="type-text remote-site-url"></input>
+                                    <div class="copy-code-block">
+                                        <span id="clip_copy_txtbxRS3B" data-clipboard-target="txtbxRS3B" class="copy-code-text">Copy to clipboard</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <b>3.c</b>Keep <i>Disable Protocol Security</i> unchecked
+                            </li>
+                            <li>
+                                <b>4</b>Click Save &amp; New
+                            </li>
+                            <li>
+                                <b>5</b>Enter the following details:
+                            </li>
+                            <li>
+                                <b>5.a</b>Remote Site Name:<br />
+                                <div class="copy-block-wrapper">
+                                    <input type="text" id="txtbxRS5A" value="SalesforceInstanceEndpoint" class="type-text remote-site-name"></input>
+                                    <div class="copy-code-block">
+                                        <span id="clip_copy_txtbxRS5A" data-clipboard-target="txtbxRS5A" class="copy-code-text">Copy to clipboard</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <b>5.b</b>Remote Site URL:<br />
+                                <div class="copy-block-wrapper">
+                                    <input type="text" id="txtbxRS5B" data-instanceurl="true" class="type-text remote-site-url"></input>
+                                    <div class="copy-code-block">
+                                        <span id="clip_copy_txtbxRS5B" data-clipboard-target="txtbxRS5B" class="copy-code-text">Copy to clipboard</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <b>5.c</b>Keep <i>Disable Protocol Security</i> unchecked
+                            </li>
+                            <li>
+                                <b>6</b>Click Save &amp; New
+                            </li>
+                            <li>
+                                <b>7</b>Enter the following details:
+                            </li>
+                            <li>
+                                <b>7.a</b>Remote Site Name:<br />
+                                <div class="copy-block-wrapper">
+                                    <input type="text" id="txtbxRS7A" value="SalesforceLoginEndpoint" class="type-text remote-site-name"></input>
+                                    <div class="copy-code-block">
+                                        <span id="clip_copy_txtbxRS7A" data-clipboard-target="txtbxRS7A" class="copy-code-text">Copy to clipboard</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <b>7.b</b>Remote Site URL:<br />
+                                <div class="copy-block-wrapper">
+                                    <input type="text" id="txtbxRS7B" data-sfurl="true" class="type-text  remote-site-url"></input>
+                                    <div class="copy-code-block">
+                                        <span id="clip_copy_txtbxRS7B" data-clipboard-target="txtbxRS7B" class="copy-code-text">Copy to clipboard</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <b>7.c</b>Keep <i>Disable Protocol Security</i> unchecked
+                            </li>
+                            <li><b>8</b>Click Save</li>
+                             <li><b>9</b>Close Window</li>
+                        </ul>
+                    </div>
+                    <div class="step-footer"><label>Click this button when you are finished going through these steps.</label><a class="vabutton1 next-step" onclick="validateRemoteSiteURLs(this);">Next</a></div>
+                </div>
+            </div>
+            <div class="accordion-wrapper ">
+                <div class="accordion-header">
+                    <h2 data-targetclass="step-5" onclick="toggleAccordionContent(this);return false;" class=""><span class="step-index">5</span>Go to Fast Forms!<span class="acc-ic"></span></h2>
+                </div>
+                <div class="acc-content step-5 f-collapse">
+                    <div class="step-footer"><label>You are ready to start building your forms!</label><br /><a class="vabutton1" onclick="navigateToApp();">Get Started</a></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialog-confirm" style="display:none;" class="content"></div>
+<div id="remoteSitePanel" >
+    <ul id="remoteSiteUL" ></ul>
+</div>
+
+  <script>
+  var accordionHeaderScrollToTop=true;
+  var SFOrgPrefix='';
+var ffcommonResuorceUrl  = "{!URLFOR($Resource.ffcommon)}";
+if(ffcommonResuorceUrl.toLowerCase().indexOf('visualantidote__')>0){
+    SFOrgPrefix='VisualAntidote__';
+}
+ var guestUserId='';
+ var forceComSite='';
+    var baseDomain='.force.com';
+    var currentPageInstanceUrl='{!currentPageInstanceUrl}';
+    var salesforceInstanceURL='';
+    var salesforceLoginURL='https://login.salesforce.com';
+  var forceComSiteUrl='';
+  var issandbox={!IsSandbox};
+  var forceComRequiredRemoteSites=['FastFormsSiteEndpoint','SalesforceInstanceEndpoint'];
+  if(issandbox){
+    forceComRequiredRemoteSites.push('SalesforceSandboxLoginEndpoint')
+  }else{
+forceComRequiredRemoteSites.push('SalesforceLoginEndpoint')
+  } 
+ 
+ 
+function retrieveOrgInfo(){
+  var orgInfo = new ffOrg.org();
+ 
+orgInfo.retrieve(function(){
+    return ({limit: 1});
+}, function(error,results,eventobj) {
+if(eventobj.result.records!=null  ){
+var orgObj=eventobj.result.records[0];
+issandbox=orgObj.IsSandbox;
+if(issandbox){salesforceLoginURL='https://test.salesforce.com';
+$('#txtbx5A').val('SalesforceSandboxLoginEndpoint');
+}
+ 
+if(orgObj.OrganizationType=='Developer Edition' || issandbox){
+  baseDomain='.'+orgObj.InstanceName.toLowerCase()+baseDomain;
+}else if(!issandbox){
+  baseDomain='.secure'+baseDomain;
+} 
+ remoteGetSiteListJS();
+}else{
+ 
+}
+}); 
+}
+ 
+$( document ).ready(function() {
+remoteIsMDAPIAccessibleJS();
+retrieveOrgInfo();
+CopyToClipBoard();
+}); 
+/**/
+ 
+ 
+function openNewWindow(url){
+  window.open(url,'winname','directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=600,height=600');
+ 
+}
+function validateRemoteSiteURLs(elemSource){
+    var isValid=true;
+$('.remote-site-url').each(function(indx,inputElem){
+if(isNullOrEmpty($(inputElem).val())){
+isValid=false;
+}
+});
+    if(isValid){
+        hideInlineMessage($(elemSource).parents('.accordion-wrapper '));
+        nextStep(elemSource);
+    }else{
+        showInlineMessage($(elemSource).parents('.accordion-wrapper '),'One or more Remote Site settings URLs are not populated. Please make sure all three remote site URLs are populated in Step 4 and added in your Salesforce Remote Site settings.');
+    }
+}
+ 
+function scrollToElement(elem)
+{
+    if(elem!==undefined){ 
+        $('html, body').animate({
+            scrollTop: $(elem).offset().top
+        }, 100);        
+    }
+}
+function setEnvironmentVariables(elemSource){
+
+    var currentParentElem=$(elemSource).parents('.accordion-wrapper')[0];
+    hideInlineMessage(currentParentElem);
+    var gsitekey=$('#txtbxSiteKey').val();
+    salesforceInstanceURL=$('#txtbxInstanceURL').val();
+    var gsecretkey=$('#txtbxSecretKey').val();
+    if(!isNullOrEmpty(forceComSiteUrl) && !isNullOrEmpty(salesforceInstanceURL)){
+ Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.NativeCloudWizardController.remoteUpdateEnvironmentURLs)}',forceComSiteUrl,salesforceInstanceURL,gsitekey,gsecretkey,
+  function(result, event) {
+      if (event.status) {
+           if (result != null && result.IsValid) {
+            var isCustomSettingURLSet=false;
+            var URLObject=JSON.parse(result.ResultText);
+            if(isStepSetupURLsValid(URLObject)){
+             console.log('StepSetupURLsValid is valid:'+URLObject);
+             var setupButton=$(elemSource);
+             $(setupButton).addClass('setup-done');
+             $(setupButton).find('.btnText').html('Done');
+             $(elemSource).parents('.accordion-wrapper').find('.next-step').removeClass('va-readonly');
+            }else{
+                console.log('setEnvironmentVariables StepSetupURLsValid is not valid:'+URLObject);
+                $(elemSource).parents('.accordion-wrapper').find('.next-step').addClass('va-readonly');
+            }
+          } else {
+              $(elemSource).parents('.accordion-wrapper').find('.next-step').addClass('va-readonly');
+          }
+
+      } else if (event.type === 'exception') {
+          showInlineMessage(currentParentElem,'');
+      } else {
+          showInlineMessage(currentParentElem,'');
+      }
+  }, {
+      escape: false
+  });}else{
+    if(isNullOrEmpty(forceComSiteUrl)){
+    showInlineMessage($(elemSource).parents('.accordion-wrapper '),'Force.com Site URL not found. Go to Section 1 and select the site from the list or create a new one.');
+    }else if(isNullOrEmpty(salesforceInstanceURL)){
+        showInlineMessage($(elemSource).parents('.accordion-wrapper '),'Salesforce instance URL not found. Go to Section 3 > <strong>Step 1 Get the instance URL</strong> and follow the instructions.');
+    }
+ }
+}
+function remotePopulateSiteInfoJS(siteName){
+Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.NativeCloudWizardController.remoteGetSiteInfo)}',siteName,
+  function(result, event) {
+      if (event.status) {
+           if(result!=null && result.IsValid){  
+            var siteObj=JSON.parse(result.ResultText);
+ guestUserId=siteObj.GuestUserId;
+ if(issandbox){
+  forceComSiteUrl='https://test-'+siteObj.Subdomain+baseDomain;
+ }else{
+  forceComSiteUrl='https://'+siteObj.Subdomain+baseDomain;
+ }
+ 
+ if(!isNullOrEmpty(siteObj.UrlPathPrefix)){
+ forceComSiteUrl=forceComSiteUrl+'/'+siteObj.UrlPathPrefix;
+ }
+
+ setStepOneForceComSiteUrl(forceComSiteUrl);
+} else {
+               console.log('remoteGetSiteListJS response is not valid');
+              // $(currentParentElem).find('.next-step').addClass('va-readonly');
+          }
+
+      } else if (event.type === 'exception') {
+         //showInlineMessage(currentParentElem,'');
+      } else {
+         // showInlineMessage(currentParentElem,'');
+      }
+  }, {
+      escape: false
+  });
+}
+function remoteGetSiteListJS()
+{
+        
+    Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.NativeCloudWizardController.remoteGetSiteList)}',
+  function(result, event) {
+      if (event.status) {
+           if(result!=null && result.length>0 ){ 
+ $.each(result,function(id,item){ 
+$('#selForceComSites').append('<option value="'+item["FFValue"]+'">'+item["FFText"]+'</option>');
+ });
+ $('#selForceComSites').select2(); 
+} else {
+               console.log('remoteGetSiteListJS response is not valid');
+              // $(currentParentElem).find('.next-step').addClass('va-readonly');
+          }
+
+      } else if (event.type === 'exception') {
+         //showInlineMessage(currentParentElem,'');
+      } else {
+         // showInlineMessage(currentParentElem,'');
+      }
+  }, {
+      escape: false
+  });
+}
+ function remoteValidateEnvironmentURLsJS(currentParentElem)
+{
+        
+    Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.NativeCloudWizardController.remoteGetEnvironmentURLs)}',
+  function(result, event) {
+      if (event.status) {
+           if (result != null && result.IsValid) {
+            var isCustomSettingURLSet=false;
+            var URLObject=JSON.parse(result.ResultText);
+            if(isStepSetupURLsValid(URLObject)){
+             console.log('StepSetupURLsValid is valid:'+URLObject);
+             var setupButton=$(currentParentElem).next().find('.btnSetupUrl');
+             $(setupButton).addClass('setup-done');
+             $(setupButton).find('.btnText').html('Done');
+             $(currentParentElem).find('.next-step').removeClass('va-readonly');
+            }else{
+                console.log('StepSetupURLsValid is not valid:'+URLObject);
+                $(currentParentElem).find('.next-step').addClass('va-readonly');
+            }
+          } else {
+               console.log('remoteValidateEnvironmentURLsJS response is not valid');
+               $(currentParentElem).find('.next-step').addClass('va-readonly');
+          }
+
+      } else if (event.type === 'exception') {
+         showInlineMessage(currentParentElem,'');
+      } else {
+          showInlineMessage(currentParentElem,'');
+      }
+  }, {
+      escape: false
+  });
+}
+ function checkPermissionSetAssignment(elemSource)
+{
+        var currentParentElem=$(elemSource).parents('.accordion-wrapper');
+    Visualforce.remoting.Manager.invokeAction('{!URLENCODE($RemoteAction.NativeCloudWizardController.remoteCheckIfNativePermissionAssigned)}',guestUserId,
+  function(result, event) {
+      if (event.status) {
+           if (result != null && result.IsValid) {
+            var isCustomSettingURLSet=false;
+            if(!isNullOrEmpty(result.ResultText) && result.ResultText!='NORESULT'){
+            var URLObject=JSON.parse(result.ResultText);
+            nextStep(elemSource);
+        }else{
+             console.log('Native permissions are not assigned.');
+             showInlineMessage(currentParentElem,'NativeCloud permissions are not assigned to '+forceComSite+' Site User. Please try again');
+        }
+            
+          } else {
+               console.log('checkPermissionSetAssignment response is not valid');
+              showInlineMessage(currentParentElem,'');
+          }
+
+      } else if (event.type === 'exception') {
+          showInlineMessage(currentParentElem,'');
+      } else {
+         showInlineMessage(currentParentElem,'');
+      }
+  }, {
+      escape: false
+  });
+}
+function toggleCurrentNextStepBtn(parentElem,disable){
+    if(disable){
+$(parentElem).find('.next-step').addClass('va-readonly');
+}else{
+   $(parentElem).find('.next-step').removeClass('va-readonly'); 
+}
+}
+function isStepSetupURLsValid(existingURLObject){
+if(!isNullOrEmpty(existingURLObject["Site_Url__c"]) && !isNullOrEmpty(existingURLObject["Instance_Url__c"]) && !isNullOrEmpty(existingURLObject["FastFormsSiteUrl__c"]) && (forceComSiteUrl==existingURLObject["FastFormsSiteUrl__c"]) && (forceComSiteUrl==existingURLObject["Site_Url__c"]) && (salesforceInstanceURL==existingURLObject["Instance_Url__c"])){
+    return true;
+}
+return false;
+}
+function remoteIsMDAPIAccessibleJS(){
+ 
+        Visualforce.remoting.Manager.invokeAction(
+            '{!URLENCODE($RemoteAction.NativeCloudWizardController.remoteIsMDAPIAccessible)}',
+            function(result, event) {
+                if(event.status) {
+                    if(result!=null && getSafeBoolean(result,false)){
+                                            
+                    }else{
+                      /*add endpoint to  remote site settings*/
+                      createRemoteSiteForMDAPI();
+                    }
+                    
+                    
+                    /*  console.log(" decoded- " + decoded);*/
+                } else if(event.type === 'exception') {
+                    console.log(" Exception- " + event.message + "<br/>\n<pre>" + event.where + "</pre>");
+                } else {
+                    console.log(" Exception unknown- " + event.message);
+                }
+            },
+            {
+                escape: true
+            }
+        );
+       
+    }
+function createRemoteSiteForMDAPI()
+{ 
+ 
+  // Calls the Metdata API from JavaScript to create the Remote Site Setting to permit Apex callouts
+  var binding = new XMLHttpRequest();
+  var request = 
+    '<?xml version="1.0" encoding="utf-8"?>' + 
+    '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'+
+      '<env:Header>' + 
+        '<urn:SessionHeader xmlns:urn="http://soap.sforce.com/2006/04/metadata">' + 
+          '<urn:sessionId>{!$Api.Session_ID}</urn:sessionId>' + 
+        '</urn:SessionHeader>' + 
+      '</env:Header>' + 
+      '<env:Body>' +
+        '<createMetadata xmlns="http://soap.sforce.com/2006/04/metadata">' + 
+          '<metadata xsi:type="RemoteSiteSetting">' + 
+            '<fullName>FastFormsMDAPIEndpoint</fullName>' +
+            '<description>Metadata API Remote Site Setting for Auto-prefill feature</description>' + 
+            '<disableProtocolSecurity>false</disableProtocolSecurity>' + 
+            '<isActive>true</isActive>' + 
+            '<url>'+currentPageInstanceUrl+'</url>' +
+          '</metadata>' +
+        '</createMetadata>' +
+      '</env:Body>' + 
+    '</env:Envelope>';
+  binding.open('POST', ''+currentPageInstanceUrl+'/services/Soap/m/35.0');
+  binding.setRequestHeader('SOAPAction','""');
+  binding.setRequestHeader('Content-Type', 'text/xml');
+  binding.onreadystatechange = 
+    function() { 
+      if(this.readyState==4) {
+        var parser = new DOMParser();
+        var doc  = parser.parseFromString(this.response, 'application/xml');
+        var errors = doc.getElementsByTagName('errors');
+        var messageText = '';
+        for(var errorIdx = 0; errorIdx < errors.length; errorIdx++)
+         { messageText+= errors.item(errorIdx).getElementsByTagName('message').item(0).innerHTML + '\n';
+         }
+        displayRemoteSiteCreationResponse(messageText);
+      } 
+    }
+  binding.send(request);
+} 
+function displayRemoteSiteCreationResponse(responseMsg){
+    if(!isNullOrEmpty(responseMsg)){
+    $('#mainErrorBox').fadeIn();
+    }
+    else{
+    $('#mainErrorBox').fadeOut();
+   }
+}
+  </script>
+  
+ 
+  <script>
+  
+    function toggleSiteExists(elemSource){
+     var tabId= $(elemSource).attr('href');
+     var parentElem=$(elemSource).parents('.acc-content');
+     $(parentElem).find('ul>li').removeClass('active');
+     $(parentElem).find('.odd-in').slideDown();
+     $(parentElem).find('.inner-toggle').slideUp();
+
+     var aTag=$(parentElem).find('a[href="'+tabId+'"]');
+      if(!$(aTag).parent().hasClass('active')){
+        $(aTag).parent().addClass('active');
+        $(aTag).parent().find('.inner-toggle').slideDown();
+        if(tabId=='#forcecomsiteNo'){
+         // $('#forcecomsiteBlock').find('input,text').removeClass('va-readonly');
+        }else{
+         // $('#forcecomsiteBlock').find('input,text').addClass('va-readonly');
+        }
+        if(!$(parentElem).find('.tab-content #forcecomsiteBlock').hasClass('active')){
+        $(parentElem).find('.tab-content #forcecomsiteBlock').addClass('active');}
+      }
+    }
+    function setStepOneForceComSiteUrl(selectedVal){
+      if(selectedVal!='undefined' && selectedVal!='' ){
+      
+      $('#forcecomsiteBlock').find('input[type="text"]').val(selectedVal);
+     
+     }else{
+      
+      $('#forcecomsiteBlock').find('input[type="text"]').val('');
+     }
+     resetNextButton($('#forcecomsiteBlock').find('input[type="text"]'));
+    }
+    function resetNextButton(elemSource){
+var selectedVal=$(elemSource).val();
+
+      if(selectedVal!='undefined' && selectedVal!=''){
+     $('#forcecomsiteBlock').parent().find('.vabutton1').removeClass('va-readonly');
+       
+     }else{
+     $('#forcecomsiteBlock').parent().find('.vabutton1').addClass('va-readonly');
+      
+     }
+    }
+    function onSiteSelectionChange(elemSource){
+      var selectedVal=$(elemSource).val();
+
+      if(selectedVal!='undefined' && selectedVal!='' && selectedVal!='-select a site-'){
+       remotePopulateSiteInfoJS(selectedVal);
+       forceComSite=$(elemSource).select2('data').text;
+     }else{
+      
+      $('#forcecomsiteBlock').find('input[type="text"]').val('');
+     }
+     resetNextButton($('#forcecomsiteBlock').find('input[type="text"]'));
+    }
+    function nextStep(elemSource){
+      var currentParentElem=$(elemSource).parents('.accordion-wrapper');
+      $(currentParentElem).find('.vff-alert-inline-box').remove();
+      var isValid=true;
+      $(currentParentElem).find('input[data-isrequired="true"]').each(function(indx,elem){
+        if(isNullOrEmpty($(elem).val())){
+          isValid=false;
+          $(elem).parent().prepend('<span class="ff-req">*</span>');
+        }
+      });
+      if(isValid){
+        var nextParentElem=currentParentElem.next();
+        hideInlineMessage(currentParentElem);
+        
+      toggleAccordionContent($(currentParentElem).find('>.accordion-header>h2'));
+      $(currentParentElem).addClass('step-done');
+      
+      hideInlineMessage(nextParentElem);
+      $(nextParentElem).find('input[data-siteurl="true"]').each(function(indx,elem){
+        $(elem).val(forceComSiteUrl);
+      });
+      $(nextParentElem).find('input[data-instanceurl="true"]').each(function(indx,elem){
+        $(elem).val(salesforceInstanceURL);
+      });
+      $(nextParentElem).find('input[data-sfurl="true"]').each(function(indx,elem){
+        $(elem).val(salesforceLoginURL);
+      });
+      toggleAccordionContent($(nextParentElem).find('>.accordion-header>h2'));
+      if($(currentParentElem).find('>.acc-content').hasClass('step-2')){
+           // remoteValidateEnvironmentURLsJS(currentParentElem);
+           if(!($(nextParentElem).find('.nested-acc .accordion-header').first().hasClass('acc-expanded'))){
+           toggleAccordionContent($(nextParentElem).find('.nested-acc h2').first());
+           }
+        }
+        
+     }
+
+    }
+    function CopyToClipBoard() {
+    
+ 
+
+         var clipCopyCode = new ZeroClipboard($('.nch-acc').find('.copy-code-text').each(function () { }), {
+moviePath: "{!URLFOR($Resource.Clipboard,'ZeroClipboard.swf')}"
+});
+ 
+        
+        
+             clipCopyCode.addEventListener('complete',function(client,text) {              
+            
+                 
+                     console.log('Clipboard event ');
+                        $("#dialog-confirm").html("<div class='dialogHeader'><div class='dialogIcon dialogIconOK'>&nbsp;</div></div><div class='dialogFont'><div class='primary'>Content is copied to the clipboard! </div></div>");
+                                  
+                
+                
+                // Define the Dialog and its properties.
+                $("#dialog-confirm").dialog({
+                    resizable: false,
+                    modal: true,
+                    title: "Close",
+                    height: 150,
+                    width: 455,
+                    buttons: {
+                        "Close": {
+                        click: function () {
+                            $(this).dialog("close");
+                        },
+                        text: 'Close',
+                        class: 'vabutton1'
+                        }
+                  }
+                  });
+              
+            });  
+          
+           
+    }
+    function switchSetupView(){
+      $('.setup-wizard-splash-screen').hide("slide", { direction: "left" }, 200,function(){
+     $('.setup-wizard-wrapper').show("slide", { direction: "right" }, 200);
+});
+    }
+    function navigateToApp(){
+    if(!isNullOrEmpty(forceComSiteUrl)){
+    updateNativeSetupSettingInfo(true);
+    }else{
+      $('.nch-acc .accordion-wrapper').removeClass('step-done');
+      var firstParentElem=$('.nch-acc .accordion-wrapper').first();
+      toggleAccordionContent($(firstParentElem).find('.accordion-header h2'));
+    }
+  }
+  function updateNativeSetupSettingInfo(setupDone){
+    
+    var settingId = '{!$Setup.FastFormsTokenInfo__c.Id}';
+    var record ;
+    if(isNullOrEmpty(SFOrgPrefix)){
+         
+            record = new ffCSTokenNs.ffTokenObj({
+                Id: settingId,
+                Is_Native_Setup_Done__c: setupDone 
+            });
+         
+    }
+    else{
+         record = new ffCSTokenNs.ffTokenObj({
+                Id: settingId,
+                VisualAntidote__Is_Native_Setup_Done__c: setupDone 
+            });
+         
+    }
+    record.update(updateNativeSetupSettingInfoCallback);
+}
+function updateNativeSetupSettingInfoCallback(err, results,objevent){
+    if (err) { 
+         
+        console.log(' err --NativeSetupSetting- '+err);
+    } else {
+        console.log(' UpdateCallback NativeSetupSetting:Result- '+results+'  Event-'+objevent);
+        ffNavigateToUrl( '/apex/FormMenu',SFOrgPrefix);
+    }
+}
+function hideInlineMessage(parentElem){
+   $(parentElem).find('.vff-alert-inline-box').remove(); 
+}
+function showInlineMessage(parentElem,msg){ 
+    $(parentElem).find('.vff-alert-inline-box').remove();
+   $($(parentElem)[0]).find('.acc-content').append('<div class="vff-alert-inline-box" style="display:none"><div class="vff-alert"  ><div class="vff-alert-msg msg-text-div"  style="display:block">'+msg+'</div></div></div>');
+$(parentElem).find('.vff-alert-inline-box').show();
+}
+
+  </script>
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>
