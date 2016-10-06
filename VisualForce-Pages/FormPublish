@@ -1,0 +1,543 @@
+<apex:page standardController="VisualAntidote__Previous_Form__c" extensions="VisualAntidote.FormPublishController" id="pg" title="Fast Forms" sidebar="false" tabStyle="FastForms__tab">  
+  <apex:remoteObjects jsNamespace="ffAlertTemplateEmailNS2">
+ <apex:remoteObjectModel name="VisualAntidote__Alert_Template__c" jsShorthand="ffAlertTemplateEmailObject" fields="Id,VisualAntidote__Category__c,VisualAntidote__Subject__c,VisualAntidote__Body__c,VisualAntidote__Name__c">  
+    </apex:remoteObjectModel> 
+</apex:remoteObjects>
+  <head>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge;" /> 
+     
+      <link rel="stylesheet" href="{!URLFOR($Resource.ffcommon,'ffcommon.css')}" />  
+    <apex:includeScript value="//code.jquery.com/jquery-1.10.1.min.js" />
+     <script src="{!URLFOR($Resource.sticky,'jquery.stickit.js')}"></script>
+     <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+      <link rel="stylesheet" type="text/css"
+        href="https://fonts.googleapis.com/css?family=Open+Sans" />
+     <script src="{!URLFOR($Resource.Clipboard,'ZeroClipboard.js')}"></script>
+       <link rel="stylesheet" href="{!URLFOR($Resource.jquery_dialog,'jquery_dialog/jquery-ui.css')}"/>
+        <link rel="stylesheet" href="{!URLFOR($Resource.foundation,'css/foundation.css')}" />     
+    <script src="{!URLFOR($Resource.foundation,'js/foundation.min.js')}"></script>
+    <script src="{!URLFOR($Resource.foundation,'js/foundation/foundation.joyride.js')}"></script>
+    <apex:includeScript value="{!URLFOR($Resource.VisualAntidote__jquery_dialog,'jquery_dialog/jquery-ui.js')}" />   
+     <script src="{!URLFOR($Resource.commonJSHelper)}"></script>
+     
+  <script src="{!URLFOR($Resource.alertHelperJS)}"></script>
+     <script src="{!URLFOR($Resource.FFCKEditor,'ckeditor.js')}"></script>
+      <apex:includeScript value="{!URLFOR($Resource.VisualAntidote__jszip, '/jszip.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.VisualAntidote__jszip, '/jszip-load.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.VisualAntidote__jszip, '/jszip-deflate.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.VisualAntidote__jszip, '/jszip-inflate.js')}"/>
+        <script src="{!URLFOR($Resource.FastPrefillHelperJS)}"></script>
+      <style>
+      form {
+background-image: url("{!URLFOR($Resource.iconImages,'back.png')}");
+}
+      </style>
+     
+ <style>
+.ui-widget-overlay {
+background: #000000  url(images/ui-bg_flat_0_aaaaaa_40x100.png)  50%  50%  repeat-x ;
+opacity: .8 ;
+filter: Alpha(Opacity=80) ;
+}
+   .outerNoSidebar .noSidebarCell{
+   padding:0px;
+   }
+   
+    .form-information-wrapper-outer
+{
+ margin: 70px auto 20px auto;
+width: 940px;
+overflow: hidden;
+display: block;
+background-color: white;
+border-radius: 5px;
+box-shadow: 0 4px 6px rgba(8,52,80,.15);
+border: 1px solid #E0E0E0;
+}
+.form-information-wrapper{
+width: 940px;
+overflow: hidden;
+display: block;
+background-color: white;
+}
+   .form-information{
+   width: 56%;
+float: left;
+min-height:50px;
+padding: 10px 20px 20px 15px;
+display:block;
+
+
+   }
+   .grey-left-border10 {
+   border-left:5px solid #e6ecef;
+   min-height:10px;
+   display:block;
+   }
+   .form-information h1{
+   font-size:26px;
+   color:#052942;
+   font-family: 'Open Sans'; 
+   }
+   .form-information h4{
+   font-size:14px;
+   color:#616161;
+   font-weight:200;
+   font-family: 'Open Sans';  
+   }
+   .form-actions{
+  float: right;
+background-color:#e6ecef;
+border-bottom-left-radius: 5px;
+ width:100%;
+height: 40px;
+   }
+   .form-editor-title-box{
+    min-width:42%;
+float: right;
+   }
+   .action-icons-right {
+float:right;
+margin-top:3px;
+}
+   /* blue tooltip css*/
+a.blue-tooltip,span.blue-tooltip {
+outline:none;
+
+     }
+ 
+a.blue-tooltip:hover {text-decoration:none;} 
+a.blue-tooltip span.blue-tooltip-text,
+span.blue-tooltip  span.blue-tooltip-text{
+    z-index:10;display:none; padding:4px 6px;
+    margin-top:-20px; margin-left:-12px;
+    max-width:150px;  
+    font-size:10px;
+    line-hight:12px;
+    -webkit-transition:all 0.5s ease; /* For Safari 3.1 to 6.0 */
+   transition: all 0.5s ease;
+}
+a.blue-tooltip span.blue-tooltip-text.-mt40,
+span.blue-tooltip  span.blue-tooltip-text.-mt40{
+ margin-top:-40px;  
+}
+a.blue-tooltip span.blue-tooltip-text.-ml40,
+ span.blue-tooltip  span.blue-tooltip-text.-ml40
+{
+  margin-left:-40px;
+}
+a.blue-tooltip:hover span.blue-tooltip-text,
+span.blue-tooltip:hover  span.blue-tooltip-text{
+    display:inline; position:absolute; color:#fff;
+    border-radius: 8px;
+background-color: #052942;
+}
+.callout {z-index:20;position:absolute;top:0px;border:0;left:-12px;}
+    
+/*CSS3 extras*/
+a.blue-tooltip span.blue-tooltip-text,
+span.blue-tooltip  span.blue-tooltip-text
+{
+    border-radius:8px;
+   
+}
+
+/**/
+ 
+ 
+/*icon css*/
+.action-icon{
+width: 26px;
+height: 24px;
+margin-right: 15px;
+float: left;
+display: inline-block;
+margin-top: 4px;
+}
+.action-icon.close-icon{
+margin-right: 7px;
+}
+ 
+/**/
+.help-text-r{
+position: absolute;
+top: 0px;
+display: block;
+width: 45px;
+height: 131px;
+right: 0px;
+background: #dcecf5;
+}
+.help-text-r a{
+  margin-top: 48px;
+/* text-align: center; */
+margin-left: 12px;
+display: inline-block;
+    
+}
+.mainHeader ul.nav-wizard {
+    position: relative;
+   
+    margin:0px;
+    padding-top:15px;
+    padding-left:0px;
+}
+ 
+
+.mainHeader ul.nav-wizard li {
+    position: relative;
+    float: left;
+    display: inline-block;
+    text-align: middle;
+    padding: 6px 20px;
+    margin: 0;
+    font-size: 20px;
+    background:#f1f6f8;
+    color: rgba(5,
+    41,
+    66,
+    0.5);
+    min-width:165px;
+}
+.mainHeader ul.nav-wizard li a {
+    text-decoration:none !important;
+    padding: 0px 0px 0px 20px;
+    color: rgba(5,41,66,0.5);
+font-weight: bold;
+}
+.mainHeader ul.nav-wizard li:hover {
+    background:#e5edf0;
+}
+.mainHeader ul.nav-wizard li:before {
+    position: absolute;
+    display: block;
+    border: 20px solid transparent;
+    border-left: 20px solid #f1f6f8;
+    border-right: 0;
+    top: 0px;
+    z-index: 10;
+    content: '';
+    right: -19px;
+}
+.mainHeader ul.nav-wizard li:after {
+    position: absolute;
+    display: block;
+    border: 20px solid transparent;
+    border-left: 20px solid #f1f6f8;
+    border-right: 0;
+    top: 0px;
+    z-index: 10;
+    content: '';
+    right: -19px;
+}
+.mainHeader ul.nav-wizard li.active {
+    background:#cfdde6;
+    color:#052942;
+}
+.mainHeader ul.nav-wizard li.active:after {
+    border-left: 20px solid #cfdde6;
+}
+.mainHeader ul.nav-wizard li.active a,
+.mainHeader ul.nav-wizard li.active a:active,
+.mainHeader ul.nav-wizard li.active a:visited,
+.mainHeader ul.nav-wizard li.active a:focus {
+    background:#cfdde6;
+    color:#052942;
+}
+.mainHeader ul.nav-wizard .active ~ li:after {
+    border-left: 20px solid #f1f6f8;
+}
+.mainHeader ul.nav-wizard li:hover:before,
+.mainHeader ul.nav-wizard li:hover:after {
+    border-left-color:#e5edf0;
+}
+.mainHeader ul.nav-wizard li.active:hover:before,
+.mainHeader ul.nav-wizard li.active:hover:after {
+    border-left-color: #cfdde6;
+}
+.mainHeader ul.nav-wizard.nav-wizard-backnav li:hover {
+    color: #468847;
+    background: #f6fbfd;
+}
+.mainHeader ul.nav-wizard.nav-wizard-backnav li:hover:after {
+    border-left: 20px solid #f6fbfd;
+}
+ul.nav-wizard.nav-wizard-backnav li:hover a,
+ul.nav-wizard.nav-wizard-backnav li:hover a:active,
+ul.nav-wizard.nav-wizard-backnav li:hover a:visited,
+ul.nav-wizard.nav-wizard-backnav li:hover a:focus {
+    color: #468847;
+    background: #f6fbfd;
+}
+ 
+.mainHeader  .nav-wizard-btn {
+    display: block;
+    overflow: hidden;
+    float: left;
+    width: 100%;
+}
+.mainHeader .nav-wizard-btn a {
+    text-align:center;
+}
+.mainHeader .nav-wizard-btn>div {
+    float:right;
+    margin-left:20px;
+    vertical-align:top;
+}
+.mainHeader .nav-wizard-btn>div.btn-go-back{
+  float:left;
+    margin-left:0px;
+}
+.mainHeader .nav-wizard-container .tab-content>.tab-pane {
+    display: none;
+    visibility: hidden;
+}
+.mainHeader .nav-wizard-container .tab-content>.tab-pane.active {
+    display: block;
+    visibility: visible;
+    text-align:left;
+}
+   </style>
+  <script>
+(function(f,b){if(!b.__SV){var a,e,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+        for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=f.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=f.getElementsByTagName("script")[0];e.parentNode.insertBefore(a,e)}})(document,window.mixpanel||[]);
+        mixpanel.init("39b7e8be28cfa1b59fdd342bad0004e0");
+  </script>
+   </head>
+
+   <script type='text/javascript'>
+
+/*FullStory Snippet*/
+/*window['_fs_debug'] = false;
+window['_fs_host'] = 'www.fullstory.com';
+window['_fs_org'] = '1ZpR';
+(function(m,n,e,t,l,o,g,y){
+  g=m[e]=function(a,b){g.q?g.q.push([a,b]):g._api(a,b);};g.q=[];
+  o=n.createElement(t);o.async=1;o.src='https://'+_fs_host+'/s/fs.js';
+  y=n.getElementsByTagName(t)[0];y.parentNode.insertBefore(o,y);
+  g.identify=function(i,v){g(l,{uid:i});if(v)g(l,v)};g.setUserVars=function(v){FS(l,v)};
+  g.clearUserCookie=function(d,i){d=n.domain;while(1){n.cookie='fs_uid=;domain='+d+
+  ';path=/;expires='+new Date(0);i=d.indexOf('.');if(i<0)break;d=d.slice(i+1)}}
+})(window,document,'FS','script','user');
+
+FS.identify('{!$Organization.Id}', {
+  displayName: '{!$User.FirstName} {!$User.LastName}',
+  email: '{!$User.Email}'
+});
+*/
+/*End FullStory Snippet*/
+/*Intercom Snippet*/
+window.intercomSettings = {
+    app_id: "uh2s363g",
+    user_id: "{!$Organization.Id}",
+    name: "{!$User.FirstName} {!$User.LastName}", // Full name
+    email: "{!$User.Email}", // Email address        
+    custom_launcher_selector: "#Intercom"   
+  };
+</script>
+<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/uh2s363g';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
+/*End Intercom Snippet*/
+</script>
+    <script>
+    var FFCKEditorurlroot="{!URLFOR($Resource.FFCKEditor)}";
+    var SFNamespacePrefix='';
+    var ffcommonUrl="{!URLFOR($Resource.ffcommon)}";
+    if(ffcommonUrl.toLowerCase().indexOf('visualantidote__')>0){
+      SFNamespacePrefix='VisualAntidote__';
+    }
+        $(document).ready(function(){
+       $(document).foundation();
+
+       $( document ).foundation({ joyride : {         
+          tip_location : 'top',
+          tip_animation : 'fade',
+          tip_animation_fade_speed: 500,          
+          modal:false,
+          expose: false,
+          next_button: true,
+          prev_button: false,
+          cookie_monster: true,
+          cookie_name: 'fastforms-joyride',
+          cookie_domain: false,
+          cookie_expires: 365,
+          post_ride_callback: function() {
+            $(document).foundation('joyride', 'destroy');
+          }                     
+          }
+       });
+                
+        getRemoteBasicFormDataJs();
+      $(function() {
+   loadComponent1();
+   });
+   });
+   
+               var clip = new ZeroClipboard( 
+            $('.code'), {
+            moviePath: "{!URLFOR($Resource.Clipboard,'ZeroClipboard.swf')}"
+            });
+   
+   function getRemoteBasicFormDataJs() {
+    /*JAVASCRIPT Remoting Method to get basic form data */
+     
+    Visualforce.remoting.Manager.invokeAction(  '{!URLENCODE($RemoteAction.FormPublishController.getRemoteBasicFormData)}',        '{!URLENCODE($CurrentPage.parameters.ffId)}', 
+        function(result, event){
+            if (event.status) {
+               
+           // var  formdashboardurl='{!URLENCODE($Site.BaseUrl)}/apex/'+SFNamespacePrefix+'FormMenu';
+                // Get DOM IDs for HTML and Visualforce elements like this
+               var  formeditorurl='{!URLENCODE($Site.BaseUrl)}/apex/'+SFNamespacePrefix+'FormEditor?id='+'{!URLENCODE($CurrentPage.parameters.ffId)}'; 
+                //console.log(' result[0] '+result[0] );
+                var formname=result[0]+'';
+                if($.trim(formname).length > 23){
+                formname = formname.substring(0, 22) + '...';
+              }
+                $('#breadcrumb-formeditor').text(formname);
+                $('#breadcrumb-formeditor').attr('href',formeditorurl);
+               // $('#breadcrumb-dashboard').attr('href',formdashboardurl);
+                 
+            } else if (event.type === 'exception') {
+               //console.log(" Exception- "+event.message + "<br/>\n<pre>" + event.where + "</pre>");
+            } else {
+                 //console.log(" Exception 2- "+ event.message);
+            }
+            resetFastFormsHREFLinks('.bread-crumb',SFNamespacePrefix);
+         }, 
+         {escape: true}
+     );
+   }
+           
+   function goToNextTourStop()
+   {
+      if ($(".joyride-tip-guide").length > 0)
+        $("#takeTour").foundation('joyride','go_next');
+   }  
+
+   function startTour()
+   {
+    setTimeout(function () { $(document).foundation('joyride', 'start'); }, 1000);
+    
+   }     
+  function hideHelpIcon()
+  {
+    $('.intercomHelpIcon').fadeOut(500);
+  }   
+
+ </script>
+  
+   <apex:form id="frm">
+   <apex:actionFunction name="loadComponent1" action="{!LoadPublishComp}" reRender="publishComponent" oncomplete="startTour();" />
+   <c:TrialExpiryComponent id="trialExpCp" ffFreemium="{!isFreemium}" />
+
+    <ol data-joyride="data-joyride" id="takeTour" style="display:none">
+      <li data-id="embed-code-header" data-options="tip_location:top;next_button:false">Fast Forms offers four different ways of publishing your form to the web. The Embed Code option allows you to embed your form into any existing web page, such as your company website or corporate intranet page. <br /><br />To embed your form into a page, simply copy the code below and paste it directly into your web page or content management system.<br /></li>        
+      <li data-id="hosted-form-header" data-options="tip_location:top;next_button:false">The Hosted Form option is the fastest and easiest way to make your form available. This option provides a short link to your form that you can access immediately. Use the Hosted Form option when you don't have a site ready to host your form , or would rather not make your form available on your own website.<br /><br />To access your form using this option, simply click or copy the link below and open it in any web browser.<br /></li>        
+      <li data-id="send-email-header" data-options="tip_location:top;next_button:false;">The Send By Email option provides advanced options for distributing a pre-filled update form via email to your existing contacts in Salesforce. <br /><br /><a href="http://visualantidote.com/sfffdocumentation#Send-by-Email" class="tourAnchor" target="_blank">Read more...</a><br /></li>   
+      <li data-id="export-link-header" data-options="tip_location:top;next_button:false">The Export Links option provides advanced options for exporting a set of links to pre-filled update forms for your existing contacts in Salesforce, for use in third-party emailing or marketing automation tools. <br /><br /><a href="http://visualantidote.com/sfffdocumentation#Export-Links" class="tourAnchor" target="_blank">Read more...</a><br /></li>
+    </ol> 
+
+   <div class="mainHeader">
+          <div class="mainHeaderInner">
+        <div style=" ">
+    <div class="bread-crumb"  >
+             <div class="bread-crumb navbar">
+                <div class="navbar-inner">
+                    <div class="navcontainer">
+                        <ul class="nav-wizard">
+                            <li  >
+                                <a id="breadcrumb-dashboard" class="vfns-link"  href="{!$Site.BaseUrl}/apex/FormMenu">Dashboard</a>
+                            </li>
+                            <li class="li-arrow-seperator"></li>
+                            <li >
+                                <a id="breadcrumb-formeditor" class="vfns-link" href="#"></a>
+                            </li>
+                                    <li class="li-arrow-seperator"></li>
+                             <li class="active">
+                                <span  id="breadcrumb-formpublish" style="padding: 0px 0px 0px 20px;"  >Publishing Options</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+             </div>
+        
+        </div>
+            <apex:outputPanel layout="block" style="float: right;line-height:0px;" rendered="{!IF((packageTier=='NativeCloud'),true,false)}">
+            <div class="ff-logo-box">
+                <div class="ff-logo"><img alt="Fast Forms Native Cloud" title="Fast Forms Native Cloud" src="{!URLFOR($Resource.logos,'native-cloud.png')}" /></div>
+                <div class="ff-logo-title">
+                    <span class="ffsup">Fast Forms</span>
+                    <h1 style="margin-bottom: 5px;" class="sub-h1">NATIVE</h1><h1 style="clear:left;" class="E-bold">CLOUD</h1>
+                </div>
+            </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="block" style="float: right;line-height:0px;" rendered="{!IF((packageTier=='NativeCloud'),false,true)}">
+            <div class="ff-logo-box">
+                        <div class="ff-logo"><img src="{!URLFOR($Resource.logos,'color_logo_only.png')}" /></div>
+                        <div class="ff-logo-title"> <h1 class="E-bold">FAST</h1><h1 class="sub-h1">FORMS</h1><span class="ffsub">{!packageTier} Edition</span></div>     
+                        </div>
+            </apex:outputPanel>    
+            
+            <div class="help-text-r"><a target="_blank" href="http://www.visualantidote.com/fastforms/help?utm_source=fastformsapp&utm_medium=FormPublishPage&utm_campaign=help" ><img src="{!URLFOR($Resource.helptext_image)}" /></a>
+            </div>                        
+        </div>
+                                 
+        
+     </div>
+      <div    class="form-information-wrapper-outer ">
+     <div class="form-information-wrapper grey-left-border10">
+            <div class="form-information ">
+                <h1  id="formTitle"  >{!form.Name}</h1>
+                                          
+                                          <div class="ObjectName"  > 
+                                              <h4 style="line-height:12.5px"><i>Primary Object:</i>&nbsp;&nbsp;<span style="margin-bottom: 4px;display: inline-block;"  >{!primaryObjectName}</span><br/>
+                                                
+                                                <apex:variable var="childCount" value="{!0}" /> 
+                                 
+                                    <apex:repeat value="{!secondaryObjectList}" var="sepObj">
+                                       <apex:variable var="childCount" value="{!IF(sepObj.FFTitle=='detail||repeat' || sepObj.FFTitle=='detail',childCount+1,childCount)}"/>
+                                    <span class="secName-wrap object-{!IF(sepObj.FFTitle=='detail||repeat'  || sepObj.FFTitle=='detail','detail',sepObj.FFTitle)} relobj-{!IF(sepObj.FFTitle=='detail||repeat' || sepObj.FFTitle=='detail',childCount,'')}{!IF(sepObj.FFTitle=='detail||repeat',' is-repeat','')}" >
+                                    <img src="{!URLFOR($Resource.ffcommon,'iconimages/TreeEditorSingle.png')}"></img> 
+                                    <span class="secName" id="{!sepObj.FFText}">{!sepObj.FFText}<apex:outputText rendered="{!IF(sepObj.FFTitle=='detail||repeat' || sepObj.FFTitle=='detail',true,false)}"><span class="color-span"></span></apex:outputText> </span></span>
+                                    </apex:repeat>
+                                              </h4>
+                </div>
+            </div>
+             <div class="form-editor-title-box">
+            <div class="form-actions publish-actions">
+                       <div class="action-icons-right">
+                   <a id="previewHtml" target="_blank"  href="{!$Site.BaseUrl}/apex/FormDraftPreview?id={!$CurrentPage.parameters.ffId}" class="action-icon preview-icon blue-tooltip vfns-link"><span  class="blue-tooltip-text">Preview</span></a>
+                    <a href="{!$Site.BaseUrl}/apex/FormEditor?id={!$CurrentPage.parameters.ffId}" class="action-icon close-icon blue-tooltip vfns-link"><span  class="blue-tooltip-text">Close</span></a>
+                 </div>
+            </div>
+             </div>
+             </div>
+            
+        <div style="clear:both">    </div>
+       
+   <apex:outPutPanel id="publishComponent"   layout="block">
+ <c:PublishComponent ffrecord="{!$CurrentPage.parameters.ffId}" ffFreemium="{!isFreemium}" rendered="{!LoadPublishComponent}"  />
+    
+
+</apex:outPutPanel>
+         
+                        
+                       
+                       
+                        <div style="clear:both;overflow: hidden;"></div>
+                        <div class="grey-left-border10">
+                     </div>
+                      </div>
+                          </apex:form>
+<div class="intercomHelpIcon" title="Questions? We're here to help!" alt="Questions? We're here to help!"><div class="intercomHelpIconText"><a id="Intercom" href="mailto:uh2s363g@incoming.intercom.io" class="intercomHelpIconLink">?</a></div><div class="intercomHelpIconClose" onclick="hideHelpIcon();">x</div></div>
+<script type="text/javascript">
+  var _mfq = _mfq || [];
+  (function() {
+    var mf = document.createElement("script");
+    mf.type = "text/javascript"; mf.async = true;
+    mf.src = "//cdn.mouseflow.com/projects/59c9bd1d-b0c1-42f4-98eb-590c0642300b.js";
+    document.getElementsByTagName("head")[0].appendChild(mf);
+  })();
+  _mfq.push(["setVariable", "Org ID", "{!$Organization.Id}"]);
+</script>                          
+</apex:page>
