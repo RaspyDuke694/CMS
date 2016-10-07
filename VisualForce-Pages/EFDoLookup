@@ -1,0 +1,274 @@
+<apex:page applyBodyTag="false" docType="html-5.0" applyHtmlTag="false"    showHeader="false" sidebar="false" standardStylesheets="false" standardController="VisualAntidote__Previous_Form__c" extensions="VisualAntidote.EFDoLookupController">
+  <head>
+    <meta name="viewport" content="width=device-width" ></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" ></meta>
+    <title>Lookup</title>
+    <script type='text/javascript' src="{!$Site.BaseUrl}{!URLFOR($Resource.ffengine,'scripts/jquery-1.11.0.min.js')}"></script>
+    <script type='text/javascript' src="{!$Site.BaseUrl}{!URLFOR($Resource.ffengine,'scripts/jquery.jqGrid.min.js')}"></script>
+    <script type='text/javascript' src="{!$Site.BaseUrl}{!URLFOR($Resource.ffengine,'scripts/grid.locale-en.js')}"></script>
+    <link href="{!$Site.BaseUrl}{!URLFOR($Resource.ffengine,'styles/main.css')}" rel="stylesheet" type="text/css"></link>
+    <link href="{!$Site.BaseUrl}{!URLFOR($Resource.ffengine,'styles/load.css')}" rel="stylesheet" type="text/css"></link>
+    <link href="{!$Site.BaseUrl}{!URLFOR($Resource.ffengine,'styles/ui.jqgrid.css')}" rel="stylesheet" type="text/css"> </link>
+
+
+</head>
+ 
+<script type="text/javascript" language="javascript">
+    jQuery(document).ready(function () {
+        jQuery('#ffOverlay').addClass('ff-overlay-image');
+        jQuery('.ff-form-main-lookup').hide();
+        jQuery("#list").jqGrid({
+            url: "/services/apexrest/FFNLookupData/v1?lv={!listId}&lo={!lookupObject}",
+            datatype: 'json',
+            colNames: ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12', 'c13', 'c14', 'c15'],
+            colModel: [
+                { name: "c1" },
+                { name: "c2" },
+                { name: "c3" },
+                { name: "c4" },
+                { name: "c5" },
+                { name: "c6" },
+                { name: "c7" },
+                { name: "c8" },
+                { name: "c9" },
+                { name: "c10" },
+                { name: "c11" },
+                { name: "c12" },
+                { name: "c13" },
+                { name: "c14" },
+                { name: "c15" },
+                ],
+            rowNum: 10,
+            shrinkToFit: true,
+            hoverrows: true,
+            toolbar: [true, "top"],
+            rowList: [],
+            pager: "#pager",
+            gridview: false,
+            rownumbers: false,
+            sortname: "c1",
+            viewrecords: false,
+            sortorder: "asc",
+            altRows: true,
+            altclass: 'jqgrowAlt',
+            jsonReader: { root: "data" },
+
+            beforeProcessing: function (data) {
+                var $self = $(this), model = data.model, name, $colHeader, $sortingIcons;
+                if (model) {
+                    for (name in model) {
+                        if (model[name].hidden) {
+                            $("#list").hideCol(name);
+                        } else if (model.hasOwnProperty(name)) {
+                            $colHeader = $("#jqgh_" + $.jgrid.jqID(this.id + "_" + name));
+                            $sortingIcons = $colHeader.find(">span.s-ico");
+                            $colHeader.text(model[name].label);
+                            $colHeader.append($sortingIcons);
+                        }
+                    }
+                }
+
+                if (data.css == undefined || data.css == "") {
+                    var fileref = document.createElement("link");
+                    fileref.setAttribute("rel", "stylesheet");
+                    fileref.setAttribute("type", "text/css");
+                    fileref.setAttribute("href", "{!$Site.BaseUrl}{!URLFOR($Resource.ffengine,'styles/hostedform.css')}");
+                    document.getElementsByTagName("head")[0].appendChild(fileref);
+                }
+                else {
+                    var styleElem = data.css;
+                    jQuery(styleElem).appendTo("head");
+                }
+
+            },
+            loadonce: true,
+            height: "auto",
+            regional: "en",
+            onSelectRow: function (id) {
+                jQuery('#list').find('tr').removeClass('rowSelected');
+                jQuery('#' + id).addClass('rowSelected');
+                celValue = $('#list').jqGrid('getCell', id, 0);
+                if (celValue.indexOf("<a") > -1)
+                    celValue = stripLink(celValue);
+                var json = '{"resultType" : "Lookup","selectedId" : "' + id + '", "selectedName" : "' + celValue + '", "sourceField" : "' + getSourceFieldName() + '"}';
+                window.parent.postMessage(json, '*');
+            },
+            loadError: function () {
+                $('#ffOverlay').removeClass('ff-overlay-image');
+                $('.ff-form-main-lookup').before("<div>No records found.</div>")
+            },
+            gridComplete: function (data) {
+                $('#ffOverlay').removeClass('ff-overlay-image');
+                jQuery(".ui-jqgrid-btable").addClass('ff-group-row');
+                jQuery(".ui-jqgrid-btable").css('margin', '0px');
+                jQuery("td[role='gridcell']").addClass('ff-label');
+                jQuery("td[role='gridcell']").css('white-space', 'normal');
+                jQuery("td[role='gridcell']").css('word-break', 'break-all');
+                jQuery("th[role='columnheader']").addClass('ff-label');
+                jQuery("td#input_pager").addClass('ff-label');
+                jQuery(".ff-form-main-lookup").attr('id', 'dvFastForms');
+                jQuery(".ui-jqgrid-sortable").css('white-space', 'normal');
+                jQuery(".ui-jqgrid-sortable").css('word-break', 'break-all');
+
+                jQuery(".ff-form-main-lookup #gbox_list").addClass('ff-form-main');
+                jQuery(".ff-form-main-lookup #gbox_list").css('border', 'none');
+                jQuery(".ff-form-main-lookup #gbox_list").css('box-shadow', 'none');
+
+                jQuery(".ff-form-main-lookup input[type='text']").addClass("ff-input-type");
+                jQuery(".ff-form-main-lookup input[type='text']").addClass("ff-type-text");
+                jQuery(".ff-form-main-lookup input[type='text']").addClass("ff-label");
+                var mainRowColor = jQuery(".ff-group-row").css('background-color');
+                var altRowColor = SetAltColor(mainRowColor);
+                jQuery(".jqgrowAlt").css('background-color', altRowColor);
+
+                var footerElem = jQuery(".ff-form-main-lookup #pager");
+
+                jQuery(footerElem).addClass("ff-group-row");
+                jQuery(footerElem).css("cssText", "margin: 10px 0px !important; padding: 0px !important;");
+
+                var headerElem = jQuery(".ff-form-main-lookup .ui-jqgrid-hbox");
+
+                jQuery(headerElem).addClass("ff-group-row");
+                jQuery(headerElem).css("cssText", "margin: 5px 0px !important; padding: 0px !important;");
+
+
+
+                
+                jQuery('.ff-form-main-lookup').show();
+                $(window).trigger('resize');
+
+            }
+        });
+        jQuery('#t_list')
+    .append($("<div><input id=\"globalSearchText\" class=\"ff-input-type ff-type-text\" type=\"text\" placeholder=\"search...\"></input>&nbsp;" +
+        "<input type=\"button\" id=\"globalSearch\" class=\"ff-btn-submit\" value=\"Search\" /></div>"));
+
+
+        jQuery("#globalSearchText").keypress(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            if (key === 13) { // 13
+                $("#globalSearch").click();
+            }
+        });
+        jQuery("#globalSearch").click(function () {
+            var rules = [], i, cm, postData = jQuery("#list").jqGrid("getGridParam", "postData"),
+        colModel = jQuery("#list").jqGrid("getGridParam", "colModel"),
+        searchText = jQuery("#globalSearchText").val(),
+        l = colModel.length;
+            for (i = 0; i < l; i++) {
+                cm = colModel[i];
+                if (cm.search !== false && (cm.stype === undefined || cm.stype === "text")) {
+                    rules.push({
+                        field: cm.name,
+                        op: "cn",
+                        data: searchText
+                    });
+                }
+            }
+            postData.filters = JSON.stringify({
+                groupOp: "OR",
+                rules: rules
+            });
+            jQuery("#list").jqGrid("setGridParam", { search: true });
+            jQuery("#list").trigger("reloadGrid", [{ page: 1, current: true}]);
+            return false;
+        });
+
+        jQuery(window).on("resize", function () {
+            resizeGrid();
+        });
+
+        function stripLink(html)
+        {            
+            var div = document.createElement("div");
+            div.innerHTML = html;
+            var text = div.textContent || div.innerText || "";
+            return text;
+        }
+
+        function resizeGrid() {
+            var $grid = jQuery("#list"),
+            newWidth = jQuery(".ff-form-main-lookup").width();
+            $grid.jqGrid("setGridWidth", newWidth, true);
+
+            var groupHeaders = $grid.jqGrid("getGridParam", "groupHeader");
+            if (groupHeaders != null) {
+                $grid.jqGrid("destroyGroupHeader").jqGrid("setGroupHeaders", groupHeaders);
+            }
+        }
+
+        function rgb2hex(rgb) {
+            if (rgb == "rgba(0, 0, 0, 0)") {
+                rgb = "#FFFFFF";
+                return rgb;
+            }
+            else {
+                rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+                return (rgb && rgb.length === 4) ? "#" +
+              ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+              ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+              ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
+            }
+        }
+
+        function InvertColor(rgb) {
+            rgb = [].slice.call(arguments).join(",").replace(/rgb\(|\)|rgba\(|\)|\s/gi, '').split(',');
+            for (var i = 0; i < rgb.length; i++) rgb[i] = (i === 3 ? 1 : 255) - rgb[i];
+            return rgb.join(", ");
+        }
+
+        function SetAltColor(rgbtext) {
+            var delta = 30;
+            if (rgbtext.indexOf('#') != 0)
+                rgbtext = rgb2hex(rgbtext);
+            var r, g, b, txt;
+            r = parseInt(rgbtext.substr(1, 2), 16),
+            g = parseInt(rgbtext.substr(3, 2), 16),
+            b = parseInt(rgbtext.substr(5, 2), 16);
+
+            if (rgbtext == '#000000') {
+                r += delta; if (r > 255) r = 255; if (r < 0) r = 0;
+                g += delta; if (g > 255) g = 255; if (g < 0) g = 0;
+                b += delta; if (b > 255) b = 255; if (b < 0) b = 0;
+            } else {
+                r -= delta; if (r > 255) r = 255; if (r < 0) r = 0;
+                g -= delta; if (g > 255) g = 255; if (g < 0) g = 0;
+                b -= delta; if (b > 255) b = 255; if (b < 0) b = 0;
+            }
+
+            txt = b.toString(16); if (txt.length < 2) txt = "0" + txt;
+            txt = g.toString(16) + txt; if (txt.length < 4) txt = "0" + txt;
+            txt = r.toString(16) + txt; if (txt.length < 6) txt = "0" + txt;
+
+            return "#" + txt;
+        }
+
+
+
+    });
+
+
+    function LookupDone() {
+        var grid = jQuery("#list");
+        var selectedRowId = grid.jqGrid('getGridParam', 'selrow');
+        var cellValue = grid.jqGrid('getCell', selectedRowId, 'columnName');
+        $('#ffLookupDialog', top.document).dialog('close');
+    }
+
+    function getSourceFieldName() {
+        var regex = new RegExp("[\\?&]lf=([^&#]*)"),
+        results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+</script>
+<div id="ffOverlay"></div>
+<h3>{!pageTitle}</h3>
+    <div class="ff-form-main-lookup" style="width:100%">
+
+    <table id="list"><tr><td></td></tr></table> 
+    <div id="pager"></div> 
+    </div>
+      
+ 
+ </apex:page>
