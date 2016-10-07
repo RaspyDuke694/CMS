@@ -1,0 +1,9 @@
+<apex:page controller="VisualAntidote.FFNCaptchaController" standardStylesheets="false"   cache="false" showHeader="false" sidebar="false"  applyBodyTag="false" applyHtmlTag="false" >
+ <html>
+ <body>
+ <div id="postResponse">
+<apex:outputText escape="false" value="{!responseMsg}"></apex:outputText>
+</div>
+ </body>
+ </html>
+</apex:page>
