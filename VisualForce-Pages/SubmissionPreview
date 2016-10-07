@@ -1,0 +1,191 @@
+<apex:page standardController="VisualAntidote__Previous_Form__c" applyBodyTag="false" applyHtmlTag="false"  extensions="VisualAntidote.SubmissionPreviewController" showHeader="false" standardStylesheets="false" sidebar="false">
+ <apex:includeScript value="//code.jquery.com/jquery-1.10.2.min.js" /> 
+   <link href="{!$Site.BaseUrl}{!URLFOR($Resource.ffengine,'styles/main.css')}" rel="stylesheet" type="text/css" id="ffmaincss"></link>
+    <script src="{!URLFOR($Resource.esignature,'jquery.signaturepad.min.js')}"></script>
+  <link rel="stylesheet" href="{!URLFOR($Resource.esignature,'signature.css')}"/>
+  <link rel="stylesheet" href="{!URLFOR($Resource.select2,'select2.css')}" />
+        <script src="{!URLFOR($Resource.select2,'select2.js')}"></script>
+        <script src="{!URLFOR($Resource.SelectToPicklist)}"></script>
+        <script src="{!URLFOR($Resource.SelectToRadioList)}"></script>
+         <script src="{!URLFOR($Resource.FFRating)}"></script> 
+         <script src="{!URLFOR($Resource.commonJSHelper)}"></script>  
+     <script src="{!URLFOR($Resource.ffnpreviewhelperJS)}"></script>
+     <style> 
+#dvFastForms input,#dvFastForms select,#dvFastForms textarea,#dvFastForms button,
+#dvFastForms .ff-checkbox-li, #dvFastForms  .ff-radio-li,#dvFastForms .ff-col-2>div,
+#dvFastForms .ff-sign-ul a,#dvFastForms .ff-item-row a{
+pointer-events: none;
+} 
+#dvFastForms .docsignWrapper.ff-col-2{
+      line-height: 6px;
+}
+#dvFastForms .ffsign-label,#dvFastForms .ff-email-verification .ff-col-1{
+  width:30%;
+}
+.img-esign{ 
+    position: absolute; 
+    z-index: 1;
+    background: transparent;
+    border-radius: 10px; 
+    margin: 1px;
+}
+
+     </style>
+  <input id="submittedData" type="hidden" value="{!SubmittedDataJSON}"/>
+   <div  class="ff-form">
+  <div class="ff-header">
+        <div class="ff-logo"></div>
+    </div>
+ <div id="dvFastForms" style="margin-left: 5px;margin-right:5px;">
+  <apex:outputText id="formHtml" value="{!FormHTML}" escape="false"/>
+  </div>
+   </div>
+  <script>
+  var instanceURL='{!$CurrentPage.URL}';
+  var ffengineResourceBaseURL='{!URLFOR($Resource.VisualAntidote__ffengine)}';
+  if(instanceURL.indexOf('/apex/')>0){
+    instanceURL=instanceURL.substring(0,instanceURL.indexOf('/apex/'));
+  }
+  if (!document.getElementById("hasCustomCSS")) {
+                var fileref = document.createElement("link");
+                fileref.setAttribute("rel", "stylesheet");
+                fileref.setAttribute("type", "text/css");
+                fileref.setAttribute("href", "{!URLFOR($Resource.VisualAntidote__ffengine)}/styles/hostedform.css");
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+            }
+
+  $( document ).ready(function() {
+    InitializeRepeatableSections();
+    initializeFormValues();
+        if (!document.getElementById("hasCustomCSS")) {
+                var fileref = document.createElement("link");
+                fileref.setAttribute("rel", "stylesheet");
+                fileref.setAttribute("type", "text/css");
+                fileref.setAttribute("href", "{!URLFOR($Resource.VisualAntidote__ffengine)}/styles/hostedform.css");
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+            } 
+     
+    initializeCaptcha();
+ InitializeSignature();
+       // InitializeFooter(); 
+       // InitializePages();
+        InitializeBreadcrumbs();
+        resetSelect2ForFormElementsDraft();  
+     resetFlexInputForFormElementsDraft(); 
+        $('.ff-footer-group input[type="button"]').css( "pointer-events","none" );
+       
+        });
+  function initializeFormValues(){
+    console.log('initializeFormValues()'+$('#submittedData').val());
+    var submittedData=$('#submittedData').val();
+    if(submittedData!==undefined && submittedData!=''){
+      var submittedJSON=JSON.parse(submittedData);
+      for(var i=0, keys=Object.keys(submittedJSON), l=keys.length; i<l; i++) {
+        var property=keys[i];
+     // for(var property in submittedJSON){
+        //console.log('property:'+property);
+        var fieldId=property.replace(/\./g,'\\.');
+        //console.log('fieldId:'+fieldId);
+        if(fieldId.indexOf('ESIGNsignDoutputSigned')==0){
+          console.log(' Esignature found- fieldId:'+fieldId+' fieldval:'+submittedJSON[property]);
+          
+          if(fieldId.indexOf('ESIGNsignDoutputSignedName')==0){            
+            var esignInput=fieldId.replace('ESIGNsignDoutputSignedName','inputESIGNATURE');
+            $('#dvFastForms #'+esignInput).attr('data-currenttab','drawn');
+          }
+          var esignElemId=fieldId.replace('ESIGNsignDoutputSigned','signDffSigned');
+
+          var imageUrl= instanceURL+'/servlet/servlet.ImageServer?id='+submittedJSON[property]+'&oid={!$Organization.Id}';
+          $('#dvFastForms #'+esignElemId).parent().prepend($('<img/>',{'src':imageUrl,'class':'img-esign'}));
+
+        }
+        else if($('#dvFastForms').find('#'+fieldId).length>0){
+          setFFFieldValue(fieldId,submittedJSON[property]);
+        }else{
+         var fieldIdasArr= property.split('.');
+         if(fieldIdasArr.length===4 || fieldIdasArr.length===1){
+          if(fieldIdasArr.length===1){
+             if($('#dvFastForms').find('#'+fieldId).length>0){
+          setFFFieldValue(fieldId,submittedJSON[property]);
+           }else{
+            //create new repeat section
+              var prevRepeatIndex=safeInt(fieldId.split('__')[1],-1);
+                if(prevRepeatIndex>1   ){
+                  var prevfieldId=fieldId.split('__')[0]+'__1';
+               /// var prevfieldId=prevfieldIdWithDot.replace(/\./g,'\\.');
+                if($('#dvFastForms').find('#'+prevfieldId).length>0){
+                  for(var rindx=2;rindx<=prevRepeatIndex;rindx++){ 
+                  $('#dvFastForms').find('#'+prevfieldId).parents('.ff-sec-repeat-wrapper').find('.ff-add').click();
+                  }
+                var  newRepeatIndex=prevRepeatIndex;
+                var repeatfieldId=fieldId.split('__')[0]+'__'+newRepeatIndex;
+                ///var repeatfieldId=repeatfieldIdWithDot.replace(/\./g,'\\.');
+                  if($('#dvFastForms').find('#'+repeatfieldId).length>0){
+                  setFFFieldValue(repeatfieldId,submittedJSON[property]);
+                 }
+                }
+               }
+            }
+           }
+          else if(fieldIdasArr[2].length>=4 && fieldIdasArr[2].split('_').length>=2){
+          var fieldIdWithDot=fieldIdasArr[0]+'.'+fieldIdasArr[1]+'.'+fieldIdasArr[2].split('_')[0]+'_'+fieldIdasArr[2].split('_')[1]+'_.'+fieldIdasArr[3];
+          var fieldId=fieldIdWithDot.replace(/\./g,'\\.');
+          if($('#dvFastForms').find('#'+fieldId).length>0){
+          setFFFieldValue(fieldId,submittedJSON[property]);
+           }else{
+            //create new repeat section
+
+              var prevRepeatIndex=safeInt(fieldIdasArr[2].split('_')[1],-1);
+              console.log(' RepeatIndex: '+prevRepeatIndex);
+                if(prevRepeatIndex>1   ){
+                  var prevfieldIdWithDot=fieldIdasArr[0]+'.'+fieldIdasArr[1]+'.'+fieldIdasArr[2].split('_')[0]+'_1_.'+fieldIdasArr[3];
+                var prevfieldId=prevfieldIdWithDot.replace(/\./g,'\\.');
+                if($('#dvFastForms').find('#'+prevfieldId).length>0){
+                  for(var rindx=2;rindx<=prevRepeatIndex;rindx++){ 
+                  $('#dvFastForms').find('#'+prevfieldId).parents('.ff-sec-repeat-wrapper').find('.ff-add').click();
+                  }
+                var  newRepeatIndex=prevRepeatIndex;
+                var repeatfieldIdWithDot=fieldIdasArr[0]+'.'+fieldIdasArr[1]+'.'+fieldIdasArr[2].split('_')[0]+'_'+newRepeatIndex+'_.'+fieldIdasArr[3];
+                var repeatfieldId=repeatfieldIdWithDot.replace(/\./g,'\\.');
+                  if($('#dvFastForms').find('#'+repeatfieldId).length>0){
+                  setFFFieldValue(repeatfieldId,submittedJSON[property]);
+                 }
+                }
+               }
+            }
+           }  
+         }
+        }
+        
+      } 
+    }
+  }
+  function setFFFieldValue(fieldId,submittedValue){
+    var isElemMultiSelect=false;
+          var multiSelectVal=[];
+          //submittedJSON[property]
+          var safeValue=decodeURIComponent(decodeURIComponent(submittedValue));
+          try{
+            var ctrlType=$('#dvFastForms').find('#'+fieldId)[0].type;
+            if(ctrlType == 'select-multiple'){
+              isElemMultiSelect=true;
+              multiSelectVal=safeValue.split(';');
+              $('#dvFastForms').find('#'+fieldId).val(multiSelectVal);
+            }else if(ctrlType=='checkbox'){
+              console.log('Boolean:'+safeValue);
+              if(getSafeBoolean(safeValue,false)){
+                $('#dvFastForms').find('#'+fieldId).prop('checked',safeValue);
+              } 
+              }else{
+           $('#dvFastForms').find('#'+fieldId).val(safeValue);
+           var vatt=$('#dvFastForms').find('#'+fieldId).attr('vatt');
+           if(!isNullOrEmpty(vatt) && vatt=='REFERENCE'){
+            $('#dvFastForms').find('#'+fieldId).next().val(safeValue);
+           }
+        }
+          }catch(err){
+            console.log(' ERROR:'+err);
+          }
+  }
+  </script>
+</apex:page>
