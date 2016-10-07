@@ -1,0 +1,3 @@
+<apex:page standardController="VisualAntidote__Previous_Form__c" extensions="VisualAntidote.FormEditorController" standardStylesheets="false"  title="Fast Forms" tabStyle="FastForms__tab">  
+
+</apex:page>
