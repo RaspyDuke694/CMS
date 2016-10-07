@@ -1,0 +1,9 @@
+<apex:page standardController="Notice__c" recordSetVar="Notice__c" sidebar="false" showHeader="false">
+    <apex:form >
+        <apex:selectList value="{!filterid}" size="1">
+            <apex:selectOptions value="{!listviewoptions}">
+            </apex:selectOptions>
+        </apex:selectList>
+        <apex:commandButton value="Go" action="{!list}"/>
+    </apex:form>
+</apex:page>
