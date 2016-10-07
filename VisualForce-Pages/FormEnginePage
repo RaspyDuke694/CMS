@@ -1,0 +1,182 @@
+<apex:page applyBodyTag="false" docType="html-5.0" applyHtmlTag="false"   showHeader="false" sidebar="false" standardStylesheets="false" standardController="VisualAntidote__Previous_Form__c" extensions="VisualAntidote.FormEngineController">
+<head><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"></meta>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8" ></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+     
+ 
+    <apex:outputText rendered="{!!HasCustomCSS}">
+        <script data-js="fastforms" type="text/javascript" language="javascript">
+            if (document.getElementById("isHostedForm")) {
+                var fileref = document.createElement("link");
+                fileref.setAttribute("rel", "stylesheet");
+                fileref.setAttribute("type", "text/css");
+                fileref.setAttribute("href", "{!URLFOR($Resource.ffengine)}/styles/hostedform.css");
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+            }
+        </script>
+    </apex:outputText>
+    <apex:outputPanel rendered="{!HasCustomCSS}"  >
+    <style>
+      <apex:outputText escape="false" rendered="{!HasCustomCSS}" value="{!StyleCSS}"></apex:outputText>
+    </style>
+    </apex:outputPanel>
+    
+</head>
+
+<body>
+    <div id="ffbrowser" class=""></div>  
+     <script data-js="fastforms" type="text/javascript" language="javascript">
+  
+  var isCHROME= /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+var isSAFARI = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+var isMicrosoftIE=(window.ActiveXObject || "ActiveXObject" in window);
+var isFIREFOX= !(window.mozInnerScreenX == null);
+var isEDGE = /Edge/.test(navigator.userAgent);
+ if(isMicrosoftIE||isEDGE ){ var version = detectIE();
+
+if (version === false) {
+  document.getElementById('ffbrowser').setAttribute('class','ieEdge');
+} else if (version >= 12) {
+  document.getElementById('ffbrowser').setAttribute('class','ie'+version);
+} else {
+  document.getElementById('ffbrowser').setAttribute('class','ie'+version);
+}
+}else if(isSAFARI ){
+document.getElementById('ffbrowser').setAttribute('class','safari');
+}else if(isCHROME){
+document.getElementById('ffbrowser').setAttribute('class','chrome');
+}else if(isFIREFOX){
+document.getElementById('ffbrowser').setAttribute('class','firefox');
+}
+console.log('Browser:'+document.getElementById('ffbrowser').getAttribute('class'));
+  function detectIE() {
+  var ua = window.navigator.userAgent;
+
+   
+  var msie = ua.indexOf('MSIE ');
+  if (msie > 0) {
+    // IE 10 or older => return version number
+    return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+  }
+
+  var trident = ua.indexOf('Trident/');
+  if (trident > 0) {
+    // IE 11 => return version number
+    var rv = ua.indexOf('rv:');
+    return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+  }
+
+  var edge = ua.indexOf('Edge/');
+  if (edge > 0) {
+    // Edge (IE 12+) => return version number
+    return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+  }
+
+  // other browser
+  return false;
+}
+  </script>
+    <form enctype="multipart/form-data" action="{!$Site.BaseUrl}/apex/MultiPartEndpoint?encoding=UTF-8" id="form1" method="post" target="ffIframe">
+        <input type="hidden"  id="userTimeZone" ></input>
+        <input type="hidden"  id="txtObjId" value="{!encryptedSObjectId}" ></input>
+        <input type="hidden"  id="sfContext" value="{!userContextId}" ></input>
+        <input type="hidden"  id="txtHtmlId" value="{!HtmlId}" ></input>
+        <input type="hidden"  id="formHtml"   ></input>
+        <input class="ignore-submit" type="hidden"  id="debugError" value="{!DebugError}"   ></input>
+        
+        <input type="hidden" id="txtSessionID" value="{!IF($CurrentPage.parameters.sid==null,'',$CurrentPage.parameters.sid)}"></input>
+         <input class="ignore-submit" type="hidden" id="txtSubmittedData" value="{!submittedData}"></input>
+        <input type="hidden"  id="multipageEnabled" value="{!MultipageEnabled}" ></input>
+        <input type="hidden"  id="breadcrumbEnabled" value="{!BreadcrumbEnabled}" ></input>
+        <input type="hidden"  id="breadcrumbNumbered" value="{!BreadcrumbNumbered}" ></input>
+        <input type="hidden"  id="breadcrumbPrefix" value="{!BreadcrumbPrefix}" ></input>
+        <input type="hidden"  id="submitMessage" value="{!SubmitMessage}" ></input>
+        <input type="hidden"  id="submitUrl" value="{!SubmitUrl}" ></input>
+        <input type="hidden"  id="submitBtnText" value="{!SubmitBtnText}" ></input>
+        <input type="hidden"  id="prevBtnText" value="{!PrevBtnText}" ></input>
+        <input type="hidden"  id="nextBtnText" value="{!NextBtnText}" ></input>
+        <input type="hidden"  id="pageValType" value="{!PageValType}" ></input>
+        <input type="hidden"  id="txtUserContentId" value="{!UserContentID}" ></input>
+        <input type="hidden"  id="hasCustomCSS" value="{!HasCustomCSS}" ></input>
+        <input type="hidden"  id="isCurrentForm" value="{!IsCurrentForm}" ></input>
+        <input type="hidden"  id="packageTier" value="{!PackageTier}" ></input>
+        <input type="hidden"  id="isDraft" value="{!IsDraft}" ></input>
+        <input type="hidden"  id="saveForLaterEnabled" value="{!SaveForLaterEnabled}" ></input>
+        <input type="hidden"  id="saveBtnText" value="{!SaveBtnText}" ></input>
+        <input type="hidden"  id="discardBtnText" value="{!DiscardBtnText}" ></input>
+        <input type="hidden"  id="draftSaved" value="{!DraftSaved}" ></input>
+        <input type="hidden"  id="draftEmail"   ></input>
+        
+        <input type="hidden"  id="paymentType" value="{!PaymentType}" ></input>
+
+        <input class="ignore-submit" type="hidden"  id="ruleFieldsMap" value="{!RuleFieldsMapJSON}" ></input>
+        <input class="ignore-submit" type="hidden"  id="relatedFieldsMapJSON" value="{!RelatedFieldsMapJSON}" ></input>
+        <input class="ignore-submit" type="hidden"  id="staticPrefillParams" value="{!staticPrefillParamsJSON}" ></input>
+                 
+        <input type="hidden"  id="formName" value="{!FormName}" ></input>
+        <input type="hidden"  id="formId" value="{!FormId}" ></input>
+        <input type="hidden" id="prefillObj" value="{!prefillObjectJSON}"></input>
+        <input type="hidden" id="accessToken" value="{!AccessToken}"></input>
+        <input type="hidden" id="dateFormat" value="dd/mm/yy" ></input>
+        <input type="hidden" id="todayDate" value="{!today()}" ></input>
+        <input type="hidden" id="userLocal" value="{!userLocal}" ></input>
+        <input type="hidden" id="jsCode" value="{!JSCode}"></input>
+        <input type="hidden" id="ipAddress" value="{!ipAddress}"></input>
+        <input type="hidden" id="recaptchaSiteKey" value="{!recaptchaSiteKey}"></input>
+        
+        
+        <input type="hidden" id="submitRules"   ></input>
+         <!--<div style="color:blue;"><h2>Debugging:</h2>{!DebugError}</div> -->
+        <div id="dvBannerHTML" runat="server">
+         
+        <apex:outputPanel layout="block" id="ffRules" rendered="{!HasRules}">
+                  
+            <apex:outputText escape="false" value="{!RuleCodeScript}"></apex:outputText>
+        
+    </apex:outputPanel>
+    <apex:outputPanel layout="block" styleClass="ff-form-main" rendered="{!isFormActive}">
+        
+        <apex:outputText escape="false"   value="{!InnerHTML}"></apex:outputText>
+
+
+             </apex:outputPanel>
+             <apex:outputPanel layout="block" style="margin:20px auto; padding:20px;max-width:800px;" rendered="{!!isFormActive}">
+             
+             <apex:outputText escape="false"   value="{!NoFormHTML}"></apex:outputText>
+              </apex:outputPanel>
+        </div>
+        <iframe id="ffIframe" name="ffIframe" style="display:none" />
+        <div id="dialog">
+        </div>
+
+        <div id="ffLookupDialog" style="overflow:hidden">
+        </div>
+        <input type="hidden" id="selectedId" value="" />
+        </form>
+         
+        <script data-js="fastforms" type="text/javascript" id="ffJSCode"> 
+        </script>
+        
+        <script data-js="fastforms" type="text/javascript">
+         
+         var verifyCallback = function(response) {
+          
+      $('#dvFastForms .ff-captcha .ff-invalid-msg').remove();
+      };
+      var onloadCallback = function() {
+         
+        $('.ff-item-row .ff-captcha').each(function(indx,colItem){
+          var cId=$(colItem).find('div[vatt="CAPTCHA"]').attr('id');
+          grecaptcha.render(cId, {'sitekey' : '{!recaptchaSiteKey}','callback' : verifyCallback});
+         
+        });
+         
+        
+      };
+    </script>
+  <script data-js="fastforms" src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async="true" defer="true"></script>
+</body>
+
+
+</apex:page>
