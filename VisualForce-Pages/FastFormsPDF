@@ -1,0 +1,60 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" renderAs="pdf" docType="html-5.0"  Controller="VisualAntidote.FastFormsPDFController" showHeader="false">
+
+<head> 
+<link href="{!$Site.BaseUrl}{!URLFOR($Resource.ffengine,'styles/main.css')}" rel="stylesheet" type="text/css" id="ffmaincss"></link> 
+
+<style>.ff-form-main {
+    max-width: 800px !important;
+    font-family: Arial Unicode MS;
+    font-size: 14px;
+    overflow: visible;
+    margin: 0 auto;
+    background-color: #fff;
+    box-shadow: -1px 1px 3px 1px rgba(4, 4, 4, .08);
+    border: 1px solid rgb(211, 211, 211);
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+.canvas {
+    border-width: 1px;
+    border-color: rgb( 212, 212, 212 );
+    border-style: solid;
+    border-radius: 8px; 
+    margin-bottom: 5px;
+    font-style: italic;
+    width:200px;
+    min-height: 25px;padding:20px;
+    display:inline-block;
+    font-size:18px;
+    text-align: center;font-family: 'Pacifico', cursive;
+}
+ 
+ 
+            @page {
+                size: letter;
+                margin: 25mm;
+                @top-center {
+                    content: "Fast Forms Submission";
+                }
+                @bottom-center {
+                    content: "Page " counter(page) " of " counter(pages);
+                }
+            }
+           
+            .page-break {
+                display:block;
+                page-break-after:always;
+            }
+            body {
+                  font-family: Arial Unicode MS;
+            }
+
+
+        </style> 
+</head>
+ 
+<apex:outputText escape="false" value="{!htmlstr}"></apex:outputText>
+ 
+</apex:page>
