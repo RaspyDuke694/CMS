@@ -1,0 +1,87 @@
+<apex:page docType="html-5.0" title="Fast Forms" action="{!initialOAuthCall}" controller="VisualAntidote.FFAuthUpdateController" sidebar="false" tabStyle="FastForms__tab">
+    <head>
+
+<script type='text/javascript'>
+
+
+
+/*FullStory Snippet*/
+window['_fs_debug'] = false;
+window['_fs_host'] = 'www.fullstory.com';
+window['_fs_org'] = '1ZpR';
+(function(m,n,e,t,l,o,g,y){
+  g=m[e]=function(a,b){g.q?g.q.push([a,b]):g._api(a,b);};g.q=[];
+  o=n.createElement(t);o.async=1;o.src='https://'+_fs_host+'/s/fs.js';
+  y=n.getElementsByTagName(t)[0];y.parentNode.insertBefore(o,y);
+  g.identify=function(i,v){g(l,{uid:i});if(v)g(l,v)};g.setUserVars=function(v){FS(l,v)};
+  g.clearUserCookie=function(d,i){d=n.domain;while(1){n.cookie='fs_uid=;domain='+d+
+  ';path=/;expires='+new Date(0);i=d.indexOf('.');if(i<0)break;d=d.slice(i+1)}}
+})(window,document,'FS','script','user');
+
+FS.identify('{!$Organization.Id}', {
+  displayName: '{!$User.FirstName} {!$User.LastName}',
+  email: '{!$User.Email}'
+});
+
+/*End FullStory Snippet*/
+</script>
+
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <meta content="utf-8" http-equiv="encoding" />
+    <c:FormCss />
+    <style>
+    .welcome {
+        margin-top: 50px;
+    }
+    
+    .welcome p {
+        margin-top: 10px;
+        line-height: 20px;
+    }
+    
+    #inner {
+        margin-top: 70px;
+    }
+    </style>
+    <script src="{!URLFOR($Resource.sortable,'sortable/jquery-1.8.3.js')}"></script>
+    <script>
+         
+       
+        (function(f,b){if(!b.__SV){var a,e,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+        for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=f.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=f.getElementsByTagName("script")[0];e.parentNode.insertBefore(a,e)}})(document,window.mixpanel||[]);
+        mixpanel.init("39b7e8be28cfa1b59fdd342bad0004e0");
+        mixpanel.identify();
+        mixpanel.people.set({
+            "$email": "{!$User.Email}",
+            "$first_name": "{!$User.FirstName}",
+            "$last_name": "{!$User.LastName}",
+            "User ID":"{!$User.Id}",
+            "Organization ID":"{!$Organization.Id}"
+        });
+    </script>
+    </head>
+
+ <apex:outputText id="checkAuth" rendered="{!IF(ISBLANK(initialOAuthEndpoint),false,true)}">
+       <script>
+        window.location.replace("{!initialOAuthEndpoint}");
+        </script>
+ </apex:outputText>
+    <div class="welcome">
+    <center><img src="{!URLFOR($Resource.logos,'color_logo.png')}" /><br />
+    <br />
+    <br />
+    <h1>Welcome to Fast Forms!</h1>
+    <br />
+    <p>Please follow the instructions in the pop-up window to<br />
+    start using Fast Forms.</p>
+    <p>If your <b>browser blocks pop-up windows,</b> you may want<br />
+    to allow them temporarily for this page.</p>
+    <p id="inner">Once you're done, Click the <b>"Get Started"</b>
+    button to begin</p>
+    <a class="vabutton1" id="btnGetStarted" href="/apex/FormWelcome" onclick="mixpanel.track('Get Started clicked');">Get Started</a> <br />
+    <br />
+    <br />
+    <br />
+    </center>
+    </div>
+</apex:page>
