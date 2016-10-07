@@ -1,0 +1,176 @@
+<apex:page controller="VisualAntidote.CKEditorNewFormMultiController"  sidebar="false" tabStyle="FastForms__tab" id="pg" action="{!doRedirect}">
+
+    <style>
+    .arrowUpper {
+        margin-left: 310px;
+        position: absolute;
+        z-index: 87;
+        margin-top: 81px;
+    }
+    form {
+            background-image: url("{!URLFOR($Resource.VisualAntidote__iconImages,'back.png')}");
+     }
+    .emptyMsg {
+        z-index: 87;
+        text-align: middle;
+        white-space: nowrap;
+        position: absolute;
+        width: 100%;
+    }
+    
+    .sidebarCollapsed {
+        padding: 0 !important;
+    }
+    
+    .status {
+        background: #ddd;
+        border: 1px solid #aaa;
+        border-radius: 2px;
+        color: black;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        -moz-box-shadow: 0 0 15px 5px #DDDDDD;
+        -webkit-box-shadow: 0 0 15px 5px #DDDDDD;
+        box-shadow: 0 0 15px 5px #DDDDDD;
+        margin: 2px;
+        width: 250px;
+        opacity: 1;
+        height: auto;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        padding: 15px;
+        z-index: 1000;
+    }
+    
+    .status {
+        border-radius: 5px;
+        background: #FFFFFF !important;
+        padding: 0 !important;
+        text-transform: none;
+        width: 400px;
+        text-align: center;
+        box-shadow: -1px 1px 3px 1px !important;
+        height: 198px !important;
+    }
+    
+    .ui-widget-overlay {
+        background: none repeat scroll 0 0 rgba(5, 41, 66, 0.7) !important;
+        opacity: 1 !important;
+    }
+    
+    .overlay {
+        width: 100%;
+        height: 100%;
+        background: #000;
+        opacity: 0.7;
+        top: 0px;
+        left: 0px;
+        position: fixed;
+        z-index: 500;
+    }
+    
+    .overlay {
+        background: none repeat scroll 0 0 rgba(5, 41, 66, 0.7) !important;
+        opacity: 1 !important;
+    }
+    a.tooltips {
+        position: relative;
+        display: inline;
+    }
+    
+    a.tooltips span {
+        position: absolute;
+        width: 145px;
+        color: #FFFFFF;
+        background: #052942;
+        height: auto;
+        line-height: 14px;
+        text-align: left;
+        visibility: hidden;
+        padding: 18px;
+        font-size: 10px;
+        box-shadow: -1px 1px 3px 1px rgba(4, 4, 4, .1);
+    }
+    
+    a.tooltips span:after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -8px;
+        width: 0;
+        height: 0;
+        border-top: 8px solid #052942;
+        border-right: 8px solid transparent;
+        border-left: 8px solid transparent;
+    }
+    
+    a:hover.tooltips span {
+        background: #052942;
+        visibility: visible;
+        bottom: 39px;
+        left: 50%;
+        margin-left: -92px;
+        z-index: 999;
+    }
+    </style>
+    <c:FormCss />
+    <apex:form id="frm">
+        <apex:pageMessages ></apex:pageMessages>
+        <apex:actionStatus id="status">
+            <apex:facet name="start">
+                <div id="load-status">
+                <div class="overlay"></div>
+                <div class="status">
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <span style="margin-left: 43px; color: #909090; font-family: 'Arial'; font-weight: bold; font-size: 20px;">Please wait...</span> 
+                <span><img style="vertical-align: middle;" src="{!engineUrl}/styles/images/ajax-loader.gif" /></span> <br />
+                <br />
+                <br />
+                <br />
+                </div>
+                </div>
+
+            </apex:facet>
+        </apex:actionStatus>
+
+        <div class="divHeader">
+        <div class="divHeaderInner">
+        <div style="float: left;"><a href="#" id="createNewForm" class="button overWidth" onClick="showDiv();return false;">Create New Form</a></div>
+        <div style="float: right;"><img src="{!URLFOR($Resource.logos,'color_logo.png')}" /></div>
+        </div>
+        </div>
+        <center>
+        <div class="emptyMsg">
+        <div style="margin: -40px 0 0 -592px;"><img src="{!URLFOR($Resource.iconImages,'Varrow.png')}" /></div>
+        <div style="margin: -40px 0 0;">
+        <h2>Your Form List is empty!<br />
+        Get started by creating a new form here.</h2>
+        </div>
+        </div>
+        </center>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <!--<c:NewFormComponent />-->
+        <c:NewFormComponentMulti id="pgCp" />
+        <br />
+        <br />
+        <br />
+        <br />
+    </apex:form>
+
+</apex:page>
