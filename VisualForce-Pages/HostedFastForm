@@ -1,0 +1,26 @@
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" applyHtmlTag="false"   applyBodyTag="false" standardStylesheets="false" controller="VisualAntidote.HostedFastFormController">
+   <body class="ff-form">
+  <input type="hidden"  id="isHostedForm"  value="true"  ></input>
+  <apex:outputPanel rendered="{!IF(ISBLANK(ErrorCode) ||  (ISNULL(ErrorCode)),false,true)}"   >
+    <link href="https://visualantidote.com/App_Themes/VisualAntidote/VA-base.css" rel="stylesheet" type="text/css"/>
+ 
+<div style="margin:20px auto; padding:20px;max-width:800px;">
+   <div style="display:block">
+  <div style="text-align:center">
+    <img alt="" src="https://visualantidote.com/App_Themes/VisualAntidote/images/producticons/FFSF_300.png"/>
+    
+    </div> 
+   </div>
+   <h3>Something went wrong</h3>
+<p> 
+<apex:outputText rendered="{!IF(ISBLANK(ErrorCode),false,true)}" escape="false" value="{!ErrorCode}" ></apex:outputText></p>
+</div>
+  </apex:outputPanel>
+  <apex:outputPanel layout="block" styleClass="ff-form" rendered="{!IF(ISBLANK(EmbedCode) ||  (ISNULL(EmbedCode)),false,true)}"   >
+  <div class="ff-header">
+        <div class="ff-logo"></div>
+    </div></apex:outputPanel>
+   <apex:outputText escape="false" rendered="{!IF(ISBLANK(EmbedCode) ||  (ISNULL(EmbedCode)),false,true)}" value="{!EmbedCode}" ></apex:outputText>
+   
+   </body>
+</apex:page>
