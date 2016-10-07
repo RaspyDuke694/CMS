@@ -1,0 +1,63 @@
+<apex:page sidebar="false" > 
+ <head>
+  
+     <meta http-equiv="X-UA-Compatible" content="IE=edge;" />     
+     
+      <link rel="stylesheet" href="{!URLFOR($Resource.ffcommon,'ffcommon.css')}" />  
+      <link rel="stylesheet" href="{!URLFOR($Resource.formcss)}" /> 
+    <link rel="stylesheet" href="{!URLFOR($Resource.jScroll,'css/jquery.jscrollpane.css')}" />     
+     <link rel="stylesheet" href="{!URLFOR($Resource.sortable,'sortable/jquery-ui.css')}" />    
+     <link rel="stylesheet" href="{!URLFOR($Resource.jquery_dialog,'jquery_dialog/jquery-ui.css')}"/>
+     <link href="//www.google.com/fonts#UsePlace:use/Collection:Open+Sans" rel="stylesheet" type="text/css"/>
+     <link rel="stylesheet" href="{!URLFOR($Resource.jScroll,'css/customSelectBox.css')}" />
+     
+     <script src="{!URLFOR($Resource.lzstringJs,'lz-string-master/libs/lz-string.min.js')}"></script>
+     <script src="{!URLFOR($Resource.lzstringJs,'lz-string-master/libs/base64-string.js')}"></script>     
+ 
+     <script src="{!URLFOR($Resource.jScroll,'js/jquery.mousewheel.js')}"></script>       
+     <script src="{!URLFOR($Resource.sortable,'sortable/jquery-ui.js')}"></script> 
+      
+     <apex:includeScript value="//code.jquery.com/jquery-1.10.2.min.js" /> 
+     <apex:includeScript value="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" />
+ 
+  
+    
+  
+      
+     <script src="{!URLFOR($Resource.sticky,'jquery.stickit.js')}"></script>
+     <script src="{!URLFOR($Resource.jquery_dialog,'jquery_dialog/jquery-ui.js')}"></script>     
+     <script src="{!URLFOR($Resource.Clipboard,'ZeroClipboard.js')}"></script>
+
+       <link rel="stylesheet" href="{!URLFOR($Resource.foundation,'css/foundation.css')}" />     
+    <script src="{!URLFOR($Resource.foundation,'js/foundation.min.js')}"></script>
+    <script src="{!URLFOR($Resource.foundation,'js/foundation/foundation.joyride.js')}"></script>
+     
+    
+      <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.4.5/jquery-ui-timepicker-addon.js"></script>
+   
+   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.4.5/jquery-ui-sliderAccess.js"></script>
+    
+   
+      <link href="//cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.4.5/jquery-ui-timepicker-addon.css" rel="stylesheet">  </link>
+    
+     <script src="{!URLFOR($Resource.ruleEditorComponentJs)}"></script>
+   
+
+     <link rel="stylesheet" href="{!URLFOR($Resource.select2,'select2.css')}" />
+    <script src="{!URLFOR($Resource.select2,'select2.js')}"></script>
+    <script src="{!URLFOR($Resource.Select2MultiCheckboxExt)}"></script>
+    <script src="{!URLFOR($Resource.jScroll,'js/jScrollPane.js')}"></script>
+
+    <script src="{!URLFOR($Resource.SelectToRadioList)}"></script>
+     <script src="{!URLFOR($Resource.FFRating)}"></script>
+     <script src="{!URLFOR($Resource.CSStoJSON)}"></script>
+      <link rel="stylesheet" href="{!URLFOR($Resource.ffcolpicker,'css/colpick.css')}"/>
+     <script src="{!URLFOR($Resource.ffcolpicker,'js/colpick.js')}"></script>
+     <link rel="stylesheet" href="{!URLFOR($Resource.ffrangeslider,'rangeslider.css')}"/>
+     <script src="{!URLFOR($Resource.ffrangeslider,'rangeslider.js')}"></script>
+  <script src="{!URLFOR($Resource.styleEditorComponentJs)}"></script> 
+    </head>
+    <apex:form id="frm">
+ <c:FormPaymentComponent />
+ </apex:form>
+</apex:page>
