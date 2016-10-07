@@ -1,0 +1,90 @@
+<apex:page standardController="VisualAntidote__Previous_Form__c" applyHtmlTag="false" docType="html-5.0" applyBodyTag="false"    extensions="VisualAntidote.FormDraftPreviewController" showHeader="false">
+<head>
+    <style>
+  body{
+    background-repeat: repeat;
+  }
+  </style>
+
+   <apex:includeScript value="//code.jquery.com/jquery-1.10.2.min.js" /> 
+   <link href="{!$Site.BaseUrl}{!URLFOR($Resource.ffengine,'styles/main.css')}" rel="stylesheet" type="text/css" id="ffmaincss"></link>
+    <script src="{!URLFOR($Resource.esignature,'jquery.signaturepad.min.js')}"></script>
+  <link rel="stylesheet" href="{!URLFOR($Resource.esignature,'signature.css')}"/>
+  <link rel="stylesheet" href="{!URLFOR($Resource.select2,'select2.css')}" />
+        <script src="{!URLFOR($Resource.select2,'select2.js')}"></script>
+        <script src="{!URLFOR($Resource.SelectToPicklist)}"></script>
+        <script src="{!URLFOR($Resource.SelectToRadioList)}"></script>
+         <script src="{!URLFOR($Resource.FFRating)}"></script>
+</head>
+<body class="ff-form">
+<script src="{!URLFOR($Resource.lzstringJs,'lz-string-master/libs/lz-string.min.js')}"></script>
+     <script src="{!URLFOR($Resource.lzstringJs,'lz-string-master/libs/lz-string.min.js')}"></script>
+     <script src="{!URLFOR($Resource.ffnpreviewhelperJS)}"></script>
+
+ <apex:outputPanel layout="block" styleClass="ff-header" rendered="{!isNative}">
+ 
+        <div class="ff-logo"></div>
+     
+    </apex:outputPanel>
+  <div id="dvFastForms" style="margin-left: 5px;margin-right:5px;">
+  <apex:outputText id="formHtml" value="{!Form_Html}" escape="false"/>
+  </div>
+ 
+  <script>
+ var ffengineResourceBaseURL='{!URLFOR($Resource.VisualAntidote__ffengine)}';
+  $( document ).ready(function() {
+    var formHtml = decompressText(document.getElementById('{!$Component.formHtml}').innerHTML);
+    document.getElementById('{!$Component.formHtml}').innerHTML = formHtml;
+
+   var isNative= document.getElementById('isNative');
+   if(isNative!='undefined' && isNative!=''){
+    initializeFormoptions();  
+    InitializeRepeatableSections();
+    initializeCaptcha();
+ InitializeSignature();
+        InitializeFooter(); 
+        InitializePages();
+        InitializeBreadcrumbs();
+        resetSelect2ForFormElementsDraft();  
+     resetFlexInputForFormElementsDraft(); 
+        $('.ff-footer-group input[type="button"]').css( "pointer-events","none" );
+      }
+        });
+
+function initializeFormoptions(){
+  try{
+  var formOptions=JSON.parse($('#formOptions').val());
+$('#dvFastForms').prepend('<input type="hidden" id="submitBtnText" value="'+formOptions.submitInformation.btnText+'" />');
+$('#dvFastForms').prepend('<input type="hidden" id="submitBtnMessage" value="'+formOptions.submitInformation.btnMessage+'" />');
+
+$('#dvFastForms').prepend('<input type="hidden" id="prevBtnText" value="'+formOptions.multiPageInformation.prevBtnText+'" />');
+$('#dvFastForms').prepend('<input type="hidden" id="pageValidationType" value="'+formOptions.multiPageInformation.pageValidationType+'" />');
+$('#dvFastForms').prepend('<input type="hidden" id="nextBtnText" value="'+formOptions.multiPageInformation.nextBtnText+'" />');
+$('#dvFastForms').prepend('<input type="hidden" id="multiPageEnabled" value="'+formOptions.multiPageInformation.multiPageEnabled+'" />');
+$('#dvFastForms').prepend('<input type="hidden" id="isFooterCustomized" value="'+formOptions.multiPageInformation.isFooterCustomized+'" />');
+$('#dvFastForms').prepend('<input type="hidden" id="breadcrumbEnabled" value="'+formOptions.multiPageInformation.breadcrumbEnabled+'" />');
+$('#dvFastForms').prepend('<input type="hidden" id="breadcrumbNumbered" value="'+formOptions.multiPageInformation.breadcrumbNumbered+'" />');
+$('#dvFastForms').prepend('<input type="hidden" id="breadcrumbPrefix" value="'+formOptions.multiPageInformation.breadcrumbPrefix+'" />');
+$('#dvFastForms').prepend('<input type="hidden" id="breadcrumbPrefixEnabled" value="'+formOptions.multiPageInformation.breadcrumbPrefixEnabled+'" />'); 
+}
+catch(err){}
+}
+    function compressText(txtIn)
+    {
+        if (txtIn.length > 131072)
+            return LZString.compressToEncodedURIComponent(txtIn);
+        else
+            return txtIn;
+    }
+
+    function decompressText(txtIn)
+    {
+        if (txtIn.length > 0 && txtIn.charAt(0) != '<')
+            return LZString.decompressFromEncodedURIComponent(txtIn);
+        else
+            return txtIn;
+    }
+ 
+  </script>
+  </body>
+</apex:page>
