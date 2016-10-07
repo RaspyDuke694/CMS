@@ -1,0 +1,9 @@
+<apex:page controller="VisualAntidote.FFNUploadFileController" standardStylesheets="false"   cache="false" showHeader="false" sidebar="false"  applyBodyTag="false" applyHtmlTag="false" >
+ <html>
+ <body>
+ <div id="postResponse">
+<apex:outputText escape="false" value="{!ResponseMsg}"></apex:outputText>
+</div>
+ </body>
+ </html>
+</apex:page>
