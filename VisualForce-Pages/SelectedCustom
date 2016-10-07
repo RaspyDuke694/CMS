@@ -1,0 +1,68 @@
+<apex:page controller="VisualAntidote.CKEditorNewFormMultiController">
+       <script src="{!URLFOR($Resource.jquery_dialog,'jquery_dialog/jquery-1.9.1.js')}"></script> 
+       <link rel="stylesheet" href="{!URLFOR($Resource.selectCss,'css/select-theme-default.css')}" />
+        <script src="{!URLFOR($Resource.selectCss,'select.js')}"></script>
+        
+        <script>    
+            $(function() {
+                
+                $('select.drop-select').each(function(){
+                    new Select({
+                        el: this
+                    });
+                });
+            });
+        </script>
+        
+  <style>
+      /*html body{
+          font-family: 'Open Sans','sans-serif';
+          font-weight:400;
+      }*/
+      .select-target.select-theme-default {
+            width: 340px;
+            padding: 10px;
+            border: 1px solid #cecece;
+            padding-left: 20px;
+            height: 35px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .select-options .select-option.select-option-highlight {
+            background: #FFF !important;
+            color: black !important;
+            border-left: 5px solid #33aefd;
+            padding: 0.5rem 1em 0.5rem 25px !important;
+        }
+      .select-content {
+        max-width: 340px !important;
+        width: 340px;
+        }
+        .header {
+      background: #bada55;
+      color: white;
+      font-family: Droid Sans;
+      font-size: 18px;
+      line-height: 1.6em;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      text-shadow: 0 1px 1px rgba(0,0,0,.2);
+      width:100%;
+      box-sizing:border-box;
+    }
+    .tpage{
+      background: #bada55;
+      color: white;
+      box-sizing:border-box;
+    }
+     </style>
+<apex:form >
+             <div class="scroll-parent">
+                 <apex:selectList styleclass="drop-select" id="mergeTypeSelect"  value="{!sobjectName}" multiselect="false" size="1">
+                              <apex:selectOptions value="{!sobjectList}"></apex:selectOptions> 
+                 </apex:selectList>
+             </div>
+</apex:form>
+
+</apex:page>
