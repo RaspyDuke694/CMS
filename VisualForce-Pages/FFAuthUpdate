@@ -1,0 +1,57 @@
+<apex:page controller="VisualAntidote.FFAuthUpdateController" standardStylesheets="false" sidebar="false">
+   <head><meta http-equiv="X-UA-Compatible" content="IE=edge;" />     
+         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+          <script src="/soap/ajax/35.0/connection.js" type="text/javascript"></script>
+</head>
+ <script>
+               sforce.connection.sessionId='{!GETSESSIONID()}';
+        
+          </script>
+  <style>
+    .successMessage {
+    clear: left;
+    display: inline-block;
+    /* max-width: 40%; */
+    background-color: #C3ECC3;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+  </style>
+  <apex:form >
+  
+   
+   
+ 
+ <apex:actionFunction immediate="true" name="setFFToken" action="{!SetRefreshToken}" reRender="tokenPanel"  status="status"  oncomplete="refreshMessage()">
+            </apex:actionFunction>
+             </apex:form>
+            <apex:actionStatus id="status">
+                                <apex:facet name="start">
+                                 <div id="load-status" > 
+                                        <h3>Authorizing, please wait...</h3>
+                                    </div>
+                             </apex:facet>
+                </apex:actionStatus>
+            <apex:outputPanel id="tokenPanel" style="display:none">
+            <span>
+  refresh_token:{!refresh_token}</span>
+ <span> debuglbl: {!debuglbl}</span>
+            </apex:outputPanel>
+            <apex:outputPanel id="refTokenPanel" rendered="{!IF(ISBLANK(refresh_token),false,true)}"  >
+            <script>
+            setTokenCall();
+            function setTokenCall(){
+              
+              setFFToken();
+            
+            }
+            function refreshMessage(){
+              document.getElementById('message').innerHTML='<span class="successMessage">Token Updated</span>';
+            }
+            
+            </script>
+            </apex:outputPanel>
+            <div id="message"></div>
+
+</apex:page>
