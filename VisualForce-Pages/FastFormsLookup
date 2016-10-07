@@ -1,0 +1,182 @@
+<apex:page controller="VisualAntidote.FastFormsLookupController"
+  title="Search" 
+  showHeader="false" 
+  sideBar="false" 
+  id="pg"
+  tabStyle="FastForms__tab">
+  <style>
+  input[type="text"]{
+    border-radius: 5px;
+    background: white;
+    border: 1px solid;
+    border-color: #aaa !important;
+    color: #052942;
+    width: 232px;
+    padding: 5px;
+    font-size: 14px;
+    outline: none; 
+  }
+    .ff-header-column{
+    background-color: #e4e8ec;
+    padding: 5px 5px;
+    border-bottom: 1px solid #becdd8; 
+    font-size: 14px;
+    font-weight: 900;
+    color: #052942; 
+}
+.ff-content-row {
+    background-color: #ffffff;
+    color: #616161; 
+border-bottom: 1px solid #becdd8;
+padding: 5px 5px;
+}
+.ff-content-row:hover{
+background-color: #fbfbfb;
+}
+.ff-table-block{  
+  border: 1px solid #becdd8;
+border-bottom-width: 0px;
+}
+.vabutton1,.vabutton2{
+  background-image: none !important;
+  background: none !important;
+  margin:0 5px !important;
+    font-size: 12px !important;
+padding: 7px 10px !important;
+border-radius: 6px  !important;
+}
+.vabutton1{
+
+    min-width: 80px; 
+    border: none !important;
+    color: #ffffff  !important;
+    background-color: #33aefd  !important;
+    text-decoration: none;
+}
+ .vabutton2{ 
+
+min-width: 40px;text-align: center;
+    border: solid 1px #33aefd !important;
+    color: #33aefd  !important;
+    background-color: #ffffff  !important;
+    text-decoration: none;
+}
+/*pagination css*/
+.pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+.pagination>li{
+   display: inline-block;
+      float: left;
+      list-style-type: none;
+      margin-left: 0px;
+
+}
+.pagination>li a, .pagination>li>span {
+    position: relative;
+ min-height: 20px;
+    padding: 6px 8px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #33aefd;
+    font-weight: 600;
+     font-size: 14px;
+     display: inline-block;
+    vertical-align: top; 
+   
+    text-decoration: none !important; 
+}
+.pagination>li a.ls2{
+  letter-spacing: 2px;
+}
+.pagination>li a.active, .pagination>li>span.active ,
+.pagination>li a.disabled, .pagination>li>span.disabled {
+color: #b7b7b7;
+pointer-events: none;
+}
+.pagination>li a:not(.active):not(.disabled){
+     cursor: pointer;
+}
+.fs-pagination-box{
+display: block;
+    max-width: 600px;
+    margin: 10px auto;
+    text-align: center;
+  }
+ 
+.pagination>li a.nav-link.first-link,.pagination>li a.nav-link.last-link {
+  background-image:  url("{!URLFOR($Resource.VisualAntidote__fscommon,'addash/addash_sprites_v1.png')}");  
+    background-repeat: no-repeat;
+      padding: 6px 8px;
+      text-indent: -9999px;
+          margin: 0px 8px;
+  }
+.pagination>li a.nav-link.first-link {    
+    background-position: -46px -116px;  
+}
+.pagination>li a.nav-link.first-link.disabled {
+background-position: -27px -116px;
+  }
+  .pagination>li a.nav-link.last-link {    
+    background-position: -118px -116px;  
+}
+.pagination>li a.nav-link.last-link.disabled {
+background-position: -94px -116px;
+  }
+  .fs-pagination-box .fs-page-info {
+    color: #b7b7b7;
+    font-size: 12px;
+    font-weight: 600; 
+    font-style: italic;
+}
+  </style>
+  <apex:form >
+  
+  <script>
+  function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+  </script>
+  <apex:outputPanel id="page" layout="block" style="margin:5px;padding:10px;padding-top:2px;">     
+              
+            <apex:actionRegion >  
+                  <apex:outputPanel id="top" layout="block" style="margin:5px;padding:10px;padding-top:2px;">
+                    <apex:outputLabel value="Search" style="font-weight:Bold;padding-right:10px;" for="txtSearch"/>
+                    <apex:inputText id="txtSearch" value="{!searchString}" />
+                      <apex:commandButton id="btnGo" styleclass="vabutton1" value="Search" action="{!Search}" rerender="pnlSearchResults"></apex:commandButton> 
+                  </apex:outputPanel>
+       
+                <apex:outputPanel id="pnlSearchResults" style="margin:10px;height:420px;overflow-Y:auto;" layout="block">
+                    <apex:outputPanel id="searchResults" styleClass="ff-table-block" layout="block">
+          <div class="ff-header-column">Name</div>
+<apex:repeat value="{!currentPageSet}" var="a">
+<div class="ff-content-row">
+<apex:outputLink value="javascript:top.window.opener.lookupPick2('{!FormTag}','{!TextBox}_lkid','{!TextBox}','{!a.Id}', '{!JSENCODE(a.Name)}', false,'{!$CurrentPage.parameters.sourcePage}')" rendered="{!NOT(ISNULL(a.Id))}">{!a.Name}</apex:outputLink>
+</div>
+</apex:repeat>
+</apex:outputPanel>
+                    <apex:outputPanel styleClass="fs-pagination-box" style="{!IF(pageCount<2,'display:none','')}">
+                    <ul class="pagination ul-nav-item" ><li class="first-item">
+    <apex:commandLink title="First" action="{!first}" styleClass="nav-link first-link"></apex:commandlink>
+    </li><li class="nav-item"><apex:commandLink title="Previous" action="{!previous}" styleClass="nav-link {!IF(hasPrevious,'','disabled')}"  >Previous</apex:commandlink>
+    </li><li class="nav-item"><apex:commandLink title="Next" action="{!next}" styleClass="nav-link {!IF(hasNext,'','disabled')}"  >Next</apex:commandlink>
+    </li><li class="last-item"><apex:commandLink title="Last" action="{!last}" styleClass="nav-link last-link"  ></apex:commandlink>
+    </li></ul>
+    <div class="fs-page-info">Page {!pageNumber} of {!pageCount}</div>
+ 
+    </apex:outputPanel>
+    <div style="{!IF(resultCount<1,'max-width: 200px;margin:10px auto;font-weight:600;','display:none')}" >No record found</div>
+    
+                </apex:outputPanel>
+            </apex:actionRegion>
+              
+
+  </apex:outputPanel>
+  </apex:form>
+</apex:page>
