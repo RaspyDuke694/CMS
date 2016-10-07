@@ -1,0 +1,928 @@
+<apex:page showHeader="false" sidebar="false">
+
+    <meta charset="UTF-8"/> 
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        
+    <title>The YKV</title>
+    <!--<link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.CSS_Files, 'css/main.css')}"/>
+    <link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.CSS_Files, 'css/Home_Page.css')}"/>-->
+    
+    
+    
+    <!-------------STYLE------------>
+    
+    <style>
+    
+
+
+#holder {
+    min-height: 100%;
+    position:relative;
+     background-color: rgba(239, 237, 237, 1);
+
+}
+
+
+
+#top
+{
+    background-color: #ffbd00;
+    box-shadow: 0px 3px 5px;
+    height: 100px;
+    width: 100%;
+    opacity: 0.7;
+    top: 0px;
+    margin-top: 0px;
+    position: fixed;
+    z-index: 5;
+    
+}
+
+#Logo
+{
+
+    position: fixed;
+    height: 120px;
+    width: 240px;
+    text-decoration: none;
+    color: black;
+    left: 20px;
+    top: 2px;
+    opacity: 1;
+    transition : all 1s ease-in-out;
+    z-index: 6;
+    
+}
+
+
+
+#mmenu
+{
+    margin-top: 120px;
+    color: white;
+    font-size: 30px;
+}
+
+
+
+
+/*------------------TOP MENU------------------*/
+
+
+nav > ul
+{
+
+    position: fixed;
+    /*background-color: #ffffff;*/
+    /*background: -webkit-linear-gradient(top , #eeeded 0% , #9f9d9d 100%);*/
+    border-radius: 2px;
+    /*box-shadow: 0px 3px 5px;*/
+    top: -90px;
+    left: 44%;
+    list-style: none;
+    
+    
+    text-decoration: none;
+    font-size: 30px;
+    /*padding: 0px;
+    margin: 0px;*/
+    z-index: 4;
+    display: inline-block;
+    z-index: 7;
+    
+}
+
+nav > ul:after 
+{
+        content: ""; clear: both; display: block;
+        
+}
+
+nav > ul > li
+{
+    position: relative;
+    display: inline-block;
+    margin-left: 15px;
+    margin-right: 15px;
+    font-size: 20px;
+    color: #ffffff;
+    text-align: center;
+}
+
+
+nav > ul > li > a 
+{
+    text-decoration: none;
+    color: #272822;
+    text-align: center;
+    padding-bottom: 14px;
+    opacity: 1;
+    z-index: 2;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    
+    
+}
+
+
+
+nav > ul > li:hover > a
+{
+    /*padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 5px;
+    padding-right: 5px;*/
+    position: relative;
+    color: #FFBD00;
+    opacity: 1;
+    border-bottom: 3px solid rgba(0, 0, 0, 1);
+    
+
+}
+
+
+
+nav > ul > li:hover
+{
+    background: rgba(0, 0, 0, 1);
+}
+
+nav > ul > li > ul
+{
+    position: absolute;
+    top: 55px;
+    text-align: center;
+    display: none;
+    list-style: none;
+    /*background: -webkit-linear-gradient(bottom , #828792 0% , #c5b07a 100%);*/
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+    opacity: 1;
+    box-shadow: 1px 1px 1px;
+    margin-top: 0px;
+    
+
+
+}
+
+nav > ul > li:hover > ul
+{
+
+
+    display: block;
+    margin-top: -19px;
+    background: rgba(255, 189, 0, 1);
+    box-shadow: 5px 5px 0 0 rgba(0,0,0,0.2), 5px 5px 0 0 rgba(0,0,0,0.19);
+    /*background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.3) 1%, rgba(183, 183, 183, 0.2) 10%, rgba(183, 183, 183, 0.2) 90%, rgba(183, 183, 183, 0.2) 100%);*/
+    text-align: left;
+    
+}
+
+nav > ul > li > ul > li
+{
+
+
+    display: block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    opacity: 1;
+
+
+
+
+
+}
+
+nav > ul > li > ul > li:hover
+{
+
+    display: block;
+
+    border-bottom: 4px solid rgba(0, 0, 0, 0.8);
+
+}
+
+nav > ul > li > ul > li:hover > a
+{
+
+    color: rgba(0, 0, 0, 0.8);
+    
+    font-size: 20px;
+
+}
+
+nav > ul > li > ul > li > a
+{
+    display: block;
+    
+    color: rgba(0, 0, 0, 1);
+    text-decoration: none;
+
+
+}
+
+
+
+/*-----------------FOR CURRENT PAGE---------------*/
+
+
+nav > ul > li > span > a
+{
+    text-decoration: none;
+    color: #272822;
+    text-align: center;
+    padding-bottom: 14px;
+    opacity: 1;
+    z-index: 2;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    
+    
+}
+
+nav > ul > li:hover > span > a
+{
+    /*padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 5px;
+    padding-right: 5px;*/
+    position: relative;
+    color: #FFBD00;
+    opacity: 1;
+    border-bottom: 3px solid rgba(0, 0, 0, 1);
+    
+
+}
+
+.current
+{
+    /*border-spacing: 100px 0px;*/
+    position: relative;
+    border-bottom: 3px solid rgba(0, 0, 0, 1);
+    padding-bottom: 10px;
+    
+
+}
+
+
+/*-----------------LOGIN-------------------*/
+
+#login
+{
+
+    background-color: rgba(0, 0, 0, 1);
+    border-style: solid;
+    border-width: 2px;
+    border-color: #FFBD00;
+    color: #FFBD00;
+    left: 87.5%;
+    top: 100px;
+    position: fixed;
+    height: 30px;
+    width: 100px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 27px;
+    padding-top: 0px;
+    padding-bottom: -15px;
+    box-shadow: 0 5px 5px 0 rgba(0,0,0,0.2), 0 5px 5px 0 rgba(0,0,0,0.19);
+    cursor: pointer;
+    z-index: 11;
+}
+
+
+#login:hover
+{
+    box-shadow: 0 0 0 0;
+    transition : all 0.1s ease-in-out;
+    background-color: rgba(255, 189, 0, 1);
+    color: rgba(0, 0, 0, 0.7);
+    /*border-style: solid;*/
+    border-bottom: 2px solid #616161;
+    border-left: 2px solid #616161;
+    border-right: 2px solid #616161;
+    border-top: 2px solid #616161;
+    /*border-color: white;*/
+
+}
+
+
+
+/*-----------------RIGHT DIVISION---------------*/
+
+
+
+#rside
+{
+    opacity: 70%;
+    /*background-color: #1B1717;*/
+    background: -webkit-linear-gradient(bottom , #ffffff -50% , #1B1717 100%);
+    background: -moz-linear-gradient(bottom , #ffffff -50% , #1B1717 100%);
+    background: linear-gradient(bottom , #ffffff -50% , #1B1717 100%);
+
+    /*box-shadow: -1px 0px 5px;*/
+    height: 100vh;
+    margin-left: 82%;
+    width: 18%;
+    position: fixed;
+    margin-top: 80px;
+    /*border-left: 2px solid #B1B1B1;*/
+    /*float: right;*/
+    z-index: 10;
+
+}
+
+
+
+/*----------------BOTTOM DIVISION---------------*/
+
+
+#bottom
+{
+    /*background-color: #FFBD00;
+    box-shadow: 0px 1px 5px;*/
+    height: 80px;
+    top: 90%;
+    /*position: relative;*/
+    bottom: -100vh;
+    width: 100%;
+    opacity: 1;
+    
+    /*box-shadow: 0 5px 3px 5px;*/
+
+    z-index: 0;
+    background: -webkit-linear-gradient(top , rgba(239, 237, 237, 1) 0% , #FFBD00 100%);
+    background: -moz-linear-gradient(top , rgba(239, 237, 237, 1) 0% , #FFBD00 100%);
+    background: -moz-linear-gradient(top , rgba(239, 237, 237, 1) 0% , #FFBD00 100%);
+}
+
+
+
+/*----------------CENTER DIVISION---------------*/
+
+
+#center
+{
+    margin-top: 0px;
+    top: 0px;
+    margin-left: 0px;
+    margin-right: 14%;
+    height: 100%;
+    width: 86%;
+    position: absolute;
+    /*background-color: rgba(239, 237, 237, 0.5);*/
+    z-index: 0;
+}
+
+
+/*---------------MARQUEE TEXT IN RIGHT DIVISION-----------------*/
+
+#mtird
+{
+
+    /*-webkit-marquee : up medium infinite scroll normal;
+    overflow-x: -webkit-marquee;*/
+    display: block;
+    height: 60%;
+    width: 94%;
+    /*background-color: white;*/
+    margin-top: 70px;
+    margin-right: 3%;
+    margin-left: 3%;
+    background: -webkit-linear-gradient(bottom , #8f8f8f -50% , #C8C8C8 100%);
+    border-radius: 5px;
+    box-shadow: 20px 20px 20px 20px rgba(0,0,0,0.2), 20px 20px 20px 20px rgba(0,0,0,0.19);
+    overflow: hidden;
+    border-style: solid;
+    border-color: #FFBD00;
+    border-width: 2px;
+
+
+
+}
+
+#mtird p
+{
+
+    color: #1B1717;
+    font-size: 18px;
+    padding-left: 10px;
+
+    /*------------Scroll Text Start Position----------*/
+
+    -webkit-transform : translateY(100%);
+    -moz-transform : translateY(100%);
+    transform : translateY(100%);
+
+    /*-----------------Apply Animation----------------*/
+
+    -webkit-animation : mtird 15s linear infinite;
+    -moz-animation : mtird 15s linear infinite;
+    animation : mtird 15s linear infinite;
+
+}
+
+
+/*------------Define The Animation--------------------*/
+
+@-webkit-keyframes mtird
+{
+    0%      { -webkit-transform : translateY(100%);}
+    100%    { -webkit-transform : translateY(-100%);}
+}
+
+@-moz-keyframes mtird
+{
+    0%      { -moz-transform : translateY(100%);}
+    100%    { -moz-transform : translateY(-100%);}
+}
+
+@keyframes mtird
+{
+    0%      {
+                -webkit-transform : translateY(100%);
+                -moz-transform : translateY(100%);
+                transform : translateY(100%);
+
+            }
+
+    100%    { 
+                -webkit-transform : translateY(-100%);
+                -moz-transform : translateY(-100%);
+                transform : translateY(-100%);
+
+            }
+}
+
+/*--------------Images slidshow-----------*/
+
+
+/*@keyframes slidy {
+0% { left: 0%; }
+20% { left: 0%; }
+25% { left: -100%; }
+45% { left: -100%; }
+50% { left: -200%; }
+70% { left: -200%; }
+75% { left: -300%; }
+95% { left: -300%; }
+100% { left: -400%; }
+}
+
+
+div#slider 
+{ 
+    overflow: hidden; 
+}
+
+div#slider figure img 
+{ 
+    width: 20%; float: left; 
+}
+
+div#slider figure 
+{ 
+  position: relative;
+  width: 500%;
+  margin: 0;
+  left: 0;
+  text-align: left;
+  font-size: 0;
+  animation: 30s slidy infinite; 
+}
+*/
+
+
+.container 
+{
+    position:relative;
+    height: 400px;
+    width: 1000px;
+    margin-top: 150px;
+    margin-left: 20px;
+    
+    
+}
+
+.container img 
+{
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #FFBD00;
+}
+@-webkit-keyframes slidy {
+    0% {
+        opacity: 1;
+    }
+    12.5% {
+        opacity:1;
+    }
+    16.5% {
+        opacity:0;
+    }
+    96% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+@keyframes slidy {
+    0% {
+        opacity: 1;
+    }
+    12.5% {
+        opacity:1;
+    }
+    16.5% {
+        opacity:0;
+    }
+    96% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+.container img:nth-child(8) {
+    -webkit-animation: slidy 40s 0s infinite;
+    animation: slidy 40s 0s infinite;
+}
+.container img:nth-child(7) {
+    -webkit-animation: slidy 40s 5s infinite;
+    animation: slidy 40s 5s infinite;
+}
+.container img:nth-child(6) {
+    -webkit-animation: slidy 40s 10s infinite;
+    animation: slidy 40s 10s infinite;
+}
+.container img:nth-child(5) {
+    -webkit-animation: slidy 40s 15s infinite;
+    animation: slidy 40s 15s infinite;
+}
+.container img:nth-child(4) {
+    -webkit-animation: slidy 40s 20s infinite;
+    animation: slidy 40s 20s infinite;
+}
+.container img:nth-child(3) {
+    -webkit-animation: slidy 40s 25s infinite;
+    animation: slidy 40s 25s infinite;
+}
+.container img:nth-child(2) {
+    -webkit-animation: slidy 40s 30s infinite;
+    animation: slidy 40s 30s infinite;
+}
+.container img:nth-child(1) {
+    -webkit-animation: slidy 40s 35s infinite;
+    animation: slidy 40s 35s infinite;
+}
+
+
+
+/*--------------------INSIDE MAIN CENTER DIVISION-------------------*/
+
+#scrdiv
+{
+
+    margin-left: 2%;
+    margin-right: 7%;
+    width: 91%;
+
+}
+
+/*-----------------FOR HEADINGS-------------------*/
+
+#headiv
+{
+    margin-left: 4%;
+    margin-right: 4%;
+    width: 92%;
+}
+
+#heading
+{
+
+    color: #4D3C3C; 
+    font-size: 50px;
+
+}
+
+/*---------------HEADINGS UNDER HEADINGS-------------*/
+
+#inheading
+{
+    font-size: 30px;
+    color: #663535;
+}
+
+/*----------------PATRONS--------------*/
+
+#patron
+{
+    width: 35%;
+    border-right: 2px solid rgba(255, 189, 0, 0.3);
+    padding-right: 20px;
+}
+
+
+/*-------------IMAGES FOR ROLES---------*/
+
+#roleimg
+{
+
+    border-radius: 100px;
+    box-shadow: 0 0.5px 5px 0.5px;
+    float: left;
+
+}
+
+#roleimg:hover
+{
+    box-shadow: 0 1px 10px 1px;
+}
+
+#rott1
+{
+
+    color: #663535;
+    font-size: 22px;
+    padding-left: 20px;
+    /*visibility: hidden;*/
+    text-shadow : 0px 1px #000000;
+
+}
+
+#rott2
+{
+
+    color: #663535;
+    font-size: 18px;
+    padding-left: 20px;
+    
+    /*visibility: hidden;*/
+    
+
+
+}
+
+</style>
+ 
+ 
+ 
+    <!--HTML PAGE STARTS HERE-->
+    
+    <div id="holder">
+
+
+            <div id="top">
+    
+            </div>
+        
+            <div>
+            
+                
+                <h2><span><a href = "Home Page.html" id = "Logo"><img src="{!URLFOR($Resource.Docs_WebPage,'Docs/img1/Logo.png')}" id = "Logo"/></a></span></h2>
+    
+            
+            </div>
+    
+            <div id="login">LOGIN</div>
+
+
+    
+
+    
+
+                <nav>
+                <ul id="mmenu">
+                
+                    <li><span class="current"><a href="Home Page.html">HOME</a></span></li>
+                    <li><a href="#">ABOUT</a>
+
+                        <ul>
+
+                            <li><a href="At A Glance.html">K OS AT A GLANCE</a></li>
+                            <li><a href="Achievements.html">ACHIEVEMENTS</a></li>
+                            <li><a href="Placement.html">PLACEMENT</a></li>
+                            <li><a href="Photo Gallery.html">PHOTO GALLERY</a></li>
+                            <li><a href="Facilities.html">FACILITIES</a></li>
+                            <li><a href="Contact.html">CONTACT US</a></li>
+
+
+                        </ul>
+
+                    </li>
+                    <li><a href= "#" >PROGRAMMES</a>
+
+                        <ul>
+
+                            <li><a href="Graduate.html">GRADUATE</a>
+
+                                <!--<ul>
+
+                                <li><a href="Music.html">BTECH</a></li>
+                                <li><a href="Videos.html">MED</a></li>
+                    
+                                </ul>-->
+
+                            </li>
+                            <li><a href="Post Graduate.html">POST GRADUATE</a></li>
+                    
+                        </ul>
+
+                    </li>
+                    <li><a href= "#" >ACADEMICS</a>
+
+                        <ul>
+
+                            <li><a href="Departments.html">DEPARTMENTS</a></li>
+                            <li><a href="Curriculum.html">CURRICULUM / SYLLABI</a></li>
+                            <li><a href="Academic Calendar.html">ACADEMIC CALENDAR</a></li>
+
+                        </ul>   
+                    </li>
+                    <li><a href="#">STUDENTS</a>
+
+                        <ul>
+
+                            <li><a href="Curriculum.html">CURRICULUM / SYLLABI</a></li>
+                            <li><a href="Time Table.html">TIME TABLE</a></li>
+                            <li><a href="Holidays.html">LIST OF HOLIDAYS</a></li>
+                            <li><a href="Noticeboard.html">STUDENT NOTICEBOARD</a></li>
+                            <li><a href="Results.html">RESULTS</a></li>
+                            <li><a href="Attendance Rules.html">ATTENDANCE RULES</a></li>
+                            <li><a href="Grievance.html">GRIEVANCE FORM</a></li>
+
+
+                        </ul>   
+
+
+
+                    </li>
+                    <!--<li><a href="#">STAFF</a></li>-->
+                    
+
+                </ul>
+            </nav>
+
+            
+            <div id="rside">
+
+                <div id="mtird">
+
+                    <p>
+
+                        ADMISSIONS OPEN NOW !   <br/> <br/> 
+
+                        <font color = '#FFBD00'>_________ </font><br/><br/>
+
+                        BBA Counselling in progress : New Students Jam Up The Corridors !   <br/><br/>
+
+                        <font color = '#FFBD00'>_________ </font><br/><br/>
+
+                        FEE SUBMISSION : Last Date for Fee Submission has been extended to 5th August, 2016 (Friday). <br/><br/>
+
+                        <font color = '#FFBD00'>_________ </font><br/><br/>
+
+                        New Session starts from 1st August, 2016 (Monday).<br/><br/>
+
+                        <font color = '#FFBD00'>_________ </font><br/><br/>
+
+                    </p>
+                    
+
+
+
+                </div>
+
+            </div>
+
+            <div id="center">
+
+
+                <div id="scrdiv">
+
+                    <div class="container">
+
+                        <figure>
+
+                            <img src="!URLFOR($Resource.Docs_WebPage,'Docs/img2/campus.jpg')"/>
+                            <img src="!URLFOR($Resource.Docs_WebPage,'Docs/img2/mmc.jpg')"/>
+                            <img src="!URLFOR($Resource.Docs_WebPage,'Docs/img2/Oxford.jpg')"/>
+                            <img src="!URLFOR($Resource.Docs_WebPage,'Docs/img2/Queen.jpg')"/>
+                            <img src="!URLFOR($Resource.Docs_WebPage,'Docs/img2/VirtualTour.jpg')"/>
+                            <img src="!URLFOR($Resource.Docs_WebPage,'Docs/img2/univ.jpg')"/>
+                            <img src="!URLFOR($Resource.Docs_WebPage,'Docs/img2/crawford.jpg')"/>
+                            <img src="!URLFOR($Resource.Docs_WebPage,'Docs/img2/dela.jpg')"/>
+
+                        </figure>
+
+                    </div>
+
+                    <br/><br/><hr/><br/><br/>
+
+                    <div id="headiv">
+                        <left>
+                        
+                            <span id="heading"><b>&nbsp;WELCOME TO K OS COLLEGE</b></span>
+                            <hr/><br/>
+                            K OS College Of Higher Education, New Delhi was established in the year 1969. K OS College has a material designed campus spread over 90 acres of lush green environment in the posh location of Greater Kailash. The Campus comprises of 10 different blocks which are surrounded by heavy green gardens and lakes and neatly designed paths to connect the blocks with each other.
+                            <br/><br/>
+                            K OS College offers Under Graduate and Post Graduate level full time Professional programs approved by AICTE in affiliation with K OS UNIVERSITY, New Delhi.
+
+                            <br/><br/>
+                            
+                            <br/><br/><br/>
+
+                        </left>
+
+
+
+                        <div id="patron">
+                                        <span id="inheading"><b>OUR PATRONS</b></span>
+                                        <hr/>
+                                        <br/>
+                            
+
+                                        <img src="img/YKV.jpg" height="100px" width="100px" id="roleimg"/ >
+                                        <br/>
+                                        <span id="rott1">KUMAR VARUN</span>
+                                        <br/>
+                                        <span id="rott2">CEO</span>
+
+                                        <br/>
+                                        <br/>
+                                        <hr/>
+                                        <br/>
+                                        <br/>
+                                    
+                                        <img src="img/Vis.jpg" height="100px" width="100px" id="roleimg"/ >
+                                        <br/>
+                                        <span id="rott1">VISHAL SINGH</span>
+                                        <br/>
+                                        <span id="rott2">CHAIRPERSON</span>
+
+                                        <br/>
+                                        <br/>
+                                        <hr/>
+                                        <br/>
+                                        <br/>
+
+                                        <img src="img/Sumit.jpg" height="100px" width="100px" id="roleimg" />
+                                        <br/>
+                                        <span id="rott1">SUMIT SINGH</span>
+                                        <br/>
+                                        <span id="rott2">DIRECTOR</span>
+
+                                        <br/>
+                                        <br/>
+                                        <hr/>
+                                        <br/>
+                                        <br/>
+
+                                        <img src="img/Parv.jpg" height="100px" width="100px" id="roleimg" />
+                                        <br/>
+                                        <span id="rott1">PARVESH KUMAR</span>
+                                        <br/>
+                                        <span id="rott2">PRINCIPAL</span>
+
+                                        <br/>
+                                        <br/>
+                                        <hr/>
+                                        <br/>
+                                        <br/>
+                            
+
+                        </div>
+                        <br/><br/>
+                        <hr/>
+                    </div>
+
+                    
+
+                </div>
+
+
+
+
+
+                <div id="bottom"></div>
+
+            </div>
+            
+
+    </div>
+    
+    
+    
+</apex:page>
