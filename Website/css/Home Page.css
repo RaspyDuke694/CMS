@@ -1,0 +1,299 @@
+/*--------------Images slidshow-----------*/
+
+
+/*@keyframes slidy {
+0% { left: 0%; }
+20% { left: 0%; }
+25% { left: -100%; }
+45% { left: -100%; }
+50% { left: -200%; }
+70% { left: -200%; }
+75% { left: -300%; }
+95% { left: -300%; }
+100% { left: -400%; }
+}
+
+
+div#slider 
+{ 
+	overflow: hidden; 
+}
+
+div#slider figure img 
+{ 
+	width: 20%; float: left; 
+}
+
+div#slider figure 
+{ 
+  position: relative;
+  width: 500%;
+  margin: 0;
+  left: 0;
+  text-align: left;
+  font-size: 0;
+  animation: 30s slidy infinite; 
+}
+*/
+
+
+.container 
+{
+    position:relative;
+    height: 400px;
+    width: 1000px;
+    margin-top: 150px;
+    margin-left: 20px;
+    
+    
+}
+
+.container img 
+{
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #FFBD00;
+}
+@-webkit-keyframes slidy {
+    0% {
+        opacity: 1;
+    }
+    12.5% {
+        opacity:1;
+    }
+    16.5% {
+        opacity:0;
+    }
+    96% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+@keyframes slidy {
+    0% {
+        opacity: 1;
+    }
+    12.5% {
+        opacity:1;
+    }
+    16.5% {
+        opacity:0;
+    }
+    96% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+.container img:nth-child(8) {
+    -webkit-animation: slidy 40s 0s infinite;
+    animation: slidy 40s 0s infinite;
+}
+.container img:nth-child(7) {
+    -webkit-animation: slidy 40s 5s infinite;
+    animation: slidy 40s 5s infinite;
+}
+.container img:nth-child(6) {
+    -webkit-animation: slidy 40s 10s infinite;
+    animation: slidy 40s 10s infinite;
+}
+.container img:nth-child(5) {
+    -webkit-animation: slidy 40s 15s infinite;
+    animation: slidy 40s 15s infinite;
+}
+.container img:nth-child(4) {
+    -webkit-animation: slidy 40s 20s infinite;
+    animation: slidy 40s 20s infinite;
+}
+.container img:nth-child(3) {
+    -webkit-animation: slidy 40s 25s infinite;
+    animation: slidy 40s 25s infinite;
+}
+.container img:nth-child(2) {
+    -webkit-animation: slidy 40s 30s infinite;
+    animation: slidy 40s 30s infinite;
+}
+.container img:nth-child(1) {
+    -webkit-animation: slidy 40s 35s infinite;
+    animation: slidy 40s 35s infinite;
+}
+
+
+
+/*--------------------INSIDE MAIN CENTER DIVISION-------------------*/
+
+#scrdiv
+{
+
+    margin-left: 2%;
+    margin-right: 7%;
+    width: 91%;
+
+}
+
+/*-----------------FOR HEADINGS-------------------*/
+
+#headiv
+{
+    margin-left: 4%;
+    margin-right: 4%;
+    width: 92%;
+}
+
+#heading
+{
+
+    color: #4D3C3C; 
+    font-size: 50px;
+
+}
+
+/*---------------HEADINGS UNDER HEADINGS-------------*/
+
+#inheading
+{
+    font-size: 30px;
+    color: #663535;
+}
+
+/*----------------LEFT DIVISION--------------*/
+
+#left
+{
+    width: 35%;
+    /*border-right: 2px solid rgba(184, 184, 184, 0.5);*/
+    box-shadow: 4px 0 4px 0 rgba(0,0,0,0.2), 4px 0 4px 0 rgba(0,0,0,0.19);
+    border-bottom: 2px solid rgba(199, 199, 199, 1);
+    padding-right: 20px;
+    float: left;
+}
+
+
+/*-------------PATRONS---------*/
+
+#roleimg
+{
+
+    border-radius: 100px;
+    box-shadow: 0 0.5px 5px 0.5px;
+    float: left;
+
+}
+
+#roleimg:hover
+{
+    box-shadow: 0 2px 10px 2px;
+    /*transition : box-shadow 1s;
+    */
+    -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+
+;}
+
+#rott1
+{
+
+    color: #663535;
+    font-size: 22px;
+    padding-left: 20px;
+    /*visibility: hidden;*/
+    text-shadow : 0px 1px #000000;
+
+}
+
+#rott2
+{
+
+    color: #663535;
+    font-size: 18px;
+    padding-left: 20px;
+    
+    /*visibility: hidden;*/
+    
+
+
+}
+
+
+
+/*-----------------HIGHLIGHTS------------*/
+
+#highlt
+{
+    margin-left: 40%;
+    margin-right: 10%;
+    width: 61%;
+    border-left: 4px solid rgba(199, 199, 199, 0.3);
+    
+    padding-left: 1%;
+    padding-right: 4%;
+}
+
+#highltin
+{
+
+    margin-left: 3%;
+    margin-right: 6%;
+
+}
+
+
+/*----------APPROVED ACCREDITED--------*/
+
+#rott3
+{
+
+    color: #392020;
+    font-size: 18px;
+    
+    
+    /*visibility: hidden;*/
+    
+
+
+}
+
+/*--------ALL DIVISIONS IN CENTER-------*/
+
+#newdiv
+{
+    margin-left: 40%;
+    margin-right: 10%;
+    width: 61%;
+    border-left: 4px solid rgba(199, 199, 199, 0.3);
+    border-top: 4px solid rgba(199, 199, 199, 0.3);
+    padding-left: 1%;
+    padding-right: 4%;
+}
+
+#rdm
+{
+    float: left;
+}
+
+/*------------THE QUERY FRAME-----------*/
+
+#frame
+{
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    padding: 3px;
+    /*box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2), 2px 2px 2px 0 rgba(0,0,0,0.19) , 2px 2px 2px 0 rgba(0,0,0,0.19), 2px 2px 2px 0 rgba(0,0,0,0.19);
+    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);*/
+    box-shadow: 0 0.5px 5px 0.5px;
+
+
+}
+
+#frame:hover
+{
+    box-shadow: 0 1px 10px 1px;
+}
